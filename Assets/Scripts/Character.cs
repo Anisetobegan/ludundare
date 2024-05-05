@@ -7,15 +7,14 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
 
-    float moveSpeed = 0.005f;
+    float moveSpeed = 2f;
     float health;
     int lvl;
     float exp;
     //Perks perk;
     float summonCooldown;
     int maxSummons = 5;
-    public List<Summon> currentSummons;
-    bool state = true;
+    [SerializeField] private List<Summon> currentSummons;    
     [SerializeField] private List<Summon> summons;
     enum State
     {
@@ -24,30 +23,51 @@ public class Character : MonoBehaviour
         Casting,
         Dead
     }
+    State state = State.Idle;
+
+    Vector3 lastPos;
+
+    private void Start()
+    {
+        lastPos = transform.position;
+    }
 
     // Update is called once per frame
     void Update()
-    {
-        Move();
-
-        if (Input.GetKeyUp(KeyCode.Alpha1))
+    {        
+        
+        switch (state) 
         {
-            Summon(summons[0]);            
-        }
+            case State.Idle:
 
-        if (Input.GetKeyUp(KeyCode.Alpha2))
-        {
-            Summon(summons[1]);
-        }
+                Move();
+                Summon();
+                
+                if (IsMoving())
+                {
+                    state = State.Moving;
+                }
+                break;
 
-        if (Input.GetKeyUp(KeyCode.Alpha3))
-        {
-            Summon(summons[2]);
+            case State.Moving:
+
+                Move();
+                Summon();
+                
+                if(!IsMoving())
+                {
+                    state = State.Idle;
+                }
+                break;
+
+            case State.Casting:
+                break;
+
+            case State.Dead: 
+                break;
         }
     }
-
-       
-
+           
     private void Move()
     {
         float xDirection = Input.GetAxis("Horizontal");
@@ -55,15 +75,47 @@ public class Character : MonoBehaviour
 
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
 
-        transform.position += moveDirection * moveSpeed;
+        transform.position += (moveDirection * moveSpeed) * Time.deltaTime;      
     }
 
-    private void Summon(Summon summon)
+    private bool IsMoving()
+    {
+        if (transform.position != lastPos)
+        {
+            lastPos = transform.position;
+            return true;
+        }
+        else
+        {
+            lastPos = transform.position;
+            return false;
+        }
+    }
+
+    private void Summon()
+    {
+        if (Input.GetKeyUp(KeyCode.Alpha1))
+        {
+            InstSummon(summons[0]);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            InstSummon(summons[1]);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Alpha3))
+        {
+            InstSummon(summons[2]);
+        }
+    }
+
+    private void InstSummon(Summon summon)
     {
         if (currentSummons.Count < maxSummons)
         {
-            Instantiate(summon);
-            currentSummons.Add(summon);
+            Summon newSummon = Instantiate(summon);
+            currentSummons.Add(newSummon);
         }
     }
 
