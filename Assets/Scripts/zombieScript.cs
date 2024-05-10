@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class zombieScript : Summon
 {
-    bool state;
+    enum State
+    {
+        Idle,
+        Moving,
+        Attacking,
+        Dead
+    }
+    State state;
 
     // Start is called before the first frame update
     void Start()

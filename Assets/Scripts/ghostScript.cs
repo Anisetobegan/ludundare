@@ -5,7 +5,14 @@ using UnityEngine;
 public class ghostScript : Summon
 {
     float explotionRadius;
-    bool state = false;
+    enum State
+    {
+        Idle,
+        Moving,
+        Attacking,
+        Dead
+    }
+    State state;
 
     // Start is called before the first frame update
     void Start()

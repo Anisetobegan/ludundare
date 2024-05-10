@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class skeletonScript : Summon
 {
-    bool state;
+    enum State
+    {
+        Idle,
+        Moving,
+        Attacking,
+        Dead
+    }
+    State state;
     float range;
 
 
