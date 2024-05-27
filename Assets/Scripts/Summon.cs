@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Summon : MonoBehaviour
 {
@@ -11,10 +12,13 @@ public class Summon : MonoBehaviour
     //Enemies target;
     float attackSpeed;
 
+    public NavMeshAgent agent;
+
+
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -30,7 +34,16 @@ public class Summon : MonoBehaviour
 
     virtual protected void Move()
     {
+        /*if (Input.GetMouseButtonDown(1))
+        {
+            RaycastHit hit;
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
+            {
+                agent.SetDestination(hit.point);
+            }
+        }*/
     }
     protected void Die()
     {
