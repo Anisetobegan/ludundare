@@ -31,8 +31,8 @@ public class Character : MonoBehaviour
 
 
     private Camera cam;
-    public LayerMask clickable;
-    public LayerMask ground;
+    [SerializeField] private LayerMask clickable;
+    [SerializeField] private LayerMask ground;
 
     [SerializeField] private RectTransform boxVisual;
     Rect selectionBox;
@@ -165,13 +165,11 @@ public class Character : MonoBehaviour
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            Debug.Log("giving order");
-
+            
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
             {
                 foreach (Summon summon in selectedSummons)
                 {
-                    Debug.Log(hit.point);
                     summon.agent.SetDestination(hit.point);
                 }
                
