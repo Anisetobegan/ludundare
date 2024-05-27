@@ -34,16 +34,7 @@ public class Summon : MonoBehaviour
 
     virtual protected void Move()
     {
-        /*if (Input.GetMouseButtonDown(1))
-        {
-            RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
-            {
-                agent.SetDestination(hit.point);
-            }
-        }*/
+        
     }
     protected void Die()
     {
