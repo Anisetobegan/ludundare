@@ -190,6 +190,8 @@ public class Character : MonoBehaviour
                 if(!selectedSummons.Contains(hit.collider.gameObject.GetComponentInParent<Summon>()))
                 {
                     selectedSummons.Add(hit.collider.gameObject.GetComponentInParent<Summon>());
+                    string summonName = hit.collider.gameObject.name;
+                    UIManager.Instance.UpdateSummon(summonName, selectedSummons.Count);
                 }
                 
             }
@@ -290,6 +292,8 @@ public class Character : MonoBehaviour
                 if (!selectedSummons.Contains(summon))
                 {
                     selectedSummons.Add(summon);
+                    string summonName = summon.transform.GetChild(0).name;
+                    UIManager.Instance.UpdateSummon(summonName, selectedSummons.Count);
                 }
             }
         }
@@ -298,6 +302,7 @@ public class Character : MonoBehaviour
     private void DeselectAll()
     {
         selectedSummons.Clear();
+        UIManager.Instance.ClearSelectedSummons();
     }
 
 }
