@@ -191,7 +191,7 @@ public class Character : MonoBehaviour
                 {
                     selectedSummons.Add(hit.collider.gameObject.GetComponentInParent<Summon>());
                     string summonName = hit.collider.gameObject.name;
-                    UIManager.Instance.UpdateSummon(summonName, selectedSummons.Count);
+                    UIManager.Instance.UpdateSummon(hit.collider.gameObject.GetComponentInParent<Summon>());
                 }
                 
             }
@@ -292,8 +292,8 @@ public class Character : MonoBehaviour
                 if (!selectedSummons.Contains(summon))
                 {
                     selectedSummons.Add(summon);
-                    string summonName = summon.transform.GetChild(0).name;
-                    UIManager.Instance.UpdateSummon(summonName, selectedSummons.Count);
+                    //string summonName = summon.transform.GetChild(0).name;
+                    UIManager.Instance.UpdateSummon(summon);
                 }
             }
         }

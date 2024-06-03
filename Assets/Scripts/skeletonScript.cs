@@ -33,4 +33,9 @@ public class skeletonScript : Summon
         
     }
 
+    public override string GetSummonName()
+    {
+        return "Skeleton";
+    }
+
 }
