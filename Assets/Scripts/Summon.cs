@@ -40,4 +40,9 @@ public class Summon : MonoBehaviour
     {
         GameObject.Destroy(gameObject);        
     }
+
+    virtual public string GetSummonName()
+    {
+        return "";
+    }
 }

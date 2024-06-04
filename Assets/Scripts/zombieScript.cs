@@ -35,4 +35,9 @@ public class zombieScript : Summon
     {
 
     }
+
+    public override string GetSummonName()
+    {
+        return "Zombie";    
+    }
 }

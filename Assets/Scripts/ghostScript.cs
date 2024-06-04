@@ -30,4 +30,9 @@ public class ghostScript : Summon
     {
         
     }
+
+    public override string GetSummonName()
+    {
+        return "Ghost";
+    }
 }
