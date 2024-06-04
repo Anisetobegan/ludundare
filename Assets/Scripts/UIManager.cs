@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> summonIndicatorList;
 
+    [SerializeField] private GameObject panelUI;
+
     public static UIManager Instance
     {
         get;
@@ -44,7 +46,7 @@ public class UIManager : MonoBehaviour
     {
 
         GameObject newSummonIndicator = Instantiate(summonIndicator, transform.position, transform.rotation);
-        newSummonIndicator.transform.SetParent(GameObject.FindGameObjectWithTag("Panel").transform);
+        newSummonIndicator.transform.SetParent(panelUI.transform);
 
         summonIndicatorList.Add(newSummonIndicator);
 
