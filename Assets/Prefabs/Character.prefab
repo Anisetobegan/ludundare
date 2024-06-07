@@ -46,10 +46,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSummons: []
+  selectedSummons: []
   summons:
   - {fileID: 2880127431351061199, guid: 31fc9ccaf25ac674ebe21935c585547f, type: 3}
   - {fileID: 4786441572944942252, guid: 72852ca173759b241b00331f18952586, type: 3}
   - {fileID: 3434436531844742556, guid: dd4b54675d8c85245bdf771131c93454, type: 3}
+  clickable:
+    serializedVersion: 2
+    m_Bits: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 0
+  boxVisual: {fileID: 0}
 --- !u!1001 &874823794774126326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -139,7 +147,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSummons: []
+  selectedSummons: []
   summons: []
+  clickable:
+    serializedVersion: 2
+    m_Bits: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 0
+  boxVisual: {fileID: 0}
 --- !u!54 &4991489064761748843
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -165,7 +181,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &7692034077501646408
 CapsuleCollider:
