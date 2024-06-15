@@ -14,6 +14,14 @@ public class Enemies : MonoBehaviour
 
     [SerializeField] NavMeshAgent agent;
 
+    virtual protected void OnMouseDown()
+    {
+        Actions.OnEnemyKilled?.Invoke(this);
+
+        Die();
+    }
+
+
     virtual protected void Move()
     {
 
@@ -26,7 +34,7 @@ public class Enemies : MonoBehaviour
 
     virtual protected void Die()
     {
-
+        Destroy(gameObject);
     }
 
 }
