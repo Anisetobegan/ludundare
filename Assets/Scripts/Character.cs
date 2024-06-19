@@ -39,6 +39,12 @@ public class Character : MonoBehaviour
     Vector2 startPos;
     Vector2 endPos;
 
+    [SerializeField] private CapsuleCollider myCollider;
+    public float ColliderRadius
+    {
+        get { return myCollider.radius; }
+    }
+
     private void Start()
     {
         cam = Camera.main;
