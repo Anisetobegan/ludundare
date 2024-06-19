@@ -12,7 +12,14 @@ public class Enemies : MonoBehaviour
     float attackSpeed;
     float attackRange;
 
-    [SerializeField] NavMeshAgent agent;
+    protected NavMeshAgent agent;
+
+    protected Vector3 target;
+
+    protected void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     virtual protected void OnMouseDown()
     {

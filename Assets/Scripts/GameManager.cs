@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Character player;
 
+    public float playerColliderRadius;  
+
     [SerializeField] private EnemySpawner spawner;
 
     private int wave;
@@ -15,6 +17,11 @@ public class GameManager : MonoBehaviour
     private float timeBetweenWaves = 3;
 
     [SerializeField] private GameObject waveScreen;
+
+    public Transform PlayerTransform
+    {
+        get { return player.transform; }
+    }
 
     public static GameManager Instance
     {
@@ -37,11 +44,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         wave = 1;
+        playerColliderRadius = player.ColliderRadius;
     }
 
     private void Update()
     {
-        if (spawner.GetEnemiesKilled() == spawner.GetMaxEnemies()) //checks if player killed the amount of max enemies per wave
+        if (spawner.EnemiesKilled == spawner.MaxEnemies) //checks if player killed the amount of max enemies per wave
         {
             spawner.enemiesKilled = 0;
 
@@ -76,7 +84,7 @@ public class GameManager : MonoBehaviour
 
         waveScreen.SetActive(false);
 
-        spawner.SetMaxEnemies(enemiesToAddPerWave);
+        spawner.MaxEnemies += enemiesToAddPerWave;
 
         spawner.gameObject.SetActive(true);
     }
