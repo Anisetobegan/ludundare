@@ -10,6 +10,12 @@ public class GameManager : MonoBehaviour
 
     private int wave;
 
+    private int enemiesToAddPerWave = 5;
+
+    private float timeBetweenWaves = 3;
+
+    [SerializeField] private GameObject waveScreen;
+
     public static GameManager Instance
     {
         get;
@@ -30,12 +36,33 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        wave = 0;
+        wave = 1;
+    }
+
+    private void Update()
+    {
+        if (spawner.GetEnemiesKilled() == spawner.GetMaxEnemies()) //checks if player killed the amount of max enemies per wave
+        {
+            spawner.enemiesKilled = 0;
+
+            WaveWon();
+
+            StartCoroutine(StartNewWave());
+                                             
+        }
     }
 
     public void WaveWon()
     {
+        waveScreen.SetActive(true);
 
+        spawner.gameObject.SetActive(false);
+
+        spawner.ClearEnemies();
+
+        wave += 1;
+
+        //Choose random perk        
     }
 
     public void Lose()
@@ -43,10 +70,17 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void StartNewWave()
-    {
-        
+    public IEnumerator StartNewWave()
+    {        
+        yield return new WaitForSeconds(timeBetweenWaves);
+
+        waveScreen.SetActive(false);
+
+        spawner.SetMaxEnemies(enemiesToAddPerWave);
+
+        spawner.gameObject.SetActive(true);
     }
+
 
     public void Pause()
     {

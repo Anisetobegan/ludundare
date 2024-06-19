@@ -9,19 +9,25 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<Enemies> enemiesToSpawn;
 
     private int maxEnemies = 10;
-    private float spawnRate = 3;
+    private float spawnRate = 2;
     private float timer = 0;
 
     private float maxOffset = 8;
     private float minOffset = -8;
 
+    public int enemiesKilled = 0;
+
     [SerializeField] private List<Enemies> enemiesAlive;
 
-    private Action OnEnemiesKilled;
 
     private void Start()
     {
-        
+        Actions.OnEnemyKilled += CalculateMaxEnemies;
+    }
+
+    private void OnDestroy()
+    {
+        Actions.OnEnemyKilled -= CalculateMaxEnemies;
     }
 
     private void Update()
@@ -30,19 +36,21 @@ public class EnemySpawner : MonoBehaviour
         {
             timer += Time.deltaTime;
         }
+        else if (timer == float.MaxValue)
+        {
+            timer = 0;
+        }
         else
         {
-            if (enemiesAlive.Count < maxEnemies)
-            {
-                SpawnEnemy();
-                timer = 0;
-            }
+            SpawnEnemy();
+            timer = 0;            
         }
     }
 
-    public void CalculateMaxEnemies()
+    public void CalculateMaxEnemies(Enemies enemyRef)
     {
-
+        enemiesKilled++;
+        enemiesAlive.Remove(enemyRef);
     }
 
     public void SpawnEnemy()
@@ -55,4 +63,25 @@ public class EnemySpawner : MonoBehaviour
         enemiesAlive.Add(newEnemy);
     }
 
+    public int EnemiesKilled
+    { 
+        get { return enemiesKilled; } 
+    }
+    
+
+    public int MaxEnemies
+    {
+        get { return maxEnemies;  } 
+        set { maxEnemies = value; }
+    }
+
+
+    public void ClearEnemies() 
+    {
+        for (int i = 0; i < enemiesAlive.Count; i++)
+        {
+            Destroy(enemiesAlive[i].gameObject);
+        }
+        enemiesAlive.Clear();
+    }
 }
