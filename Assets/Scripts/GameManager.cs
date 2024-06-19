@@ -71,9 +71,7 @@ public class GameManager : MonoBehaviour
     }
 
     public IEnumerator StartNewWave()
-    {
-        Debug.Log("Starting wave " + wave.ToString());
-        
+    {        
         yield return new WaitForSeconds(timeBetweenWaves);
 
         waveScreen.SetActive(false);
