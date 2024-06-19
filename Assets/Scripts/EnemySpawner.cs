@@ -63,20 +63,18 @@ public class EnemySpawner : MonoBehaviour
         enemiesAlive.Add(newEnemy);
     }
 
-    public int GetEnemiesKilled()
-    {
-        return enemiesKilled;
-    }
-
-    public int GetMaxEnemies()
+    public int EnemiesKilled
     { 
-        return maxEnemies;
+        get { return enemiesKilled; } 
+    }
+    
+
+    public int MaxEnemies
+    {
+        get { return maxEnemies;  } 
+        set { maxEnemies = value; }
     }
 
-    public void SetMaxEnemies(int enemiesToAdd)
-    {
-        maxEnemies += enemiesToAdd;
-    }
 
     public void ClearEnemies() 
     {
