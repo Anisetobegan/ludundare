@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155b73484aa22014590f410e61b21a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
+  agent: {fileID: -7552648689483852379}
 --- !u!195 &-7552648689483852379
 NavMeshAgent:
   m_ObjectHideFlags: 0

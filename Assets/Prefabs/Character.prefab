@@ -53,10 +53,10 @@ MonoBehaviour:
   - {fileID: 3434436531844742556, guid: dd4b54675d8c85245bdf771131c93454, type: 3}
   clickable:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   ground:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   boxVisual: {fileID: 0}
 --- !u!1001 &874823794774126326
 PrefabInstance:
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3046500111923966162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f8aaf9ca60cb5b4d843a105a72d8007, type: 3}
   m_Name: 
