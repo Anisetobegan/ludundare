@@ -305,6 +305,4 @@ public class Character : MonoBehaviour
         UIManager.Instance.ClearSelectedSummons();
     }
 
-    
-
 }

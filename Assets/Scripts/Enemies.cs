@@ -8,7 +8,7 @@ public class Enemies : MonoBehaviour
 {
     float speed;
     float health;
-    float damage = 5;
+    float damage;
     float attackSpeed;
     float attackRange;
 

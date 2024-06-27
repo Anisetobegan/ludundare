@@ -2,18 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-<<<<<<< Updated upstream
-=======
-using UnityEngine.AI;
-using Unity.VisualScripting;
->>>>>>> Stashed changes
 
 public class MeleeScript : Enemies
 {
-
-    float minAttackDistance = 1.3f;
-    float timeBetweenAttacks = 3f;
-
+    
     enum State
     {
         Chasing,
@@ -23,105 +15,13 @@ public class MeleeScript : Enemies
 
     State state;
 
-<<<<<<< Updated upstream
     protected override void Move()
     {
 
-=======
-    [SerializeField] private List<GameObject> alliesInRange;
-    private GameObject closestAlly;
-
-
-    private void Start()
-    {
-        state = State.Chasing;
-        target = GameManager.Instance.PlayerTransform.position;
-    }
-
-    private void Update()
-    {
-        switch (state)
-        {
-            case State.Chasing:
-
-                target = DetectClosestAlly();
-                Move();
-                
-                float distance = Vector3.Distance(agent.transform.position, target);
-
-                if (distance < minAttackDistance)
-                {
-                    state = State.Attacking;
-                }
-
-                break;
-
-            case State.Attacking:
-
-                Attack();
-
-                break;
-
-            case State.Die:
-
-                break;
-        }
-        
-    }
-
-    protected override void Move()
-    {
-        Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
-        agent.SetDestination(offset);
->>>>>>> Stashed changes
     }
 
     protected override void Attack()
     {
-        Debug.Log("Attacking");
-
-        agent.SetDestination(transform.position);
-
-        StartCoroutine(ResetAttack());
-    }
-
-    IEnumerator ResetAttack()
-    {
-        yield return new WaitForSeconds(timeBetweenAttacks);
-
-        state = State.Chasing;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        alliesInRange.Add(other.gameObject);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        alliesInRange.Remove(other.gameObject);
-    }
-
-    private Vector3 DetectClosestAlly()
-    {
-        if (alliesInRange.Count > 0)
-        {
-            float leastDistance = Mathf.Infinity;
-            GameObject targetPos = null;
-
-            for (int i = 0; i < alliesInRange.Count; i++)
-            {
-                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
-
-                if (currentDistance < leastDistance)
-                {
-                    leastDistance = currentDistance;
-                    targetPos = alliesInRange[i].gameObject;
-                }
-            }
-            return targetPos.transform.position;
-        }
         
-        return GameManager.Instance.PlayerTransform.position;
     }
 }
