@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         get { return player.transform; }
     }
 
-    public float playerColliderRadius { get { return player.playerCollider.radius; } }
+    public float playerColliderRadius { get { return player.ColliderRadius; } }
 
     public static GameManager Instance
     {

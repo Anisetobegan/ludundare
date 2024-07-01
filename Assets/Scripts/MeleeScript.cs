@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.AI;
-using Unity.VisualScripting;
 
 public class MeleeScript : Enemies
 {
@@ -71,9 +70,7 @@ public class MeleeScript : Enemies
 
     protected override void Attack()
     {
-        Debug.Log("Attacking");
-
-        agent.SetDestination(transform.position);
+        agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
         StartCoroutine(ResetAttack());
     }
@@ -81,6 +78,8 @@ public class MeleeScript : Enemies
     IEnumerator ResetAttack()
     {
         yield return new WaitForSeconds(timeBetweenAttacks);
+
+        agent.isStopped = false;
 
         state = State.Chasing;
     }
