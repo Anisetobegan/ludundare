@@ -16,6 +16,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject waveScreen;
 
+    public Transform PlayerTransform
+    {
+        get { return player.transform; }
+    }
+
+    public float playerColliderRadius { get { return player.ColliderRadius; } }
+
     public static GameManager Instance
     {
         get;

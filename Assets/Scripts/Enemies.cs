@@ -8,11 +8,11 @@ public class Enemies : MonoBehaviour
 {
     float speed;
     float health;
-    float damage;
+    float damage = 5;
     float attackSpeed;
     float attackRange;
 
-    [SerializeField] NavMeshAgent agent;
+    [SerializeField] protected NavMeshAgent agent;
 
     virtual protected void OnMouseDown()
     {

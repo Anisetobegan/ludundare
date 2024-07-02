@@ -329,6 +329,10 @@ PrefabInstance:
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 5811894213495024318, guid: bf93b3b6575505f4d9a7de1ca195fbc9, type: 3}
+      propertyPath: playerCollider
+      value: 
+      objectReference: {fileID: 1497628861}
+    - target: {fileID: 5811894213495024318, guid: bf93b3b6575505f4d9a7de1ca195fbc9, type: 3}
       propertyPath: clickable.m_Bits
       value: 8
       objectReference: {fileID: 0}
@@ -1189,6 +1193,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!136 &1497628861 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 7692034077501646408, guid: bf93b3b6575505f4d9a7de1ca195fbc9, type: 3}
+  m_PrefabInstance: {fileID: 187843268}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1523848392
 GameObject:
   m_ObjectHideFlags: 0
