@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class GunSlingerScript : Enemies
 {
@@ -83,7 +81,10 @@ public class GunSlingerScript : Enemies
 
             case State.Reloading:
 
-                Reloading();
+                if (enumerator == null)
+                {
+                    Reloading();
+                }
                 
                 break;
 
