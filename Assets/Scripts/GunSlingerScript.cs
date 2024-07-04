@@ -1,39 +1,216 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class GunSlingerScript : Enemies
 {
-    float aimTime;
-    //[SerializeField] private Bullet bullet;
+    float aimTime = 1f;
+    float reloadTime = 4f;
+    bool isOnRange = false;
+    float timeBetweenAttacks = 1f;
+
+    int bullets = 5;
+
+    [SerializeField] private GameObject bullet;
 
     enum State
     {
         Chasing,
-        Reloading,
+        Aiming,
         Attacking,
+        Waiting,
+        Reloading,
         Die
     }
 
     State state;
 
-    protected void Aim()
-    {
+    private Vector3 target;
 
+    [SerializeField] private List<GameObject> alliesInRange;
+    private GameObject closestAlly;
+
+    IEnumerator enumerator;
+
+    private void Start()
+    {
+        state = State.Chasing;
+        target = GameManager.Instance.PlayerTransform.position;
+    }
+
+    private void Update()
+    {
+        switch (state)
+        {
+            case State.Chasing:
+
+                target = DetectClosestAlly();
+                Move();
+
+                if (isOnRange)
+                {
+                    state = State.Aiming;
+                }
+
+                break;
+
+            case State.Aiming:
+
+                target = DetectClosestAlly();
+
+                agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, 
+                    Quaternion.LookRotation((target + Vector3.up * transform.position.y - transform.position).normalized), 360f);
+
+                if (enumerator == null) // Checks if thereLs no running coroutines
+                {
+                    WaitForFinishAim(); //Calls the Aiming coroutine
+                }
+
+                break;
+
+            case State.Attacking:
+                
+                if (enumerator == null)
+                {
+                    Attack();
+                }
+
+                break;
+
+            case State.Reloading:
+
+                Reloading();
+                
+                break;
+
+            case State.Waiting:
+                if(enumerator == null)
+                {
+                    if(bullets > 0)
+                    {                        
+                        state = State.Chasing;
+                    }
+                    if(bullets <= 0)
+                    {
+                        state = State.Reloading;
+                    }                    
+                }
+                break;
+
+            case State.Die:
+
+                break;
+        }
+    }
+
+    protected void WaitForFinishAim()
+    {        
+        enumerator = Aiming();
+        StartCoroutine(enumerator);        
+    }
+
+    IEnumerator Aiming() //Aims for 1 second before attacking
+    {
+        yield return new WaitForSeconds(aimTime);
+        enumerator = null;
+        state = State.Attacking;
     }
 
     protected override void Move()
     {
+        Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
+        agent.SetDestination(offset);
+    }
 
+    private Vector3 DetectClosestAlly()
+    {
+        if (alliesInRange.Count > 0)
+        {
+            float leastDistance = Mathf.Infinity;
+            GameObject targetPos = null;
+
+            for (int i = 0; i < alliesInRange.Count; i++)
+            {
+                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
+
+                if (currentDistance < leastDistance)
+                {
+                    leastDistance = currentDistance;
+                    targetPos = alliesInRange[i].gameObject;
+                }
+            }
+            return targetPos.transform.position;
+        }
+
+        return GameManager.Instance.PlayerTransform.position;
     }
 
     protected override void Attack()
     {
+        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+        
+        bullets--;
+        
+        if (bullets > 0)
+        {
+            enumerator = ResetAttack();
+            StartCoroutine(enumerator);
+        }
+        if (bullets <= 0)
+        {
+            enumerator = Reload();
+            StartCoroutine(enumerator);
+        }
+        
+        state = State.Waiting;
+        
+    }
 
+    IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(timeBetweenAttacks);
+
+        agent.isStopped = false;
+
+        enumerator = null;
     }
 
     protected void Reloading()
     {
-        
+        enumerator = Reload();
+        StartCoroutine (enumerator);        
+        state = State.Chasing;
     }
+
+    IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(reloadTime);
+
+        bullets = 5;
+
+        agent.isStopped = false;
+
+        enumerator = null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {        
+        alliesInRange.Add(other.gameObject);
+        isOnRange = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        alliesInRange.Remove(other.gameObject);
+
+        if (alliesInRange.Count == 0)
+        {
+            isOnRange = false;
+        }
+    }
+        
 }
