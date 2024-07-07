@@ -91,7 +91,7 @@ public class GunSlingerScript : Enemies
                     {
                         TakingCoverDestination();
                     }
-                    if (tookCover == true)
+                    else
                     {
                         Reloading();
                     }                    
@@ -234,7 +234,7 @@ public class GunSlingerScript : Enemies
     {
         agent.isStopped = false;
         target = DetectClosestAlly();
-        Vector3 oppositeDirection = transform.position - ((target - transform.position).normalized * 5f);
+        Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
         agent.SetDestination(oppositeDirection);
 
         enumerator = TakingCover();
