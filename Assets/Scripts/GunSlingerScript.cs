@@ -8,6 +8,7 @@ public class GunSlingerScript : Enemies
     float reloadTime = 4f;
     bool isOnRange = false;
     float timeBetweenAttacks = 1f;
+    bool tookCover = false;
 
     int bullets = 5;
 
@@ -30,7 +31,7 @@ public class GunSlingerScript : Enemies
     [SerializeField] private List<GameObject> alliesInRange;
     private GameObject closestAlly;
 
-    IEnumerator enumerator;
+    IEnumerator enumerator = null;
 
     private void Start()
     {
@@ -44,14 +45,17 @@ public class GunSlingerScript : Enemies
         {
             case State.Chasing:
 
-                target = DetectClosestAlly();
-                Move();
-
-                if (isOnRange)
+                if (enumerator == null)
                 {
-                    state = State.Aiming;
-                }
 
+                    target = DetectClosestAlly();
+                    Move();
+
+                    if (isOnRange)
+                    {
+                        state = State.Aiming;
+                    }
+                }
                 break;
 
             case State.Aiming:
@@ -79,11 +83,18 @@ public class GunSlingerScript : Enemies
 
                 break;
 
-            case State.Reloading:
+            case State.Reloading:                
 
                 if (enumerator == null)
                 {
-                    Reloading();
+                    if (tookCover == false)
+                    {
+                        TakingCoverDestination();
+                    }
+                    else
+                    {
+                        Reloading();
+                    }                    
                 }
                 
                 break;
@@ -152,22 +163,23 @@ public class GunSlingerScript : Enemies
 
     protected override void Attack()
     {
-        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
-        
-        bullets--;
-        
         if (bullets > 0)
         {
+            GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+        
+            bullets--;        
+        
             enumerator = ResetAttack();
             StartCoroutine(enumerator);
+
+            state = State.Waiting;
         }
+
         if (bullets <= 0)
         {
-            enumerator = Reload();
-            StartCoroutine(enumerator);
+            state = State.Reloading;
         }
-        
-        state = State.Waiting;
+                
         
     }
 
@@ -182,9 +194,9 @@ public class GunSlingerScript : Enemies
 
     protected void Reloading()
     {
+        agent.isStopped = true;
         enumerator = Reload();
-        StartCoroutine (enumerator);        
-        state = State.Chasing;
+        StartCoroutine (enumerator);
     }
 
     IEnumerator Reload()
@@ -196,6 +208,10 @@ public class GunSlingerScript : Enemies
         agent.isStopped = false;
 
         enumerator = null;
+
+        tookCover = false;
+
+        state = State.Chasing;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -212,6 +228,27 @@ public class GunSlingerScript : Enemies
         {
             isOnRange = false;
         }
+    }
+
+    private void TakingCoverDestination()
+    {
+        agent.isStopped = false;
+        target = DetectClosestAlly();
+        Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
+        agent.SetDestination(oppositeDirection);
+
+        enumerator = TakingCover();
+        StartCoroutine(enumerator);       
+    }
+
+    IEnumerator TakingCover()
+    {
+        while (agent.remainingDistance != 0)
+        {
+            yield return null;
+        }
+        enumerator = null;
+        tookCover = true;
     }
         
 }
