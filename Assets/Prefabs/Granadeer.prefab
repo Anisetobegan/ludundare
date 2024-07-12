@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8598509153928213054}
   - component: {fileID: 217144793091805465}
   - component: {fileID: -2606264758318999713}
+  - component: {fileID: 7494389518735042931}
   m_Layer: 7
   m_Name: Granadeer
   m_TagString: Untagged
@@ -150,6 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: -2606264758318999713}
+  grenade: {fileID: 6963534018475108480, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
+  alliesInRange: []
 --- !u!195 &-2606264758318999713
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -172,3 +175,24 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!135 &7494389518735042931
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482602563851719434}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 264
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 736
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 7.5
+  m_Center: {x: 0, y: 0, z: 0}
