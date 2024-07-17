@@ -5,7 +5,6 @@ using UnityEngine;
 public class GrenadeScript : MonoBehaviour
 {
     float moveSpeed = 5;
-    float timeToExplode = 4;
 
     [SerializeField] private AnimationCurve curve;
 
@@ -14,11 +13,7 @@ public class GrenadeScript : MonoBehaviour
     float grenadeHeight = 3;
 
     IEnumerator enumerator = null;
-
-    private void Awake()
-    {
-        StartCoroutine(Explode());
-    }
+    
 
     private void Update()
     {
@@ -52,12 +47,13 @@ public class GrenadeScript : MonoBehaviour
 
             yield return null;
         }
+
+        Explode();
         
     }
 
-    IEnumerator Explode()
+    private void Explode()
     {
-        yield return new WaitForSeconds(timeToExplode);
         Destroy(gameObject);
     }
 
