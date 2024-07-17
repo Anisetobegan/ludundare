@@ -14,11 +14,6 @@ public class skeletonScript : Summon
     State state;
     float range;
 
-    Vector3 target = Vector3.zero;
-    GameObject targetEnemy = null;
-    
-
-    // Update is called once per frame
     void Update()
     {
 
@@ -38,17 +33,4 @@ public class skeletonScript : Summon
     {
         return "Skeleton";
     }
-
-    public override void DesignateTarget(Vector3 target)
-    {
-        this.target = target;
-        targetEnemy = null;
-    }
-
-    public override void DesignateTarget(GameObject target)
-    {
-        this.targetEnemy = target;
-        this.target = target.transform.position;
-    }
-
 }

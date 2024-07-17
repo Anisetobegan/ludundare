@@ -25,10 +25,6 @@ public class zombieScript : Summon
 
     IEnumerator enumerator = null;
 
-    Vector3 target = Vector3.zero;
-
-    GameObject targetEnemy = null;
-
     private void Awake()
     {
         walkPointSet = false;
@@ -171,13 +167,7 @@ public class zombieScript : Summon
 
     public override void DesignateTarget(Vector3 target)
     {
-        this.target = target;
-        targetEnemy = null;
-    }
-
-    public override void DesignateTarget(GameObject target)
-    {
-        this.targetEnemy = target;
-        this.target = target.transform.position;
+        base.DesignateTarget(target);
+        state = State.Moving;
     }
 }

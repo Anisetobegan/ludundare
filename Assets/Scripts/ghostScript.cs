@@ -14,10 +14,6 @@ public class ghostScript : Summon
     }
     State state;
 
-    Vector3 target = Vector3.zero;
-    GameObject targetEnemy = null;
-
-    // Update is called once per frame
     void Update()
     {
         
@@ -36,17 +32,5 @@ public class ghostScript : Summon
     public override string GetSummonName()
     {
         return "Ghost";
-    }
-
-    public override void DesignateTarget(Vector3 target)
-    {
-        this.target = target;
-        targetEnemy = null;
-    }
-
-    public override void DesignateTarget(GameObject target)
-    {
-        this.targetEnemy = target;
-        this.target = target.transform.position;
     }
 }

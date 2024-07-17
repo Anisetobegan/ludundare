@@ -14,6 +14,9 @@ public class Summon : MonoBehaviour
 
     public NavMeshAgent agent;
 
+    protected Vector3 target = Vector3.zero;
+    protected GameObject targetEnemy = null;
+
 
     // Start is called before the first frame update
     protected void Start()
@@ -48,11 +51,13 @@ public class Summon : MonoBehaviour
 
     virtual public void DesignateTarget(Vector3 target)
     {
-
+        this.target = target;
+        targetEnemy = null;
     }
 
     virtual public void DesignateTarget(GameObject target)
     {
-
+        this.targetEnemy = target;
+        this.target = target.transform.position;
     }
 }
