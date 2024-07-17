@@ -13,9 +13,7 @@ public class ghostScript : Summon
         Dead
     }
     State state;
-    
 
-    // Update is called once per frame
     void Update()
     {
         

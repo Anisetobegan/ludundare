@@ -14,10 +14,6 @@ public class skeletonScript : Summon
     State state;
     float range;
 
-
-    
-
-    // Update is called once per frame
     void Update()
     {
 
@@ -37,5 +33,4 @@ public class skeletonScript : Summon
     {
         return "Skeleton";
     }
-
 }

@@ -170,11 +170,19 @@ public class Character : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
             
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 foreach (Summon summon in selectedSummons)
                 {
-                    summon.agent.SetDestination(hit.point);
+                    //summon.agent.SetDestination(hit.point);
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground")) //checks if the RayCast hits the ground
+                    {
+                        summon.DesignateTarget(hit.point); //Sends the Vector3 of the RayCast hit point
+                    }
+                    else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy")) //Checks if the RayCast hits an enemy
+                    {
+                        summon.DesignateTarget(hit.collider.gameObject); //Sends the gameObject of the enemy hit
+                    }
                 }
                
             }

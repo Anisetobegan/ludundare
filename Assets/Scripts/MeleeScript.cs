@@ -24,6 +24,8 @@ public class MeleeScript : Enemies
     [SerializeField] private List<GameObject> alliesInRange;
     private GameObject closestAlly;
 
+    IEnumerator enumerator = null;
+
 
     private void Start()
     {
@@ -37,21 +39,27 @@ public class MeleeScript : Enemies
         {
             case State.Chasing:
 
-                target = DetectClosestAlly();
-                Move();
-                
-                float distance = Vector3.Distance(agent.transform.position, target);
-
-                if (distance < minAttackDistance)
+                if (enumerator == null)
                 {
-                    state = State.Attacking;
+                    target = DetectClosestAlly();
+                    Move();
+
+                    float distance = Vector3.Distance(agent.transform.position, target);
+
+                    if (distance < minAttackDistance)
+                    {
+                        state = State.Attacking;
+                    }
                 }
 
                 break;
 
             case State.Attacking:
 
-                Attack();
+                if (enumerator == null)
+                {
+                    Attack();
+                }
 
                 break;
 
@@ -72,7 +80,8 @@ public class MeleeScript : Enemies
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-        StartCoroutine(ResetAttack());
+        enumerator = ResetAttack();
+        StartCoroutine(enumerator);
     }
 
     IEnumerator ResetAttack()
@@ -82,6 +91,8 @@ public class MeleeScript : Enemies
         agent.isStopped = false;
 
         state = State.Chasing;
+
+        enumerator = null;
     }
 
     private void OnTriggerEnter(Collider other)
