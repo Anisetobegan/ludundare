@@ -45,4 +45,14 @@ public class Summon : MonoBehaviour
     {
         return "";
     }
+
+    virtual public void DesignateTarget(Vector3 target)
+    {
+
+    }
+
+    virtual public void DesignateTarget(GameObject target)
+    {
+
+    }
 }
