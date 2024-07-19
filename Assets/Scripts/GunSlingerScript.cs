@@ -215,8 +215,11 @@ public class GunSlingerScript : Enemies
     }
 
     private void OnTriggerEnter(Collider other)
-    {        
-        alliesInRange.Add(other.gameObject);
+    {
+        if (alliesInRange.Contains(other.gameObject) == false)
+        {
+            alliesInRange.Add(other.gameObject);
+        }
         isOnRange = true;
     }
 
