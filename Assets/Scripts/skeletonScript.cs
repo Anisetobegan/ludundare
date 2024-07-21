@@ -23,6 +23,8 @@ public class skeletonScript : Summon
 
     IEnumerator enumerator = null;
 
+    bool isGrabbing = false;
+
     private void Start()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
@@ -110,8 +112,8 @@ public class skeletonScript : Summon
                 break;
 
             case State.Dead:
-
-                targetEnemy.GetComponent<Enemies>().IsNotBeingGrabbed();
+                isGrabbing = false;
+                targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
                 base.Die();
 
                 break;
@@ -143,7 +145,8 @@ public class skeletonScript : Summon
 
     void StartGrabbing()
     {
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed();
+        isGrabbing = true;
+        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
     }
 
     protected override void Move()
@@ -177,7 +180,9 @@ public class skeletonScript : Summon
 
     void EnemyDestroyed(Enemies enemyRef)
     {
+        isGrabbing = false;
         enemiesInRange.Remove(enemyRef.gameObject);
+        target = Vector3.zero;
         targetEnemy = null;
     }
 }

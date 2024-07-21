@@ -37,14 +37,8 @@ public class Enemies : MonoBehaviour
         Destroy(gameObject);
     }
 
-    virtual public void IsBeingGrabbed()
+    virtual public void IsBeingGrabbed(bool isStopped)
     {
-        agent.isStopped = true;
+        agent.isStopped = isStopped;
     }
-
-    virtual public void IsNotBeingGrabbed()
-    {
-        agent.isStopped = false; 
-    }
-
 }
