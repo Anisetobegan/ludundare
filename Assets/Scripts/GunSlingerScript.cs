@@ -271,6 +271,7 @@ public class GunSlingerScript : Enemies
     {
         alliesInRange.Remove(summonRef.gameObject);
         target = Vector3.zero;
+        state = State.Chasing;
     }
 
 }

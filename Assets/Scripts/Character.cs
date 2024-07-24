@@ -329,8 +329,6 @@ public class Character : MonoBehaviour
 
     void SummonDestroyed(Summon summonRef)
     {
-        Debug.Log(gameObject.name);
-
         currentSummons.Remove(summonRef);
         selectedSummons.Remove(summonRef);
 
