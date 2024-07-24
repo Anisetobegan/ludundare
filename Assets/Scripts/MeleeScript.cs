@@ -26,7 +26,15 @@ public class MeleeScript : Enemies
 
     IEnumerator enumerator = null;
 
+    private void Awake()
+    {
+        Actions.OnSummonKilled += SummonDestroyed;
+    }
 
+    private void OnDestroy()
+    {
+        Actions.OnSummonKilled -= SummonDestroyed;
+    }
     private void Start()
     {
         state = State.Chasing;
@@ -126,5 +134,11 @@ public class MeleeScript : Enemies
         }
         
         return GameManager.Instance.PlayerTransform.position;
+    }
+
+    void SummonDestroyed(Summon summonRef)
+    {
+        alliesInRange.Remove(summonRef.gameObject);
+        target = Vector3.zero;
     }
 }

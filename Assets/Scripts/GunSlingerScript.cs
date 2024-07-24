@@ -33,6 +33,16 @@ public class GunSlingerScript : Enemies
 
     IEnumerator enumerator = null;
 
+    private void Awake()
+    {
+        Actions.OnSummonKilled += SummonDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Actions.OnSummonKilled -= SummonDestroyed;
+    }
+
     private void Start()
     {
         state = State.Chasing;
@@ -147,6 +157,12 @@ public class GunSlingerScript : Enemies
 
             for (int i = 0; i < alliesInRange.Count; i++)
             {
+                if (alliesInRange[i] == null)
+                {
+                    alliesInRange.RemoveAt(i);
+                    continue; 
+                }
+
                 float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
 
                 if (currentDistance < leastDistance)
@@ -155,7 +171,7 @@ public class GunSlingerScript : Enemies
                     targetPos = alliesInRange[i].gameObject;
                 }
             }
-            return targetPos.transform.position;
+            return targetPos != null? targetPos.transform.position: Vector3.zero ;
         }
 
         return GameManager.Instance.PlayerTransform.position;
@@ -250,5 +266,11 @@ public class GunSlingerScript : Enemies
         enumerator = null;
         tookCover = true;
     }
-        
+
+    void SummonDestroyed(Summon summonRef)
+    {
+        alliesInRange.Remove(summonRef.gameObject);
+        target = Vector3.zero;
+    }
+
 }

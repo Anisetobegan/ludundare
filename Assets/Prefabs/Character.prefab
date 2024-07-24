@@ -58,6 +58,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   boxVisual: {fileID: 0}
+  playerCollider: {fileID: 0}
 --- !u!1001 &874823794774126326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -116,9 +117,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2766520990056341028, guid: b4a79bd2a2c960f4f8f45e4014978a83, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7734822586195684478}
-    - targetCorrespondingSourceObject: {fileID: 2766520990056341028, guid: b4a79bd2a2c960f4f8f45e4014978a83, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4991489064761748843}
     - targetCorrespondingSourceObject: {fileID: 2766520990056341028, guid: b4a79bd2a2c960f4f8f45e4014978a83, type: 3}
       insertIndex: -1
@@ -134,28 +132,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2766520990056341028, guid: b4a79bd2a2c960f4f8f45e4014978a83, type: 3}
   m_PrefabInstance: {fileID: 874823794774126326}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7734822586195684478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3046500111923966162}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f8aaf9ca60cb5b4d843a105a72d8007, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentSummons: []
-  selectedSummons: []
-  summons: []
-  clickable:
-    serializedVersion: 2
-    m_Bits: 0
-  ground:
-    serializedVersion: 2
-    m_Bits: 0
-  boxVisual: {fileID: 0}
 --- !u!54 &4991489064761748843
 Rigidbody:
   m_ObjectHideFlags: 0

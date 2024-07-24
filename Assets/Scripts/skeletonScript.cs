@@ -14,6 +14,26 @@ public class skeletonScript : Summon
     State state;
     float range;
 
+<<<<<<< Updated upstream
+=======
+    [SerializeField] private List<GameObject> enemiesInRange;
+    private GameObject closestEnemy;
+
+    IEnumerator enumerator = null;
+
+    bool isGrabbing = false;
+
+    private void Start()
+    {
+        Actions.OnEnemyKilled += EnemyDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Actions.OnEnemyKilled -= EnemyDestroyed;
+    }
+
+>>>>>>> Stashed changes
     void Update()
     {
 

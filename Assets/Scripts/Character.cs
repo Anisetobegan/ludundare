@@ -43,6 +43,16 @@ public class Character : MonoBehaviour
 
     public float ColliderRadius { get { return playerCollider.radius; } }
 
+    private void Awake()
+    {
+        Actions.OnSummonKilled += SummonDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Actions.OnSummonKilled -= SummonDestroyed;
+    }
+
     private void Start()
     {
         cam = Camera.main;
@@ -317,6 +327,18 @@ public class Character : MonoBehaviour
         UIManager.Instance.ClearSelectedSummons();
     }
 
-    
+    void SummonDestroyed(Summon summonRef)
+    {
+        Debug.Log(gameObject.name);
+
+        currentSummons.Remove(summonRef);
+        selectedSummons.Remove(summonRef);
+
+        if (summonRef.isDead == true)
+        {
+            UIManager.Instance.ClearSelectedSummon(summonRef);
+        }
+        
+    }
 
 }
