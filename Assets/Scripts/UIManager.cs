@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
         {
             GameObject newSummonIndicator = GetSummonIndicator(selectedSummon);
             summonIndicatorList.Remove(newSummonIndicator);
-            GameObject.Destroy(newSummonIndicator.gameObject);
+            GameObject.Destroy(newSummonIndicator);
         }
     }
 

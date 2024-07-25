@@ -117,9 +117,7 @@ public class skeletonScript : Summon
                 break;
 
             case State.Dead:
-
-                isGrabbing = false;
-                targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+                
                 Die();
 
                 break;
@@ -192,5 +190,12 @@ public class skeletonScript : Summon
         enemiesInRange.Remove(enemyRef.gameObject);
         target = Vector3.zero;
         targetEnemy = null;
+    }
+
+    protected override void Die()
+    {
+        isGrabbing = false;
+        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+        base.Die();        
     }
 }

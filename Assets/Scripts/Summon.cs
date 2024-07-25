@@ -41,7 +41,7 @@ public class Summon : MonoBehaviour
     {
         
     }
-    protected void Die()
+    virtual protected void Die()
     {
         isDead = true;
         Actions.OnSummonKilled?.Invoke(this);
