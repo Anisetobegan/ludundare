@@ -12,6 +12,10 @@ public class Enemies : MonoBehaviour
     float attackSpeed;
     float attackRange;
 
+    protected float expGiven = 30;
+
+    public float EnemyExpGiven { get { return expGiven; } set { expGiven = value; } }
+
     [SerializeField] protected NavMeshAgent agent;
 
     virtual protected void OnMouseDown()

@@ -10,8 +10,9 @@ public class Character : MonoBehaviour
 
     float moveSpeed = 2f;
     float health;
-    int lvl;
+    int lvl = 1;
     float exp;
+    float levelUpExp = 100;
     //Perks perk;
     float summonCooldown;
     int maxSummons = 5;
@@ -43,6 +44,18 @@ public class Character : MonoBehaviour
 
     public float ColliderRadius { get { return playerCollider.radius; } }
 
+    private void Awake()
+    {
+        //Actions.OnSummonKilled += SummonDestroyed;
+        Actions.OnEnemyKilled += CalculateExp;
+    }
+
+    private void OnDestroy()
+    {
+        //Actions.OnSummonKilled -= SummonDestroyed;
+        Actions.OnEnemyKilled -= CalculateExp;
+    }
+
     private void Start()
     {
         cam = Camera.main;
@@ -50,6 +63,8 @@ public class Character : MonoBehaviour
         startPos = Vector2.zero;
         endPos = Vector2.zero;
         DrawVisual();
+        UIManager.Instance.UpdatePlayerLevel(lvl);
+        UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
     }
 
     // Update is called once per frame
@@ -152,9 +167,28 @@ public class Character : MonoBehaviour
         }
     }
 
+    void CalculateExp(Enemies enemyRef)
+    {
+        exp += enemyRef.EnemyExpGiven;
+
+        UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
+
+        if (exp >= levelUpExp)
+        {
+            LevelUp();            
+        }
+    }
+
     private void LevelUp()
     {
+        lvl++;
+        exp -= levelUpExp;
+        levelUpExp += 20f;
 
+        UIManager.Instance.UpdatePlayerLevel(lvl);
+        UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
+
+        //AddPerk();
     }
 
     private void AddPerk(/*Perk perk*/)
@@ -317,6 +351,16 @@ public class Character : MonoBehaviour
         UIManager.Instance.ClearSelectedSummons();
     }
 
-    
+    void SummonDestroyed(Summon summonRef)
+    {
+        currentSummons.Remove(summonRef);
+        selectedSummons.Remove(summonRef);
+
+        /*if (summonRef.isDead == true)
+        {
+            UIManager.Instance.ClearSelectedSummon(summonRef);
+        }*/
+        
+    }
 
 }

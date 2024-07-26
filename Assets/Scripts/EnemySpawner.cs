@@ -15,7 +15,8 @@ public class EnemySpawner : MonoBehaviour
     private float maxOffset = 8;
     private float minOffset = -8;
 
-    public int enemiesKilled = 0;
+    int enemiesKilled = 0;
+    int enemiesSpawned = 0;
 
     [SerializeField] private List<Enemies> enemiesAlive;
 
@@ -42,15 +43,19 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            SpawnEnemy();
-            timer = 0;            
+            if (enemiesSpawned < maxEnemies)
+            {
+                SpawnEnemy();                
+            }
+            timer = 0;
         }
     }
 
     public void CalculateMaxEnemies(Enemies enemyRef)
     {
         enemiesKilled++;
-        enemiesAlive.Remove(enemyRef);
+
+        
     }
 
     public void SpawnEnemy()
@@ -60,12 +65,18 @@ public class EnemySpawner : MonoBehaviour
         Enemies newEnemy = Instantiate(enemiesToSpawn[i], new Vector3(UnityEngine.Random.Range(minOffset, maxOffset),
             transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset)), transform.rotation);
 
-        enemiesAlive.Add(newEnemy);
+        enemiesSpawned++;
     }
 
     public int EnemiesKilled
-    { 
-        get { return enemiesKilled; } 
+    {
+        get { return enemiesKilled; }
+        set { enemiesKilled = value; } 
+    }
+
+    public int EnemiesSpawned
+    {
+        get { return enemiesSpawned; } set { enemiesSpawned = value; }
     }
     
 
@@ -73,15 +84,5 @@ public class EnemySpawner : MonoBehaviour
     {
         get { return maxEnemies;  } 
         set { maxEnemies = value; }
-    }
-
-
-    public void ClearEnemies() 
-    {
-        for (int i = 0; i < enemiesAlive.Count; i++)
-        {
-            Destroy(enemiesAlive[i].gameObject);
-        }
-        enemiesAlive.Clear();
     }
 }

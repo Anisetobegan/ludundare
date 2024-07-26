@@ -15,7 +15,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> summonIndicatorList;
 
-    [SerializeField] private GameObject panelUI;
+    [SerializeField] private GameObject SummonPanelUI;
+
+    [SerializeField] GameObject PlayerPanelUI;    
+    [SerializeField] TextMeshProUGUI playerLevelTextMeshPro;
+    [SerializeField] TextMeshProUGUI playerExpTextMeshPro;
 
     public static UIManager Instance
     {
@@ -46,7 +50,7 @@ public class UIManager : MonoBehaviour
     {
 
         GameObject newSummonIndicator = Instantiate(summonIndicator, transform.position, transform.rotation);
-        newSummonIndicator.transform.SetParent(panelUI.transform);
+        newSummonIndicator.transform.SetParent(SummonPanelUI.transform);
 
         summonIndicatorList.Add(newSummonIndicator);
 
@@ -74,6 +78,16 @@ public class UIManager : MonoBehaviour
             }
             summonIndicatorList.Clear();                    
         }
+    }
+
+    public void UpdatePlayerLevel(int playerLvl)
+    {
+        playerLevelTextMeshPro.text = "Level: " + playerLvl.ToString();
+    }
+
+    public void UpdatePlayerExp(float playerExp, float playerLevelUpExp)
+    {
+        playerExpTextMeshPro.text = "Exp: " + playerExp.ToString() + "/" + playerLevelUpExp.ToString();
     }
 
     
