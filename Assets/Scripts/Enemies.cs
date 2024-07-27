@@ -7,12 +7,14 @@ using UnityEngine.AI;
 public class Enemies : MonoBehaviour
 {
     float speed;
-    float health;
-    float damage = 5;
+    [SerializeField] protected float health = 100;
+    protected float damage = 5;
     float attackSpeed;
     float attackRange;
 
     [SerializeField] protected NavMeshAgent agent;
+
+    public float EnemyHealth { get { return health; } set { health = value; } }
 
     virtual protected void OnMouseDown()
     {
@@ -41,4 +43,5 @@ public class Enemies : MonoBehaviour
     {
         agent.isStopped = isStopped;
     }
+
 }

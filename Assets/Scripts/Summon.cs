@@ -7,10 +7,12 @@ using UnityEngine.AI;
 public class Summon : MonoBehaviour
 {
     float health;
-    float damage;
+    protected float damage;
     float moveSpeed = 0.07f;
     //Enemies target;
     float attackSpeed;
+
+    public bool isDead = false;
 
     public NavMeshAgent agent;
 
@@ -39,8 +41,10 @@ public class Summon : MonoBehaviour
     {
         
     }
-    protected void Die()
+    virtual protected void Die()
     {
+        isDead = true;
+        Actions.OnSummonKilled?.Invoke(this);
         GameObject.Destroy(gameObject);        
     }
 

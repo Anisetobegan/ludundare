@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3434436531844742556}
   - component: {fileID: 2256879320064761871}
   - component: {fileID: -2508795094068915978}
+  - component: {fileID: 1283913880383940106}
   m_Layer: 3
   m_Name: Zombie
   m_TagString: Untagged
@@ -32,7 +33,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8276568558856066429}
+  - {fileID: 3225546275107230279}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3434436531844742556
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2c8358b225d2ec43aa4c810b34fa178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
   agent: {fileID: 2256879320064761871}
   ground:
     serializedVersion: 2
@@ -125,7 +127,30 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &8455224891391947414
+--- !u!136 &1283913880383940106
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4315239896747456804}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.45738924
+  m_Height: 2.132253
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.0469886, z: 0}
+--- !u!1001 &3119244403276035500
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -135,15 +160,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.0312
+      value: 2.3206747
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.0312
+      value: 2.3206747
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2.0312
+      value: 2.3206747
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
       propertyPath: m_LocalPosition.x
@@ -192,41 +217,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6414507822622978718}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
---- !u!4 &8276568558856066429 stripped
+--- !u!4 &3225546275107230279 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
-  m_PrefabInstance: {fileID: 8455224891391947414}
+  m_PrefabInstance: {fileID: 3119244403276035500}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8761638641408151495 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4306b620e7819fe49b0b3f45fe7f1e47, type: 3}
-  m_PrefabInstance: {fileID: 8455224891391947414}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &6414507822622978718
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8761638641408151495}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.21227627
-  m_Height: 0.9403031
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.40629792, z: 0}
