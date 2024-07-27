@@ -39,7 +39,6 @@ public class skeletonScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-
     void Update()
     {
         switch (state)
