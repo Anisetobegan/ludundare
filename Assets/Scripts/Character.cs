@@ -46,13 +46,13 @@ public class Character : MonoBehaviour
 
     private void Awake()
     {
-        //Actions.OnSummonKilled += SummonDestroyed;
+        Actions.OnSummonKilled += SummonDestroyed;
         Actions.OnEnemyKilled += CalculateExp;
     }
 
     private void OnDestroy()
     {
-        //Actions.OnSummonKilled -= SummonDestroyed;
+        Actions.OnSummonKilled -= SummonDestroyed;
         Actions.OnEnemyKilled -= CalculateExp;
     }
 
@@ -356,10 +356,10 @@ public class Character : MonoBehaviour
         currentSummons.Remove(summonRef);
         selectedSummons.Remove(summonRef);
 
-        /*if (summonRef.isDead == true)
+        if (summonRef.isDead == true)
         {
             UIManager.Instance.ClearSelectedSummon(summonRef);
-        }*/
+        }
         
     }
 
