@@ -15,8 +15,7 @@ public class skeletonScript : Summon
         Grabbing,
         Dead
     }
-    [SerializeField] State state;
-    float range;
+    State state;
 
     [SerializeField] private List<GameObject> enemiesInRange;
     private GameObject closestEnemy;
@@ -25,14 +24,19 @@ public class skeletonScript : Summon
 
     bool isGrabbing = false;
 
-    private void Start()
+    private void Awake()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
+    }
+    
+    private void Start()
+    {
+        state = State.Idle;
     }
 
     private void OnDestroy()
     {
-        Actions.OnEnemyKilled += EnemyDestroyed;
+        Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
     void Update()
@@ -112,41 +116,11 @@ public class skeletonScript : Summon
                 break;
 
             case State.Dead:
-                isGrabbing = false;
-                targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
-                base.Die();
+                
+                Die();
 
                 break;
         }
-    }
-
-    protected override void Attack()
-    {
-        
-    }
-
-    private GameObject DetectClosestEnemy()
-    {
-        float leastDistance = Mathf.Infinity;
-        GameObject targetPos = null;
-        
-        for (int i = 0; i < enemiesInRange.Count; i++)
-        {
-            float currentDistance = Vector3.Distance(agent.transform.position, enemiesInRange[i].transform.position);
-            
-            if (currentDistance < leastDistance)
-            {
-                leastDistance = currentDistance;
-                targetPos = enemiesInRange[i].gameObject;
-            }
-        }
-        return targetPos;        
-    }
-
-    void StartGrabbing()
-    {
-        isGrabbing = true;
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
     }
 
     protected override void Move()
@@ -155,10 +129,47 @@ public class skeletonScript : Summon
         agent.SetDestination(offset);
     }
 
+    private GameObject DetectClosestEnemy()
+    {
+        float leastDistance = Mathf.Infinity;
+        GameObject targetPos = null;
+
+        for (int i = 0; i < enemiesInRange.Count; i++)
+        {
+            float currentDistance = Vector3.Distance(agent.transform.position, enemiesInRange[i].transform.position);
+
+            if (currentDistance < leastDistance)
+            {
+                leastDistance = currentDistance;
+                targetPos = enemiesInRange[i].gameObject;
+            }
+        }
+        return targetPos;
+    }
+
+    protected override void Attack()
+    {
+        
+    }
+
+    void StartGrabbing()
+    {
+        isGrabbing = true;
+        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+    }
+
+
+    public override void DesignateTarget(Vector3 target)
+    {
+        base.DesignateTarget(target);
+        state = State.Moving;
+    }
+
     public override string GetSummonName()
     {
         return "Skeleton";
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (enemiesInRange.Contains(other.gameObject) == false)
@@ -172,17 +183,18 @@ public class skeletonScript : Summon
         enemiesInRange.Remove(other.gameObject);
     }
 
-    public override void DesignateTarget(Vector3 target)
-    {
-        base.DesignateTarget(target);
-        state = State.Moving;
-    }
-
     void EnemyDestroyed(Enemies enemyRef)
     {
         isGrabbing = false;
         enemiesInRange.Remove(enemyRef.gameObject);
         target = Vector3.zero;
         targetEnemy = null;
+    }
+
+    protected override void Die()
+    {
+        isGrabbing = false;
+        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+        base.Die();        
     }
 }

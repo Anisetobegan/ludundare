@@ -68,6 +68,31 @@ public class UIManager : MonoBehaviour
         summonTextMesh.text = summonName;
     }
 
+    public void ClearSelectedSummon(Summon selectedSummon)
+    {
+        if (summonIndicatorList.Count > 0)
+        {
+            GameObject newSummonIndicator = GetSummonIndicator(selectedSummon);
+            summonIndicatorList.Remove(newSummonIndicator);
+            GameObject.Destroy(newSummonIndicator);
+        }
+    }
+
+    GameObject GetSummonIndicator(Summon selectedSummon)
+    {
+        GameObject newSummonIndicator = null;
+
+        for (int i = 0; i < summonIndicatorList.Count; ++i) 
+        {
+            if (selectedSummon.GetSummonName() == summonIndicatorList[i].gameObject.GetComponentInChildren<TextMeshProUGUI>().text)
+            {
+                newSummonIndicator = summonIndicatorList[i];
+                return newSummonIndicator;
+            }
+        }
+        return newSummonIndicator;
+    }
+
     public void ClearSelectedSummons()
     {
         if (summonIndicatorList.Count > 0)
@@ -89,7 +114,4 @@ public class UIManager : MonoBehaviour
     {
         playerExpTextMeshPro.text = "Exp: " + playerExp.ToString() + "/" + playerLevelUpExp.ToString();
     }
-
-    
-
 }

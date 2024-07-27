@@ -27,6 +27,16 @@ public class GranadeerScript : Enemies
 
     private GrenadeScript newGrenade = null;
 
+    private void Awake()
+    {
+        Actions.OnSummonKilled += SummonDestroyed;
+    }
+
+    private void OnDestroy()
+    {
+        Actions.OnSummonKilled -= SummonDestroyed;
+    }
+
     private void Start()
     {
         state = State.Chasing;
@@ -144,5 +154,11 @@ public class GranadeerScript : Enemies
         {
             isOnRange = false;
         }
+    }
+
+    void SummonDestroyed(Summon summonRef)
+    {
+        alliesInRange.Remove(summonRef.gameObject);
+        target = Vector3.zero;
     }
 }
