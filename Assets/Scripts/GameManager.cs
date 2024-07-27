@@ -50,7 +50,9 @@ public class GameManager : MonoBehaviour
     {
         if (spawner.EnemiesKilled == spawner.MaxEnemies) //checks if player killed the amount of max enemies per wave
         {
-            spawner.enemiesKilled = 0;
+            spawner.EnemiesKilled = 0;
+
+            spawner.EnemiesSpawned = 0;
 
             WaveWon();
 
@@ -64,8 +66,6 @@ public class GameManager : MonoBehaviour
         waveScreen.SetActive(true);
 
         spawner.gameObject.SetActive(false);
-
-        spawner.ClearEnemies();
 
         wave += 1;
 
