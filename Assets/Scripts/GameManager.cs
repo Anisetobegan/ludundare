@@ -16,6 +16,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject waveScreen;
 
+    [SerializeField] GameObject choosePerkScreen;
+
+    IEnumerator enumerator = null;
+
+    public Character PlayerGet { get { return player; } }
+
     public Transform PlayerTransform
     {
         get { return player.transform; }
@@ -56,7 +62,8 @@ public class GameManager : MonoBehaviour
 
             WaveWon();
 
-            StartCoroutine(StartNewWave());
+            enumerator = StartNewWave();
+            StartCoroutine(enumerator);
                                              
         }
     }
@@ -68,8 +75,6 @@ public class GameManager : MonoBehaviour
         spawner.gameObject.SetActive(false);
 
         wave += 1;
-
-        //Choose random perk        
     }
 
     public void Lose()
@@ -83,7 +88,23 @@ public class GameManager : MonoBehaviour
 
         waveScreen.SetActive(false);
 
-        spawner.MaxEnemies += enemiesToAddPerWave;
+        spawner.MaxEnemies += enemiesToAddPerWave;        
+
+        OpenPerkSelectionScreen();
+
+        enumerator = null;
+    }
+
+    public void OpenPerkSelectionScreen()
+    {
+        choosePerkScreen.SetActive(true);
+
+        spawner.gameObject.SetActive(false);
+    }
+
+    public void ClosePerkSelectionScreen() 
+    {
+        choosePerkScreen.SetActive(false);
 
         spawner.gameObject.SetActive(true);
     }
