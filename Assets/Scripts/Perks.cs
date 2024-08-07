@@ -8,10 +8,11 @@ public class Perks
 
     PerkData data;
 
-    public Character Player { get { return player; } set { player = value; } }
+    public Character Player { get { return player; } }
 
     public PerkData Data { get { return data; } set { data = value; } }
 
+    public Perks() { player = GameManager.Instance.PlayerGet; }
 
     virtual public void Apply()
     {

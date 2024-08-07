@@ -6,18 +6,6 @@ public class PerkUIManager : MonoBehaviour
 {
     [SerializeField] GameObject perkPrefab;
 
-    IEnumerator enumerator = null;
-
-    GameObject selectedPerk = null;
-
-    public enum Type
-    {
-        ExtraSummon,
-        AddHealth,
-        AddSummonHealth
-    }
-    Type type;
-
     public static PerkUIManager Instance
     {
         get;
@@ -34,23 +22,22 @@ public class PerkUIManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
-
-    private void Start()
-    {
         
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (enumerator == null)
-        {
-            enumerator = PerkSelection();
-            StartCoroutine(enumerator);
-        }
+        Actions.OnLevelUp += PerkSelection;
+        Actions.OnWaveWon += PerkSelection;
     }
 
-    IEnumerator PerkSelection()
+    private void OnDisable()
+    {
+        Actions.OnLevelUp -= PerkSelection;
+        Actions.OnWaveWon -= PerkSelection;
+    }
+
+    void PerkSelection()
     {
         List<PerkData> newDataList = new List<PerkData>(PerkManager.Instance.PerkDataList); //Declares a List of PerkData to generate one at random
 
@@ -65,20 +52,12 @@ public class PerkUIManager : MonoBehaviour
             Perks newPerk = CreatePerkType(newDataList[randomIndex].type); //Generates a new Perk
             newPerk.Data = newDataList[randomIndex]; //Recieves the data of the perk randomized
 
-            newPerk.Player = GameManager.Instance.PlayerGet;
+            
             
             newPerkPrefab.GetComponent<PerkUI>().FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
             newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks
             
         }
-
-        while (selectedPerk == null)
-        {
-            yield return null;
-        }
-
-        enumerator = null;
-
     }
 
     Perks CreatePerkType(PerkData.Type type)
@@ -102,5 +81,13 @@ public class PerkUIManager : MonoBehaviour
 
         return newPerk;
 
+    }
+
+    public void DestroyPerkPrefabs()
+    {
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            Destroy(this.transform.GetChild(i).gameObject);
+        }
     }
 }

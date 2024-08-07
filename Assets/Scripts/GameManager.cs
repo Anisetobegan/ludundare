@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
 
     public void WaveWon()
     {
-        waveScreen.SetActive(true);
+        waveScreen.SetActive(true);        
 
         spawner.gameObject.SetActive(false);
 
@@ -88,9 +88,13 @@ public class GameManager : MonoBehaviour
 
         waveScreen.SetActive(false);
 
-        spawner.MaxEnemies += enemiesToAddPerWave;        
-
         OpenPerkSelectionScreen();
+
+        Actions.OnWaveWon?.Invoke();
+
+        spawner.MaxEnemies += enemiesToAddPerWave;
+
+        spawner.gameObject.SetActive(true);
 
         enumerator = null;
     }
@@ -105,6 +109,8 @@ public class GameManager : MonoBehaviour
     public void ClosePerkSelectionScreen() 
     {
         choosePerkScreen.SetActive(false);
+
+        choosePerkScreen.GetComponent<PerkUIManager>().DestroyPerkPrefabs();
 
         spawner.gameObject.SetActive(true);
     }

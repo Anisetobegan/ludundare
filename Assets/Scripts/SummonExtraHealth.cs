@@ -8,5 +8,6 @@ public class SummonExtraHealth : Perks
     public override void Apply()
     {
         player.SummonMaxHealth += healthToAdd;
+        player.ApplyPerks();
     }
 }

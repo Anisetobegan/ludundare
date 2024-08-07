@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -189,7 +188,7 @@ public class Character : MonoBehaviour
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
 
         if (exp >= levelUpExp)
-        {
+        {            
             LevelUp();            
         }
     }
@@ -207,7 +206,7 @@ public class Character : MonoBehaviour
 
         GameManager.Instance.OpenPerkSelectionScreen();
 
-        //AddPerk();
+        Actions.OnLevelUp?.Invoke();
     }
 
     public void AddNewPerk(Perks newPerk)
@@ -217,15 +216,11 @@ public class Character : MonoBehaviour
 
     public void ApplyPerks()
     {
-        if (currentSummons.Count > 0)
+        for (int i = 0; i < currentSummons.Count; i++)
         {
-            for (int i = 0; i < currentSummons.Count; i++)
-            {
-                currentSummons[i].SummonMaxHealth += summonHealthToAdd;
-                currentSummons[i].SummonHealth += summonHealthToAdd;
-            }
+            currentSummons[i].SummonMaxHealth += summonHealthToAdd;
+            currentSummons[i].SummonHealth += summonHealthToAdd;
         }
-
     }
 
     private void GiveOrder()
