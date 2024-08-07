@@ -5,4 +5,8 @@ public static class Actions
     public static Action<Enemies> OnEnemyKilled;
 
     public static Action<Summon> OnSummonKilled;
+
+    public static Action OnLevelUp;
+
+    public static Action OnWaveWon;
 }

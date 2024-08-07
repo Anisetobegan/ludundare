@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -9,16 +8,22 @@ public class Character : MonoBehaviour
 {
 
     float moveSpeed = 2f;
-    float health;
+    [SerializeField] float health = 50;
+    [SerializeField] float maxHealth = 100;
     int lvl = 1;
     float exp;
     float levelUpExp = 100;
-    //Perks perk;
+    List<Perks> perksObtained = new List<Perks>();
     float summonCooldown;
     int maxSummons = 5;
+    float summonHealthToAdd = 0;
+
+
     [SerializeField] private List<Summon> currentSummons;
     [SerializeField] private List<Summon> selectedSummons;
     [SerializeField] private List<Summon> summons;
+
+    List<Perks> currentPerks = new List<Perks>();
     enum State
     {
         Idle,
@@ -43,6 +48,12 @@ public class Character : MonoBehaviour
     [SerializeField] private CapsuleCollider playerCollider;
 
     public float ColliderRadius { get { return playerCollider.radius; } }
+    public float PlayerHealth { get { return health; } set { health = value; } }
+
+    public float PlayerMaxHealth { get { return maxHealth; } set { maxHealth = value; } }
+    public float MaxSummons {  get { return maxSummons; } set { maxSummons = (int)value; } }
+
+    public float SummonMaxHealth { get { return summonHealthToAdd; } set { summonHealthToAdd = value; } }
 
     private void Awake()
     {
@@ -156,6 +167,9 @@ public class Character : MonoBehaviour
         {
             Summon newSummon = Instantiate(summon);
             currentSummons.Add(newSummon);
+
+            newSummon.SummonHealth += summonHealthToAdd;
+            newSummon.SummonMaxHealth += summonHealthToAdd;
         }
     }
 
@@ -174,7 +188,7 @@ public class Character : MonoBehaviour
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
 
         if (exp >= levelUpExp)
-        {
+        {            
             LevelUp();            
         }
     }
@@ -188,12 +202,25 @@ public class Character : MonoBehaviour
         UIManager.Instance.UpdatePlayerLevel(lvl);
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
 
-        //AddPerk();
+        //Choose perk
+
+        GameManager.Instance.OpenPerkSelectionScreen();
+
+        Actions.OnLevelUp?.Invoke();
     }
 
-    private void AddPerk(/*Perk perk*/)
+    public void AddNewPerk(Perks newPerk)
     {
+        currentPerks.Add(newPerk);
+    }
 
+    public void ApplyPerks()
+    {
+        for (int i = 0; i < currentSummons.Count; i++)
+        {
+            currentSummons[i].SummonMaxHealth += summonHealthToAdd;
+            currentSummons[i].SummonHealth += summonHealthToAdd;
+        }
     }
 
     private void GiveOrder()

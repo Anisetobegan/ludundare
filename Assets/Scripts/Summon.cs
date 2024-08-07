@@ -6,7 +6,8 @@ using UnityEngine.AI;
 
 public class Summon : MonoBehaviour
 {
-    float health;
+    [SerializeField] float health = 100;
+    [SerializeField] float maxHealth = 100;
     protected float damage;
     float moveSpeed = 0.07f;
     //Enemies target;
@@ -18,6 +19,9 @@ public class Summon : MonoBehaviour
 
     protected Vector3 target = Vector3.zero;
     protected GameObject targetEnemy = null;
+
+    public float SummonHealth { get { return health; } set { health = value; } }
+    public float SummonMaxHealth { get {return maxHealth; } set { maxHealth = value; } }
 
 
     // Start is called before the first frame update
