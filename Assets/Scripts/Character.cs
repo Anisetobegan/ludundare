@@ -17,7 +17,10 @@ public class Character : MonoBehaviour
     float summonCooldown;
     int maxSummons = 5;
     float summonHealthToAdd = 0;
+    float castingTime = 2f;
+    float castingCoolDown = 3f;
 
+    [SerializeField] bool readyToCast = true;
 
     [SerializeField] private List<Summon> currentSummons;
     [SerializeField] private List<Summon> selectedSummons;
@@ -31,7 +34,7 @@ public class Character : MonoBehaviour
         Casting,
         Dead
     }
-    State state = State.Idle;
+    [SerializeField] State state = State.Idle;
 
     Vector3 lastPos;
 
@@ -47,6 +50,10 @@ public class Character : MonoBehaviour
 
     [SerializeField] private CapsuleCollider playerCollider;
 
+    IEnumerator enumerator = null;
+
+    int keyPressed;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -54,6 +61,12 @@ public class Character : MonoBehaviour
     public float MaxSummons {  get { return maxSummons; } set { maxSummons = (int)value; } }
 
     public float SummonMaxHealth { get { return summonHealthToAdd; } set { summonHealthToAdd = value; } }
+
+    public float PlayerMoveSpeed { get {  return moveSpeed; } set { moveSpeed = value; } }
+
+    public float PlayerCastTime { get { return castingTime; } set { castingTime = value; } }
+
+    public float PlayerCastCoolDown { get { return castingCoolDown; } set { castingCoolDown = value; } }
 
     private void Awake()
     {
@@ -92,7 +105,10 @@ public class Character : MonoBehaviour
             case State.Idle:
 
                 Move();
-                Summon();
+                if (currentSummons.Count < maxSummons && readyToCast == true)
+                {
+                    keyPressed = Summon();
+                }
                 
                 if (IsMoving())
                 {
@@ -103,15 +119,23 @@ public class Character : MonoBehaviour
             case State.Moving:
 
                 Move();
-                Summon();
-                
-                if(!IsMoving())
+                if (currentSummons.Count < maxSummons && readyToCast == true)
+                {
+                    keyPressed = Summon();
+                }
+
+                if (!IsMoving())
                 {
                     state = State.Idle;
                 }
                 break;
 
             case State.Casting:
+
+                if (enumerator == null)
+                {
+                    InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on
+                }
                 break;
 
             case State.Dead: 
@@ -143,34 +167,62 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void Summon() //checks whether the keys 1, 2 or 3 are pressed and summons the corresponding summon
+    private int Summon() //checks whether the keys 1, 2 or 3 are pressed and returns the corresponding key - 1
     {
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
-            InstSummon(summons[0]);
+            //InstSummon(summons[0]);
+            state = State.Casting;
+            return 0;
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha2))
         {
-            InstSummon(summons[1]);
+            //InstSummon(summons[1]);
+            state = State.Casting;
+            return 1;
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha3))
         {
-            InstSummon(summons[2]);
+            //InstSummon(summons[2]);
+            state = State.Casting;
+            return 2;
         }
+        return keyPressed;
     }
 
-    private void InstSummon(Summon summon) //instantiates a summon
-    {
-        if (currentSummons.Count < maxSummons)
+    private void InstSummon(Summon summon) //starts the coroutine that instantiates summons after waiting x seconds
+    {        
+        if (enumerator == null)
         {
-            Summon newSummon = Instantiate(summon);
-            currentSummons.Add(newSummon);
+            enumerator = BeginCasting(summon);
+            StartCoroutine(enumerator);
+        }        
+    }
 
-            newSummon.SummonHealth += summonHealthToAdd;
-            newSummon.SummonMaxHealth += summonHealthToAdd;
-        }
+    IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
+    {
+        yield return new WaitForSeconds(castingTime);
+
+        Summon newSummon = Instantiate(summon);
+        currentSummons.Add(newSummon);
+
+        newSummon.SummonHealth += summonHealthToAdd;
+        newSummon.SummonMaxHealth += summonHealthToAdd;
+
+        state = State.Idle;
+
+        enumerator = null;
+
+        StartCoroutine(CastingCoolDownCoroutine());
+    }
+
+    IEnumerator CastingCoolDownCoroutine()
+    {
+        readyToCast = false;
+        yield return new WaitForSeconds(castingCoolDown);
+        readyToCast = true;
     }
 
     private void Die()

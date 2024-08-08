@@ -14,7 +14,10 @@ public class PerkData : ScriptableObject
     {
         ExtraSummon,
         AddHealth,
-        AddSummonHealth
+        AddSummonHealth,
+        ExtraMoveSpeed,
+        FasterCast,
+        CastCoolDown
     }
     public Type type;
 }
