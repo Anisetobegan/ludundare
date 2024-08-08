@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c990d7be99837c47b9947fa2bfe5224, type: 3}
-  m_Name: PlayerExtraHealthPerk
+  m_Name: CastCoolDown
   m_EditorClassIdentifier: 
-  title: Player Extra Health
+  title: More Casting
   icon: {fileID: 0}
-  description: "Increases the Player\xB4s health by 25"
-  type: 1
+  description: Decreases the Cool Down of the cast by 0.25 seconds
+  type: 5

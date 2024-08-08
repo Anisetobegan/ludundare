@@ -6,6 +6,8 @@ public class PerkUIManager : MonoBehaviour
 {
     [SerializeField] GameObject perkPrefab;
 
+    int perksToChoose = 3;
+
     public static PerkUIManager Instance
     {
         get;
@@ -41,7 +43,7 @@ public class PerkUIManager : MonoBehaviour
     {
         List<PerkData> newDataList = new List<PerkData>(PerkManager.Instance.PerkDataList); //Declares a List of PerkData to generate one at random
 
-        for (int i = 0; i < PerkManager.Instance.PerkDataCount; i++)
+        for (int i = 0; i < perksToChoose; i++)
         {
             GameObject newPerkPrefab = null;
             int randomIndex = Random.Range(0, newDataList.Count); //Generates random number between 0 and the count of total perks available
@@ -72,9 +74,23 @@ public class PerkUIManager : MonoBehaviour
             case PerkData.Type.AddHealth:
                 newPerk = new PlayerExtraHealth();
                 break;
+
             case PerkData.Type.AddSummonHealth:
                 newPerk = new SummonExtraHealth();
                 break;
+
+            case PerkData.Type.ExtraMoveSpeed:
+                newPerk = new ExtraMoveSpeed();
+                break;
+
+            case PerkData.Type.FasterCast:
+                newPerk = new FasterCast();
+                break;
+
+            case PerkData.Type.CastCoolDown:
+                newPerk = new CastCoolDown();
+                break;
+
             default:
                 break;
         }

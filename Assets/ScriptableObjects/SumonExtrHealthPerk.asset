@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Summon Extra Health
   icon: {fileID: 0}
-  description: Increases summons health
+  description: Increases summons health by 20
   type: 2
