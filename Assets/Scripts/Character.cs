@@ -52,7 +52,7 @@ public class Character : MonoBehaviour
 
     IEnumerator enumerator = null;
 
-    int keyPressed = new int();
+    int keyPressed;
 
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
