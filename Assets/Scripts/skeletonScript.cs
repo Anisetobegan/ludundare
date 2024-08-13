@@ -5,7 +5,7 @@ using UnityEngine;
 public class skeletonScript : Summon
 {
     float minAttackDistance = 1.5f;
-    float timeBetweenAttacks = 3f;
+    float timeBetweenAttacks = 1f;
 
     enum State
     {
@@ -32,6 +32,7 @@ public class skeletonScript : Summon
     private void Start()
     {
         state = State.Idle;
+        damage = 10f;
     }
 
     private void OnDestroy()
@@ -129,7 +130,7 @@ public class skeletonScript : Summon
         agent.SetDestination(offset);
     }
 
-    private GameObject DetectClosestEnemy()
+    private Enemies DetectClosestEnemy()
     {
         float leastDistance = Mathf.Infinity;
         GameObject targetPos = null;
@@ -144,18 +145,30 @@ public class skeletonScript : Summon
                 targetPos = enemiesInRange[i].gameObject;
             }
         }
-        return targetPos;
+        return targetPos.GetComponent<Enemies>();
     }
 
     protected override void Attack()
     {
-        
+        Actions.OnEnemyDamaged?.Invoke(targetEnemy, damage);
+
+        enumerator = ResetAttack();
+        StartCoroutine(enumerator);
+    }
+
+    IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(timeBetweenAttacks);
+
+        enumerator = null;
     }
 
     void StartGrabbing()
     {
         isGrabbing = true;
         targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+
+        Attack();
     }
 
 

@@ -120,7 +120,7 @@ public class ghostScript : Summon
 
         //instantiate explotion GameObject
         ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        newExplosion.InitializeExplosion(damage, explotionRadius);
+        newExplosion.InitializeExplosion(damage, explotionRadius, ExplotionScript.ExplosionType.Ghost);
 
         enumerator = null;
 
@@ -135,7 +135,7 @@ public class ghostScript : Summon
         agent.SetDestination(offset);
     }
 
-    private GameObject DetectClosestEnemy()
+    private Enemies DetectClosestEnemy()
     {
         float leastDistance = Mathf.Infinity;
         GameObject targetPos = null;
@@ -150,7 +150,7 @@ public class ghostScript : Summon
                 targetPos = enemiesInRange[i].gameObject;
             }
         }
-        return targetPos;
+        return targetPos.GetComponent<Enemies>();
     }
 
     public override string GetSummonName()

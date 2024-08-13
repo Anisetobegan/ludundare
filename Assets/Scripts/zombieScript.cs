@@ -29,6 +29,8 @@ public class zombieScript : Summon
     {
         walkPointSet = false;
         state = State.Wandering;
+
+        damage = 25f;
     }
 
 
@@ -112,6 +114,8 @@ public class zombieScript : Summon
     protected override void Attack()
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+
+        Actions.OnEnemyDamaged?.Invoke(targetEnemy, damage);
 
         enumerator = ResetAttack();
         StartCoroutine(enumerator);

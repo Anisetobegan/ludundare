@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class GunSlingerScript : Enemies
@@ -32,6 +33,10 @@ public class GunSlingerScript : Enemies
     private GameObject closestAlly;
 
     IEnumerator enumerator = null;
+
+    bool targetIsPLayer = true;
+
+    IDamagable damagable;
 
     private void Awake()
     {
@@ -171,9 +176,20 @@ public class GunSlingerScript : Enemies
                     targetPos = alliesInRange[i].gameObject;
                 }
             }
-            return targetPos != null? targetPos.transform.position: Vector3.zero ;
+            if (targetPos.layer == LayerMask.NameToLayer("Player"))
+            {
+                targetIsPLayer = true;
+                damagable = GameManager.Instance.PlayerGet;
+            }
+            else
+            {
+                targetIsPLayer = false;
+                damagable = targetPos.GetComponent<Summon>();
+            }
+            return targetPos.transform.position;
         }
-
+        targetIsPLayer = true;
+        damagable = GameManager.Instance.PlayerGet;
         return GameManager.Instance.PlayerTransform.position;
     }
 
@@ -182,6 +198,7 @@ public class GunSlingerScript : Enemies
         if (bullets > 0)
         {
             GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+            newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
         
             bullets--;        
         
@@ -276,5 +293,4 @@ public class GunSlingerScript : Enemies
         target = Vector3.zero;
         state = State.Chasing;
     }
-
 }

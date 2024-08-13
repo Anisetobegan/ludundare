@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class GranadeerScript : Enemies
@@ -26,6 +27,10 @@ public class GranadeerScript : Enemies
     IEnumerator enumerator = null;
 
     private GrenadeScript newGrenade = null;
+
+    bool targetIsPLayer = true;
+
+    IDamagable damagable;
 
     private void Awake()
     {
@@ -111,9 +116,20 @@ public class GranadeerScript : Enemies
                     targetPos = alliesInRange[i].gameObject;
                 }
             }
+            if (targetPos.layer == LayerMask.NameToLayer("Player"))
+            {
+                targetIsPLayer = true;
+                damagable = GameManager.Instance.PlayerGet;
+            }
+            else
+            {
+                targetIsPLayer = false;
+                damagable = targetPos.GetComponent<Summon>();
+            }
             return targetPos.transform.position;
         }
-
+        targetIsPLayer = true;
+        damagable = GameManager.Instance.PlayerGet;
         return GameManager.Instance.PlayerTransform.position;
     }
 
@@ -123,7 +139,7 @@ public class GranadeerScript : Enemies
 
         newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
 
-        newGrenade.InitializeGranadeTarget(target);
+        newGrenade.InitializeGranadeTarget(target, damage);
         
         enumerator = ThrowingGranade();
         StartCoroutine(enumerator);

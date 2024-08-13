@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Summon : MonoBehaviour
+public class Summon : MonoBehaviour, IDamagable
 {
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
@@ -18,7 +18,9 @@ public class Summon : MonoBehaviour
     public NavMeshAgent agent;
 
     protected Vector3 target = Vector3.zero;
-    protected GameObject targetEnemy = null;
+    protected Enemies targetEnemy = null;
+
+    [SerializeField] HealthBars healthBar;
 
     public float SummonHealth { get { return health; } set { health = value; } }
     public float SummonMaxHealth { get {return maxHealth; } set { maxHealth = value; } }
@@ -63,9 +65,26 @@ public class Summon : MonoBehaviour
         targetEnemy = null;
     }
 
-    virtual public void DesignateTarget(GameObject target)
+    virtual public void DesignateTarget(Enemies target)
     {
         this.targetEnemy = target;
         this.target = target.transform.position;
+    }
+
+    void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        UpdateHealthBar();
+    }
+
+    public void Damage(float damage)
+    {
+        TakeDamage(damage);
+    }
+
+    public void UpdateHealthBar()
+    {
+        healthBar.HealthBarUpdate(health / maxHealth);
     }
 }

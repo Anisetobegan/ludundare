@@ -12,8 +12,16 @@ public class GrenadeScript : MonoBehaviour
 
     float grenadeHeight = 3;
 
+    float damage;
+
+    float explosionRadius = 3f;
+
     IEnumerator enumerator = null;
-    
+
+    IDamagable damagable;
+
+    [SerializeField] ExplotionScript explosionPrefab;
+
 
     private void Update()
     {
@@ -54,12 +62,16 @@ public class GrenadeScript : MonoBehaviour
 
     private void Explode()
     {
+        ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        newExplosion.InitializeExplosion(damage, explosionRadius, ExplotionScript.ExplosionType.Grenade);
+
         Destroy(gameObject);
     }
 
 
-    public void InitializeGranadeTarget(Vector3 target)
+    public void InitializeGranadeTarget(Vector3 target, float grenadierDamage)
     {
         this.target = target;
+        this.damage = grenadierDamage;
     }
 }

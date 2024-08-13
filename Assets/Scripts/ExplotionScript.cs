@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class ExplotionScript : MonoBehaviour
 {
-    [SerializeField] LayerMask layermask;
-
     float explotionDuration = 1f;
-
-    [SerializeField] List<GameObject> enemiesToDamage;
 
     float damage;
 
     [SerializeField] SphereCollider sphereCollider;
+
+    public enum ExplosionType
+    {
+        Ghost,
+        Grenade
+    }
+
+    ExplosionType explosionType;
+
+    IDamagable damagable;
 
     private void Start()
     {
@@ -29,12 +36,35 @@ public class ExplotionScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.GetComponent<Enemies>().EnemyHealth -= damage;
+        switch (explosionType)
+        {
+            case ExplosionType.Grenade:
+
+                if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+                {
+                    damagable = other.GetComponent<Character>();
+                    damagable.Damage(damage);
+                }
+                else if (other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
+                {
+                    damagable = other.GetComponent<Summon>();
+                    damagable.Damage(damage);
+                }
+
+                break;
+
+            case ExplosionType.Ghost:
+
+                other.GetComponent<Enemies>().EnemyHealth -= damage;
+
+                break;
+        }        
     }
 
-    public void InitializeExplosion(float damage, float explosionRadius)
+    public void InitializeExplosion(float damage, float explosionRadius, ExplosionType explosionType)
     {
         this.damage = damage;
         sphereCollider.radius = explosionRadius;
+        this.explosionType = explosionType;
     }
 }

@@ -24,7 +24,11 @@ public class MeleeScript : Enemies
     [SerializeField] private List<GameObject> alliesInRange;
     private GameObject closestAlly;
 
+    bool targetIsPLayer = true;
+
     IEnumerator enumerator = null;
+
+    IDamagable damagable;
 
     private void Awake()
     {
@@ -88,6 +92,8 @@ public class MeleeScript : Enemies
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
+        damagable.Damage(damage);
+
         enumerator = ResetAttack();
         StartCoroutine(enumerator);
     }
@@ -130,9 +136,20 @@ public class MeleeScript : Enemies
                     targetPos = alliesInRange[i].gameObject;
                 }
             }
+            if (targetPos.layer == LayerMask.NameToLayer("Player"))
+            {
+                targetIsPLayer = true;
+                damagable = GameManager.Instance.PlayerGet;
+            }
+            else
+            {
+                targetIsPLayer = false;
+                damagable = targetPos.GetComponent<Summon>();
+            }
             return targetPos.transform.position;
         }
-        
+        targetIsPLayer = true;
+        damagable = GameManager.Instance.PlayerGet;
         return GameManager.Instance.PlayerTransform.position;
     }
 

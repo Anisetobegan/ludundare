@@ -48,4 +48,18 @@ public class Enemies : MonoBehaviour
         agent.isStopped = isStopped;
     }
 
+    virtual public void TakeDamage(Enemies thisEnemy, float damageTaken)
+    {
+        thisEnemy.health -= damageTaken;
+    }
+
+    protected void OnEnable()
+    {
+        Actions.OnEnemyDamaged += TakeDamage;
+    }
+
+    protected void OnDisable()
+    {
+        Actions.OnEnemyDamaged -= TakeDamage;
+    }
 }
