@@ -26,16 +26,16 @@ public class skeletonScript : Summon
 
     private void Awake()
     {
-        Actions.OnEnemyKilled += EnemyDestroyed;
-    }
-    
-    private void Start()
-    {
         state = State.Idle;
         damage = 10f;
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        Actions.OnEnemyKilled += EnemyDestroyed;
+    }
+
+    private void OnDisable()
     {
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
@@ -87,7 +87,11 @@ public class skeletonScript : Summon
 
                 if (enumerator == null)
                 {
-                    target = targetEnemy.transform.position;
+                    if (targetEnemy != null)
+                    {
+                        target = targetEnemy.transform.position;
+                    }
+                    
                     Move();
 
                     float distance = Vector3.Distance(agent.transform.position, target);
@@ -150,7 +154,7 @@ public class skeletonScript : Summon
 
     protected override void Attack()
     {
-        Actions.OnEnemyDamaged?.Invoke(targetEnemy, damage);
+        targetEnemy.TakeDamage(damage);
 
         enumerator = ResetAttack();
         StartCoroutine(enumerator);
@@ -187,7 +191,10 @@ public class skeletonScript : Summon
     {
         if (enemiesInRange.Contains(other.gameObject) == false)
         {
-            enemiesInRange.Add(other.gameObject);
+            if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                enemiesInRange.Add(other.gameObject);
+            }
         }
     }
 

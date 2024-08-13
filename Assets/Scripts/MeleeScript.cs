@@ -17,25 +17,14 @@ public class MeleeScript : Enemies
         Die
     }
 
-    State state;
+    State state;      
 
-    private Vector3 target;
-
-    [SerializeField] private List<GameObject> alliesInRange;
-    private GameObject closestAlly;
-
-    bool targetIsPLayer = true;
-
-    IEnumerator enumerator = null;
-
-    IDamagable damagable;
-
-    private void Awake()
+    private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
     }
@@ -111,47 +100,19 @@ public class MeleeScript : Enemies
 
     private void OnTriggerEnter(Collider other)
     {
-        alliesInRange.Add(other.gameObject);
+        if (alliesInRange.Contains(other.gameObject) == false)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
+            {
+                alliesInRange.Add(other.gameObject);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         alliesInRange.Remove(other.gameObject);
-    }
-
-    private Vector3 DetectClosestAlly()
-    {
-        if (alliesInRange.Count > 0)
-        {
-            float leastDistance = Mathf.Infinity;
-            GameObject targetPos = null;
-
-            for (int i = 0; i < alliesInRange.Count; i++)
-            {
-                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
-
-                if (currentDistance < leastDistance)
-                {
-                    leastDistance = currentDistance;
-                    targetPos = alliesInRange[i].gameObject;
-                }
-            }
-            if (targetPos.layer == LayerMask.NameToLayer("Player"))
-            {
-                targetIsPLayer = true;
-                damagable = GameManager.Instance.PlayerGet;
-            }
-            else
-            {
-                targetIsPLayer = false;
-                damagable = targetPos.GetComponent<Summon>();
-            }
-            return targetPos.transform.position;
-        }
-        targetIsPLayer = true;
-        damagable = GameManager.Instance.PlayerGet;
-        return GameManager.Instance.PlayerTransform.position;
-    }
+    }    
 
     void SummonDestroyed(Summon summonRef)
     {

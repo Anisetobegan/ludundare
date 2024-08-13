@@ -27,7 +27,7 @@ public class Summon : MonoBehaviour, IDamagable
 
 
     // Start is called before the first frame update
-    protected void Start()
+    virtual protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
     }

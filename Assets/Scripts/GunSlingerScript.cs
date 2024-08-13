@@ -9,7 +9,7 @@ public class GunSlingerScript : Enemies
     float reloadTime = 4f;
     bool isOnRange = false;
     float timeBetweenAttacks = 1f;
-    bool tookCover = false;
+    bool tookCover = false;    
 
     int bullets = 5;
 
@@ -25,18 +25,7 @@ public class GunSlingerScript : Enemies
         Die
     }
 
-    State state;
-
-    private Vector3 target;
-
-    [SerializeField] private List<GameObject> alliesInRange;
-    private GameObject closestAlly;
-
-    IEnumerator enumerator = null;
-
-    bool targetIsPLayer = true;
-
-    IDamagable damagable;
+    [SerializeField] State state;
 
     private void Awake()
     {
@@ -153,46 +142,6 @@ public class GunSlingerScript : Enemies
         agent.SetDestination(offset);
     }
 
-    private Vector3 DetectClosestAlly()
-    {
-        if (alliesInRange.Count > 0)
-        {
-            float leastDistance = Mathf.Infinity;
-            GameObject targetPos = null;
-
-            for (int i = 0; i < alliesInRange.Count; i++)
-            {
-                if (alliesInRange[i] == null)
-                {
-                    alliesInRange.RemoveAt(i);
-                    continue; 
-                }
-
-                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
-
-                if (currentDistance < leastDistance)
-                {
-                    leastDistance = currentDistance;
-                    targetPos = alliesInRange[i].gameObject;
-                }
-            }
-            if (targetPos.layer == LayerMask.NameToLayer("Player"))
-            {
-                targetIsPLayer = true;
-                damagable = GameManager.Instance.PlayerGet;
-            }
-            else
-            {
-                targetIsPLayer = false;
-                damagable = targetPos.GetComponent<Summon>();
-            }
-            return targetPos.transform.position;
-        }
-        targetIsPLayer = true;
-        damagable = GameManager.Instance.PlayerGet;
-        return GameManager.Instance.PlayerTransform.position;
-    }
-
     protected override void Attack()
     {
         if (bullets > 0)
@@ -251,7 +200,10 @@ public class GunSlingerScript : Enemies
     {
         if (alliesInRange.Contains(other.gameObject) == false)
         {
-            alliesInRange.Add(other.gameObject);
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
+            {
+                alliesInRange.Add(other.gameObject);
+            }
         }
         isOnRange = true;
     }
@@ -268,13 +220,16 @@ public class GunSlingerScript : Enemies
 
     private void TakingCoverDestination()
     {
-        agent.isStopped = false;
-        target = DetectClosestAlly();
-        Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
-        agent.SetDestination(oppositeDirection);
+        if (isBeingGrabbed == false)
+        {
+            agent.isStopped = false;
+            target = DetectClosestAlly();
+            Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
+            agent.SetDestination(oppositeDirection);
 
-        enumerator = TakingCover();
-        StartCoroutine(enumerator);       
+            enumerator = TakingCover();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator TakingCover()

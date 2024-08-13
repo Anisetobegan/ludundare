@@ -9,6 +9,4 @@ public static class Actions
     public static Action OnLevelUp;
 
     public static Action OnWaveWon;
-
-    public static Action<Enemies, float> OnEnemyDamaged;
 }

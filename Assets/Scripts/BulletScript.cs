@@ -15,7 +15,7 @@ public class BulletScript : MonoBehaviour
 
     private void Awake()
     {
-        StartCoroutine(DestroyBullet());
+        Destroy(gameObject, timeToDestroyBullet);
     }
 
     private void Update()
@@ -30,12 +30,6 @@ public class BulletScript : MonoBehaviour
     public void InitializeBullet(float gunSlingerDamage)
     {
         this.damage = gunSlingerDamage;
-    }
-
-    IEnumerator DestroyBullet()
-    {
-        yield return new WaitForSeconds(timeToDestroyBullet);
-        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

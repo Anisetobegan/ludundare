@@ -55,7 +55,10 @@ public class ExplotionScript : MonoBehaviour
 
             case ExplosionType.Ghost:
 
-                other.GetComponent<Enemies>().EnemyHealth -= damage;
+                if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                {
+                    other.GetComponent<Enemies>().EnemyHealth -= damage;
+                }                
 
                 break;
         }        
