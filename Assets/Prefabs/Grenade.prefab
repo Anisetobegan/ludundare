@@ -153,3 +153,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  explosionPrefab: {fileID: 1437338458097751948, guid: b037e67b235f626418cf4f741193da19, type: 3}

@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51142f740a82c7c498614b3147ec0c4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
   agent: {fileID: -2606264758318999713}
   grenade: {fileID: 6963534018475108480, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
   alliesInRange: []
@@ -188,7 +189,7 @@ SphereCollider:
     m_Bits: 264
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 736
+    m_Bits: 1760
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IDamagable
 {
 
     float moveSpeed = 2f;
@@ -54,6 +54,8 @@ public class Character : MonoBehaviour
 
     int keyPressed;
 
+    [SerializeField] HealthBars healthBar;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -68,13 +70,13 @@ public class Character : MonoBehaviour
 
     public float PlayerCastCoolDown { get { return castingCoolDown; } set { castingCoolDown = value; } }
 
-    private void Awake()
+    private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
         Actions.OnEnemyKilled += CalculateExp;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
         Actions.OnEnemyKilled -= CalculateExp;
@@ -89,6 +91,8 @@ public class Character : MonoBehaviour
         DrawVisual();
         UIManager.Instance.UpdatePlayerLevel(lvl);
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
+
+        UpdateHealthBar();
     }
 
     // Update is called once per frame
@@ -294,7 +298,7 @@ public class Character : MonoBehaviour
                     }
                     else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy")) //Checks if the RayCast hits an enemy
                     {
-                        summon.DesignateTarget(hit.collider.gameObject); //Sends the gameObject of the enemy hit
+                        summon.DesignateTarget(hit.collider.gameObject.GetComponent<Enemies>()); //Sends the gameObject of the enemy hit
                     }
                 }
                
@@ -442,4 +446,20 @@ public class Character : MonoBehaviour
         
     }
 
+    void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        UpdateHealthBar();
+    }
+
+    public void UpdateHealthBar()
+    {
+        healthBar.HealthBarUpdate(health / maxHealth);
+    }
+
+    public void Damage(float damage)
+    {
+        TakeDamage(damage);
+    }
 }

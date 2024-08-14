@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d88bb006bf38274da15ce8a092f410b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
   agent: {fileID: -4960739914802525594}
   alliesInRange: []
 --- !u!195 &-4960739914802525594
@@ -185,7 +186,7 @@ SphereCollider:
     m_Bits: 264
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 736
+    m_Bits: 1760
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

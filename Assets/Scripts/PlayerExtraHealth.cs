@@ -9,5 +9,7 @@ public class PlayerExtraHealth : Perks
     {
         player.PlayerMaxHealth += healthToAdd;
         player.PlayerHealth += healthToAdd;
+
+        player.UpdateHealthBar();
     }
 }

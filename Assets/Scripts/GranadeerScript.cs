@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class GranadeerScript : Enemies
@@ -18,14 +19,7 @@ public class GranadeerScript : Enemies
 
     State state;
 
-    private Vector3 target;
-
-    [SerializeField] private List<GameObject> alliesInRange;
-    private GameObject closestAlly;
-
-    IEnumerator enumerator = null;
-
-    private GrenadeScript newGrenade = null;
+    private GrenadeScript newGrenade = null; 
 
     private void Awake()
     {
@@ -92,30 +86,7 @@ public class GranadeerScript : Enemies
     {
         Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
         agent.SetDestination(offset);
-    }
-
-    private Vector3 DetectClosestAlly()
-    {
-        if (alliesInRange.Count > 0)
-        {
-            float leastDistance = Mathf.Infinity;
-            GameObject targetPos = null;
-
-            for (int i = 0; i < alliesInRange.Count; i++)
-            {
-                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
-
-                if (currentDistance < leastDistance)
-                {
-                    leastDistance = currentDistance;
-                    targetPos = alliesInRange[i].gameObject;
-                }
-            }
-            return targetPos.transform.position;
-        }
-
-        return GameManager.Instance.PlayerTransform.position;
-    }
+    }    
 
     protected override void Attack()
     {
@@ -123,7 +94,7 @@ public class GranadeerScript : Enemies
 
         newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
 
-        newGrenade.InitializeGranadeTarget(target);
+        newGrenade.InitializeGranadeTarget(target, damage);
         
         enumerator = ThrowingGranade();
         StartCoroutine(enumerator);
@@ -141,7 +112,10 @@ public class GranadeerScript : Enemies
     {
         if (alliesInRange.Contains(other.gameObject) == false)
         {
-            alliesInRange.Add(other.gameObject);
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
+            {
+                alliesInRange.Add(other.gameObject);
+            }
         }
         isOnRange = true;
     }
@@ -160,5 +134,6 @@ public class GranadeerScript : Enemies
     {
         alliesInRange.Remove(summonRef.gameObject);
         target = Vector3.zero;
+        state = State.Chasing;
     }
 }

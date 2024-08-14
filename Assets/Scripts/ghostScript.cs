@@ -24,9 +24,19 @@ public class ghostScript : Summon
 
     [SerializeField] ExplotionScript explosionPrefab;
 
-    private void Start()
+    private void Awake()
     {
         damage = 100f;
+    }
+
+    private void OnEnable()
+    {
+        Actions.OnEnemyKilled += EnemyDestroyed;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
     void Update()
@@ -76,7 +86,11 @@ public class ghostScript : Summon
 
                 if (enumerator == null)
                 {
-                    target = targetEnemy.transform.position;
+                    if (targetEnemy != null)
+                    {
+                        target = targetEnemy.transform.position;
+                    }
+
                     Move();
 
                     float distance = Vector3.Distance(agent.transform.position, target);
@@ -93,12 +107,19 @@ public class ghostScript : Summon
 
                 if (enumerator == null)
                 {
-                    InitiateExplosion();
+                    if (targetEnemy != null)
+                    {
+                        InitiateExplosion();
+                    }
+                    
                 }
 
                 break;
 
             case State.Dead:
+
+                Die();
+
                 break;
         }
     }
@@ -120,13 +141,11 @@ public class ghostScript : Summon
 
         //instantiate explotion GameObject
         ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        newExplosion.InitializeExplosion(damage, explotionRadius);
+        newExplosion.InitializeExplosion(damage, explotionRadius, ExplotionScript.ExplosionType.Ghost);
 
         enumerator = null;
 
-        state = State.Dead;
-
-        Die();
+        state = State.Dead;        
     }
 
     protected override void Move()
@@ -135,7 +154,7 @@ public class ghostScript : Summon
         agent.SetDestination(offset);
     }
 
-    private GameObject DetectClosestEnemy()
+    private Enemies DetectClosestEnemy()
     {
         float leastDistance = Mathf.Infinity;
         GameObject targetPos = null;
@@ -150,7 +169,7 @@ public class ghostScript : Summon
                 targetPos = enemiesInRange[i].gameObject;
             }
         }
-        return targetPos;
+        return targetPos.GetComponent<Enemies>();
     }
 
     public override string GetSummonName()
@@ -162,7 +181,10 @@ public class ghostScript : Summon
     {
         if (enemiesInRange.Contains(other.gameObject) == false)
         {
-            enemiesInRange.Add(other.gameObject);
+            if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                enemiesInRange.Add(other.gameObject);
+            }
         }
     }
 
@@ -175,5 +197,13 @@ public class ghostScript : Summon
     {
         base.DesignateTarget(target);
         state = State.Moving;
+    }
+
+    void EnemyDestroyed(Enemies enemyRef)
+    {
+        enemiesInRange.Remove(enemyRef.gameObject);
+        target = Vector3.zero;
+        targetEnemy = null;
+        state = State.Idle;
     }
 }

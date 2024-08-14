@@ -29,6 +29,18 @@ public class zombieScript : Summon
     {
         walkPointSet = false;
         state = State.Wandering;
+
+        damage = 25f;
+    }
+
+    private void OnEnable()
+    {
+        Actions.OnEnemyKilled += EnemyDestroyed;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
 
@@ -75,7 +87,11 @@ public class zombieScript : Summon
 
                 if (enumerator == null)
                 {
-                    target = targetEnemy.transform.position;
+                    if (targetEnemy != null)
+                    {
+                        target = targetEnemy.transform.position;
+                    }
+
                     Move();
 
                     float distance = Vector3.Distance(agent.transform.position, target);
@@ -92,7 +108,10 @@ public class zombieScript : Summon
 
                 if (enumerator == null)
                 {
-                    Attack();
+                    if (targetEnemy != null)
+                    {
+                        Attack();
+                    }
                 }
 
                 break;            
@@ -112,6 +131,8 @@ public class zombieScript : Summon
     protected override void Attack()
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+        
+        targetEnemy.TakeDamage(damage);
 
         enumerator = ResetAttack();
         StartCoroutine(enumerator);
@@ -169,5 +190,12 @@ public class zombieScript : Summon
     {
         base.DesignateTarget(target);
         state = State.Moving;
+    }
+
+    void EnemyDestroyed(Enemies enemyRef)
+    {
+        target = Vector3.zero;
+        targetEnemy = null;
+        state = State.Wandering;
     }
 }
