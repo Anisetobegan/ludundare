@@ -57,7 +57,7 @@ public class ExplotionScript : MonoBehaviour
 
                 if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    other.GetComponent<Enemies>().EnemyHealth -= damage;
+                    other.GetComponent<Enemies>().TakeDamage(damage);
                 }                
 
                 break;
