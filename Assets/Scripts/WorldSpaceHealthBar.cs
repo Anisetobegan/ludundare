@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonHealthBar : HealthBars
+public class WorldSpaceHealthBar : HealthBars
 {
     Camera cam; 
 

@@ -59,6 +59,11 @@ public class zombieScript : Summon
                     {
                         state = State.Moving;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -78,6 +83,11 @@ public class zombieScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
                     }
                 }
 
@@ -100,6 +110,11 @@ public class zombieScript : Summon
                     {
                         state = State.Attacking;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -112,11 +127,18 @@ public class zombieScript : Summon
                     {
                         Attack();
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;            
 
             case State.Dead:
+
+                Die();
 
                 break;
         }

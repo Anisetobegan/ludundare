@@ -58,6 +58,11 @@ public class ghostScript : Summon
                         targetEnemy = DetectClosestEnemy();
                         state = State.Chasing;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -77,6 +82,11 @@ public class ghostScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
                     }
                 }
 
@@ -99,6 +109,11 @@ public class ghostScript : Summon
                     {
                         state = State.Exploding;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -111,7 +126,11 @@ public class ghostScript : Summon
                     {
                         InitiateExplosion();
                     }
-                    
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;

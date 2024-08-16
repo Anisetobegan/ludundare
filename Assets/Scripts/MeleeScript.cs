@@ -51,6 +51,11 @@ public class MeleeScript : Enemies
                     {
                         state = State.Attacking;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
 
                 break;
@@ -60,11 +65,18 @@ public class MeleeScript : Enemies
                 if (enumerator == null)
                 {
                     Attack();
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
 
                 break;
 
             case State.Die:
+
+                Die();
 
                 break;
         }

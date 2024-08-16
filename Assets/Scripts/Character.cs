@@ -118,6 +118,12 @@ public class Character : MonoBehaviour, IDamagable
                 {
                     state = State.Moving;
                 }
+
+                if (Input.GetKeyUp(KeyCode.Backspace))
+                {
+                    KillSummon(selectedSummons);
+                }
+
                 break;
 
             case State.Moving:
@@ -132,6 +138,12 @@ public class Character : MonoBehaviour, IDamagable
                 {
                     state = State.Idle;
                 }
+
+                if (Input.GetKeyUp(KeyCode.Backspace))
+                {
+                    KillSummon(selectedSummons);
+                }
+
                 break;
 
             case State.Casting:
@@ -139,10 +151,19 @@ public class Character : MonoBehaviour, IDamagable
                 if (enumerator == null)
                 {
                     InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on
+
+                    if (Input.GetKeyUp(KeyCode.Backspace))
+                    {
+                        KillSummon(selectedSummons);
+                    }
                 }
+
                 break;
 
-            case State.Dead: 
+            case State.Dead:
+
+                //Game over
+
                 break;
         }
     }
@@ -364,9 +385,18 @@ public class Character : MonoBehaviour, IDamagable
 
     }
 
-    private void KillSummon(Summon selectedSummon)
+    private void KillSummon(List<Summon> summonsToKill)
     {
+        int selectedSummonsCount = summonsToKill.Count;
+        for (int i = selectedSummonsCount - 1; i >= 0; i--) 
+        {
+            UIManager.Instance.ClearSelectedSummon(summonsToKill[i]);
 
+            currentSummons.Remove(summonsToKill[i]);
+
+            summonsToKill[i].KillSummon();            
+        }
+        //summonsToKill.Clear();
     }
 
     private void DrawVisual() //draws the canvasÅLs selection box while dragging

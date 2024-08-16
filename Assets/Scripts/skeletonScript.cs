@@ -59,6 +59,11 @@ public class skeletonScript : Summon
                         targetEnemy = DetectClosestEnemy();
                         state = State.Chasing;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -78,6 +83,11 @@ public class skeletonScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
                     }
                 }
 
@@ -100,6 +110,11 @@ public class skeletonScript : Summon
                     {
                         state = State.Grabbing;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
+                    }
                 }
 
                 break;
@@ -115,6 +130,11 @@ public class skeletonScript : Summon
                     else
                     {
                         state = State.Idle;
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Dead;
                     }
                 }
 
@@ -214,7 +234,12 @@ public class skeletonScript : Summon
     protected override void Die()
     {
         isGrabbing = false;
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+
+        if (targetEnemy != null)
+        {
+            targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+        }
+
         base.Die();        
     }
 }

@@ -59,6 +59,11 @@ public class GunSlingerScript : Enemies
                     {
                         state = State.Aiming;
                     }
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
                 break;
 
@@ -76,6 +81,11 @@ public class GunSlingerScript : Enemies
                     WaitForFinishAim(); //Calls the Aiming coroutine
                 }
 
+                if (health <= 0)
+                {
+                    state = State.Die;
+                }
+
                 break;
 
             case State.Attacking:
@@ -83,6 +93,11 @@ public class GunSlingerScript : Enemies
                 if (enumerator == null)
                 {
                     Attack();
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
 
                 break;
@@ -98,7 +113,12 @@ public class GunSlingerScript : Enemies
                     else
                     {
                         Reloading();
-                    }                    
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
                 
                 break;
@@ -113,11 +133,18 @@ public class GunSlingerScript : Enemies
                     if(bullets <= 0)
                     {
                         state = State.Reloading;
-                    }                    
+                    }
+
+                    if (health <= 0)
+                    {
+                        state = State.Die;
+                    }
                 }
                 break;
 
             case State.Die:
+
+                Die();
 
                 break;
         }
