@@ -157,20 +157,19 @@ public class zombieScript : Summon
     {
         if (agent != null)
         {
-            if (!walkPointSet)
+            if (walkPointSet == false)
             {
                 SearchWalkPoint();
             }
-
-            if (walkPointSet)
+            else
             {
                 agent.SetDestination(walkPoint);
-            }
 
-            if (agent.remainingDistance <= 0)
-            {
-                walkPointSet = false;
-            }
+                if (agent.remainingDistance <= 0)
+                {
+                    walkPointSet = false;
+                }
+            }            
         }
     }
 
