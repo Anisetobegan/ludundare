@@ -39,8 +39,10 @@ public class ghostScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
 
@@ -111,14 +113,13 @@ public class ghostScript : Summon
                     {
                         InitiateExplosion();
                     }
-                    
                 }
 
                 break;
 
             case State.Dead:
 
-                Die();
+                //Die();
 
                 break;
         }
@@ -145,7 +146,7 @@ public class ghostScript : Summon
 
         enumerator = null;
 
-        state = State.Dead;        
+        Die();        
     }
 
     protected override void Move()

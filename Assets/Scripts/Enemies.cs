@@ -9,6 +9,7 @@ public class Enemies : MonoBehaviour
 {
     float speed;
     [SerializeField] protected float health = 100;
+    [SerializeField] protected float maxHealth = 100;
     protected float damage = 5;
     float attackSpeed;
     float attackRange;
@@ -33,12 +34,25 @@ public class Enemies : MonoBehaviour
 
     protected bool isBeingGrabbed = false;
 
+    [SerializeField] HealthBars healthBar;
+
     public float EnemyHealth { get { return health; } set { health = value; } }
+
+    protected void Start()
+    {
+        UpdateHealthBar();
+    }
+
+    virtual protected void Update()
+    {
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
 
     virtual protected void OnMouseDown()
     {
-        Actions.OnEnemyKilled?.Invoke(this);
-
         Die();
     }
 
@@ -55,6 +69,8 @@ public class Enemies : MonoBehaviour
 
     virtual protected void Die()
     {
+        Actions.OnEnemyKilled?.Invoke(this);
+
         Destroy(gameObject);
     }
 
@@ -67,6 +83,8 @@ public class Enemies : MonoBehaviour
     virtual public void TakeDamage (float damageTaken)
     {
         health -= damageTaken;
+
+        UpdateHealthBar();
     }
 
     virtual protected Vector3 DetectClosestAlly()
@@ -101,5 +119,10 @@ public class Enemies : MonoBehaviour
         targetIsPLayer = true;
         damagable = GameManager.Instance.PlayerGet;
         return GameManager.Instance.PlayerTransform.position;
+    }
+
+    public void UpdateHealthBar()
+    {
+        healthBar.HealthBarUpdate(health / maxHealth);
     }
 }

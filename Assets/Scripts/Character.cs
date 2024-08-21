@@ -8,7 +8,7 @@ public class Character : MonoBehaviour, IDamagable
 {
 
     float moveSpeed = 2f;
-    [SerializeField] float health = 50;
+    [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
     int lvl = 1;
     float exp;
@@ -102,7 +102,11 @@ public class Character : MonoBehaviour, IDamagable
         DragSelect();
         
         GiveOrder();
-        
+
+        if (Input.GetKeyUp(KeyCode.Backspace))
+        {
+            KillSummon(selectedSummons);
+        }
 
         switch (state) 
         {
@@ -117,7 +121,8 @@ public class Character : MonoBehaviour, IDamagable
                 if (IsMoving())
                 {
                     state = State.Moving;
-                }
+                }                
+
                 break;
 
             case State.Moving:
@@ -132,17 +137,22 @@ public class Character : MonoBehaviour, IDamagable
                 {
                     state = State.Idle;
                 }
+
                 break;
 
             case State.Casting:
 
                 if (enumerator == null)
                 {
-                    InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on
+                    InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on                    
                 }
+
                 break;
 
-            case State.Dead: 
+            case State.Dead:
+
+                //Game over
+
                 break;
         }
     }
@@ -364,9 +374,18 @@ public class Character : MonoBehaviour, IDamagable
 
     }
 
-    private void KillSummon(Summon selectedSummon)
+    private void KillSummon(List<Summon> summonsToKill)
     {
+        int selectedSummonsCount = summonsToKill.Count;
+        for (int i = selectedSummonsCount - 1; i >= 0; i--) 
+        {
+            UIManager.Instance.ClearSelectedSummon(summonsToKill[i]);
 
+            currentSummons.Remove(summonsToKill[i]);
+
+            summonsToKill[i].KillSummon();            
+        }
+        //summonsToKill.Clear();
     }
 
     private void DrawVisual() //draws the canvasÅLs selection box while dragging

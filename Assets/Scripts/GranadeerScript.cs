@@ -37,8 +37,10 @@ public class GranadeerScript : Enemies
         target = GameManager.Instance.PlayerTransform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             case State.Chasing:
@@ -77,6 +79,8 @@ public class GranadeerScript : Enemies
                 break;
 
             case State.Die:
+
+                //Die();
 
                 break;
         }

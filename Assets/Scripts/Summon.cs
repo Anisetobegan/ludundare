@@ -6,12 +6,10 @@ using UnityEngine.AI;
 
 public class Summon : MonoBehaviour, IDamagable
 {
-    [SerializeField] float health = 100;
-    [SerializeField] float maxHealth = 100;
+    [SerializeField] protected float health = 100;
+    [SerializeField] protected float maxHealth = 100;
     protected float damage;
-    float moveSpeed = 0.07f;
-    //Enemies target;
-    float attackSpeed;
+    protected float moveSpeed = 0.07f;
 
     public bool isDead = false;
 
@@ -20,7 +18,7 @@ public class Summon : MonoBehaviour, IDamagable
     protected Vector3 target = Vector3.zero;
     protected Enemies targetEnemy = null;
 
-    [SerializeField] HealthBars healthBar;
+    [SerializeField] protected HealthBars healthBar;
 
     public float SummonHealth { get { return health; } set { health = value; } }
     public float SummonMaxHealth { get {return maxHealth; } set { maxHealth = value; } }
@@ -30,12 +28,16 @@ public class Summon : MonoBehaviour, IDamagable
     virtual protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        UpdateHealthBar();
     }
 
     // Update is called once per frame
-    void Update()
+    virtual protected void Update()
     {
-        
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
     virtual protected void Attack()
@@ -86,5 +88,10 @@ public class Summon : MonoBehaviour, IDamagable
     public void UpdateHealthBar()
     {
         healthBar.HealthBarUpdate(health / maxHealth);
+    }
+
+    public void KillSummon()
+    {
+        Die();
     }
 }

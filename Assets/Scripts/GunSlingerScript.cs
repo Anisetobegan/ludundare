@@ -43,8 +43,10 @@ public class GunSlingerScript : Enemies
         target = GameManager.Instance.PlayerTransform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             case State.Chasing:
@@ -60,6 +62,7 @@ public class GunSlingerScript : Enemies
                         state = State.Aiming;
                     }
                 }
+
                 break;
 
             case State.Aiming:
@@ -98,12 +101,13 @@ public class GunSlingerScript : Enemies
                     else
                     {
                         Reloading();
-                    }                    
+                    }
                 }
                 
                 break;
 
             case State.Waiting:
+
                 if(enumerator == null)
                 {
                     if(bullets > 0)
@@ -113,11 +117,14 @@ public class GunSlingerScript : Enemies
                     if(bullets <= 0)
                     {
                         state = State.Reloading;
-                    }                    
+                    }
                 }
+
                 break;
 
             case State.Die:
+
+                //Die();
 
                 break;
         }

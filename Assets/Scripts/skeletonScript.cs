@@ -40,8 +40,10 @@ public class skeletonScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
 
@@ -58,7 +60,7 @@ public class skeletonScript : Summon
                     {
                         targetEnemy = DetectClosestEnemy();
                         state = State.Chasing;
-                    }
+                    }                    
                 }
 
                 break;
@@ -122,7 +124,7 @@ public class skeletonScript : Summon
 
             case State.Dead:
                 
-                Die();
+                //Die();
 
                 break;
         }
@@ -214,7 +216,12 @@ public class skeletonScript : Summon
     protected override void Die()
     {
         isGrabbing = false;
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+
+        if (targetEnemy != null)
+        {
+            targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+        }
+
         base.Die();        
     }
 }
