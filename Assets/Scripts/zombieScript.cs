@@ -44,8 +44,10 @@ public class zombieScript : Summon
     }
 
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             
@@ -58,11 +60,6 @@ public class zombieScript : Summon
                     if (target != Vector3.zero)
                     {
                         state = State.Moving;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
                     }
                 }
 
@@ -83,11 +80,6 @@ public class zombieScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
                     }
                 }
 
@@ -110,11 +102,6 @@ public class zombieScript : Summon
                     {
                         state = State.Attacking;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;
@@ -127,18 +114,13 @@ public class zombieScript : Summon
                     {
                         Attack();
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;            
 
             case State.Dead:
 
-                Die();
+                //Die();
 
                 break;
         }
@@ -173,19 +155,22 @@ public class zombieScript : Summon
 
     protected void Wander() 
     {
-        if (!walkPointSet)
+        if (agent != null)
         {
-            SearchWalkPoint();
-        }
+            if (!walkPointSet)
+            {
+                SearchWalkPoint();
+            }
 
-        if (walkPointSet) 
-        {
-            agent.SetDestination(walkPoint);
-        }
+            if (walkPointSet)
+            {
+                agent.SetDestination(walkPoint);
+            }
 
-        if (agent.remainingDistance <= 0) 
-        {
-            walkPointSet = false;
+            if (agent.remainingDistance <= 0)
+            {
+                walkPointSet = false;
+            }
         }
     }
 
@@ -219,5 +204,11 @@ public class zombieScript : Summon
         target = Vector3.zero;
         targetEnemy = null;
         state = State.Wandering;
+    }
+
+    protected override void Die()
+    {
+        agent = null;
+        base.Die();
     }
 }

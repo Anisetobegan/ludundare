@@ -40,8 +40,10 @@ public class skeletonScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
 
@@ -58,12 +60,7 @@ public class skeletonScript : Summon
                     {
                         targetEnemy = DetectClosestEnemy();
                         state = State.Chasing;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
+                    }                    
                 }
 
                 break;
@@ -83,11 +80,6 @@ public class skeletonScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
                     }
                 }
 
@@ -110,11 +102,6 @@ public class skeletonScript : Summon
                     {
                         state = State.Grabbing;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;
@@ -131,18 +118,13 @@ public class skeletonScript : Summon
                     {
                         state = State.Idle;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;
 
             case State.Dead:
                 
-                Die();
+                //Die();
 
                 break;
         }

@@ -37,8 +37,10 @@ public class GranadeerScript : Enemies
         target = GameManager.Instance.PlayerTransform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             case State.Chasing:
@@ -53,11 +55,6 @@ public class GranadeerScript : Enemies
                     {
                         state = State.Attacking;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
                 break;
 
@@ -66,11 +63,6 @@ public class GranadeerScript : Enemies
                 if (enumerator == null)
                 {
                     Attack();
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
 
                 break;
@@ -83,17 +75,12 @@ public class GranadeerScript : Enemies
                         agent.isStopped = false;
                         state = State.Chasing;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
                 break;
 
             case State.Die:
 
-                Die();
+                //Die();
 
                 break;
         }

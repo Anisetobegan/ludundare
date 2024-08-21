@@ -34,8 +34,10 @@ public class MeleeScript : Enemies
         target = GameManager.Instance.PlayerTransform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             case State.Chasing:
@@ -50,12 +52,7 @@ public class MeleeScript : Enemies
                     if (distance < minAttackDistance)
                     {
                         state = State.Attacking;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
+                    }                    
                 }
 
                 break;
@@ -65,18 +62,13 @@ public class MeleeScript : Enemies
                 if (enumerator == null)
                 {
                     Attack();
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
 
                 break;
 
             case State.Die:
 
-                Die();
+                //Die();
 
                 break;
         }

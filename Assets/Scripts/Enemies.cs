@@ -43,6 +43,14 @@ public class Enemies : MonoBehaviour
         UpdateHealthBar();
     }
 
+    virtual protected void Update()
+    {
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
     virtual protected void OnMouseDown()
     {
         Die();

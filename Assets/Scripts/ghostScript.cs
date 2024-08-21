@@ -39,8 +39,10 @@ public class ghostScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
 
@@ -57,11 +59,6 @@ public class ghostScript : Summon
                     {
                         targetEnemy = DetectClosestEnemy();
                         state = State.Chasing;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
                     }
                 }
 
@@ -82,11 +79,6 @@ public class ghostScript : Summon
                     if (targetEnemy != null)
                     {
                         state = State.Chasing;
-                    }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
                     }
                 }
 
@@ -109,11 +101,6 @@ public class ghostScript : Summon
                     {
                         state = State.Exploding;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;
@@ -126,18 +113,13 @@ public class ghostScript : Summon
                     {
                         InitiateExplosion();
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Dead;
-                    }
                 }
 
                 break;
 
             case State.Dead:
 
-                Die();
+                //Die();
 
                 break;
         }
@@ -164,7 +146,7 @@ public class ghostScript : Summon
 
         enumerator = null;
 
-        state = State.Dead;        
+        Die();        
     }
 
     protected override void Move()

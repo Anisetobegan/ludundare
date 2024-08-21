@@ -8,7 +8,7 @@ public class Character : MonoBehaviour, IDamagable
 {
 
     float moveSpeed = 2f;
-    [SerializeField] float health = 50;
+    [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
     int lvl = 1;
     float exp;
@@ -102,7 +102,11 @@ public class Character : MonoBehaviour, IDamagable
         DragSelect();
         
         GiveOrder();
-        
+
+        if (Input.GetKeyUp(KeyCode.Backspace))
+        {
+            KillSummon(selectedSummons);
+        }
 
         switch (state) 
         {
@@ -117,12 +121,7 @@ public class Character : MonoBehaviour, IDamagable
                 if (IsMoving())
                 {
                     state = State.Moving;
-                }
-
-                if (Input.GetKeyUp(KeyCode.Backspace))
-                {
-                    KillSummon(selectedSummons);
-                }
+                }                
 
                 break;
 
@@ -139,23 +138,13 @@ public class Character : MonoBehaviour, IDamagable
                     state = State.Idle;
                 }
 
-                if (Input.GetKeyUp(KeyCode.Backspace))
-                {
-                    KillSummon(selectedSummons);
-                }
-
                 break;
 
             case State.Casting:
 
                 if (enumerator == null)
                 {
-                    InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on
-
-                    if (Input.GetKeyUp(KeyCode.Backspace))
-                    {
-                        KillSummon(selectedSummons);
-                    }
+                    InstSummon(summons[keyPressed]); //sends the summon in the index which the key was pressed on                    
                 }
 
                 break;

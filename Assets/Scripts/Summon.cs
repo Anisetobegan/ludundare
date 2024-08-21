@@ -28,12 +28,16 @@ public class Summon : MonoBehaviour, IDamagable
     virtual protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        UpdateHealthBar();
     }
 
     // Update is called once per frame
-    void Update()
+    virtual protected void Update()
     {
-        
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
     virtual protected void Attack()

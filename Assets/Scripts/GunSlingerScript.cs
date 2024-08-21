@@ -43,8 +43,10 @@ public class GunSlingerScript : Enemies
         target = GameManager.Instance.PlayerTransform.position;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (state)
         {
             case State.Chasing:
@@ -59,12 +61,8 @@ public class GunSlingerScript : Enemies
                     {
                         state = State.Aiming;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
+
                 break;
 
             case State.Aiming:
@@ -81,11 +79,6 @@ public class GunSlingerScript : Enemies
                     WaitForFinishAim(); //Calls the Aiming coroutine
                 }
 
-                if (health <= 0)
-                {
-                    state = State.Die;
-                }
-
                 break;
 
             case State.Attacking:
@@ -93,11 +86,6 @@ public class GunSlingerScript : Enemies
                 if (enumerator == null)
                 {
                     Attack();
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
 
                 break;
@@ -114,16 +102,12 @@ public class GunSlingerScript : Enemies
                     {
                         Reloading();
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
                 
                 break;
 
             case State.Waiting:
+
                 if(enumerator == null)
                 {
                     if(bullets > 0)
@@ -134,17 +118,13 @@ public class GunSlingerScript : Enemies
                     {
                         state = State.Reloading;
                     }
-
-                    if (health <= 0)
-                    {
-                        state = State.Die;
-                    }
                 }
+
                 break;
 
             case State.Die:
 
-                Die();
+                //Die();
 
                 break;
         }
