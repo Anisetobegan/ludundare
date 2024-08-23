@@ -47,15 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8aaf9ca60cb5b4d843a105a72d8007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 50
+  health: 100
   maxHealth: 100
   readyToCast: 1
   currentSummons: []
   selectedSummons: []
   summons:
-  - {fileID: 636098350367905688, guid: 31fc9ccaf25ac674ebe21935c585547f, type: 3}
-  - {fileID: 2133690372044652048, guid: 72852ca173759b241b00331f18952586, type: 3}
   - {fileID: 3434436531844742556, guid: dd4b54675d8c85245bdf771131c93454, type: 3}
+  - {fileID: 2133690372044652048, guid: 72852ca173759b241b00331f18952586, type: 3}
+  - {fileID: 636098350367905688, guid: 31fc9ccaf25ac674ebe21935c585547f, type: 3}
   state: 0
   clickable:
     serializedVersion: 2

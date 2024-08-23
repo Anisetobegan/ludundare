@@ -56,15 +56,17 @@ public class Character : MonoBehaviour, IDamagable
 
     [SerializeField] HealthBars healthBar;
 
+    List<int> levelToUnlockSummon = new List<int> { 0, 3, 5 }; //Stores the level requirements to unlock summons in their respective index
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
     public float PlayerMaxHealth { get { return maxHealth; } set { maxHealth = value; } }
-    public float MaxSummons {  get { return maxSummons; } set { maxSummons = (int)value; } }
+    public float MaxSummons { get { return maxSummons; } set { maxSummons = (int)value; } }
 
     public float SummonMaxHealth { get { return summonHealthToAdd; } set { summonHealthToAdd = value; } }
 
-    public float PlayerMoveSpeed { get {  return moveSpeed; } set { moveSpeed = value; } }
+    public float PlayerMoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
     public float PlayerCastTime { get { return castingTime; } set { castingTime = value; } }
 
@@ -100,7 +102,7 @@ public class Character : MonoBehaviour, IDamagable
     {
         SelectSummon();
         DragSelect();
-        
+
         GiveOrder();
 
         if (Input.GetKeyUp(KeyCode.Backspace))
@@ -108,7 +110,7 @@ public class Character : MonoBehaviour, IDamagable
             KillSummon(selectedSummons);
         }
 
-        switch (state) 
+        switch (state)
         {
             case State.Idle:
 
@@ -117,11 +119,11 @@ public class Character : MonoBehaviour, IDamagable
                 {
                     keyPressed = Summon();
                 }
-                
+
                 if (IsMoving())
                 {
                     state = State.Moving;
-                }                
+                }
 
                 break;
 
@@ -156,7 +158,7 @@ public class Character : MonoBehaviour, IDamagable
                 break;
         }
     }
-           
+
     private void Move() //moves the player
     {
         float xDirection = Input.GetAxis("Horizontal");
@@ -164,7 +166,7 @@ public class Character : MonoBehaviour, IDamagable
 
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
 
-        transform.position += (moveDirection * moveSpeed) * Time.deltaTime;      
+        transform.position += (moveDirection * moveSpeed) * Time.deltaTime;
     }
 
     private bool IsMoving() //checks if the player is moving
@@ -207,12 +209,20 @@ public class Character : MonoBehaviour, IDamagable
     }
 
     private void InstSummon(Summon summon) //starts the coroutine that instantiates summons after waiting x seconds
-    {        
+    {
         if (enumerator == null)
         {
-            enumerator = BeginCasting(summon);
-            StartCoroutine(enumerator);
-        }        
+            if (lvl >= levelToUnlockSummon[keyPressed]) //checks if the level is equal to or greater than the level requirement to summon
+            {
+                enumerator = BeginCasting(summon);
+                StartCoroutine(enumerator);
+            }
+            else
+            {
+                Debug.Log("You need to be lvl " + levelToUnlockSummon[keyPressed]);
+                state = State.Idle;
+            }
+        }
     }
 
     IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
@@ -254,8 +264,8 @@ public class Character : MonoBehaviour, IDamagable
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
 
         if (exp >= levelUpExp)
-        {            
-            LevelUp();            
+        {
+            LevelUp();
         }
     }
 
@@ -296,7 +306,7 @@ public class Character : MonoBehaviour, IDamagable
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            
+
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 foreach (Summon summon in selectedSummons)
@@ -311,7 +321,7 @@ public class Character : MonoBehaviour, IDamagable
                         summon.DesignateTarget(hit.collider.gameObject.GetComponent<Enemies>()); //Sends the gameObject of the enemy hit
                     }
                 }
-               
+
             }
         }
     }
@@ -326,13 +336,13 @@ public class Character : MonoBehaviour, IDamagable
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickable))
             {
-                if(!selectedSummons.Contains(hit.collider.gameObject.GetComponentInParent<Summon>()))
+                if (!selectedSummons.Contains(hit.collider.gameObject.GetComponentInParent<Summon>()))
                 {
                     selectedSummons.Add(hit.collider.gameObject.GetComponentInParent<Summon>());
                     string summonName = hit.collider.gameObject.name;
                     UIManager.Instance.UpdateSummon(hit.collider.gameObject.GetComponentInParent<Summon>());
                 }
-                
+
             }
             else
             {
@@ -369,7 +379,7 @@ public class Character : MonoBehaviour, IDamagable
         }
     }
 
-    private void RemoveSummon(Summon deadSummon) 
+    private void RemoveSummon(Summon deadSummon)
     {
 
     }
@@ -377,13 +387,13 @@ public class Character : MonoBehaviour, IDamagable
     private void KillSummon(List<Summon> summonsToKill)
     {
         int selectedSummonsCount = summonsToKill.Count;
-        for (int i = selectedSummonsCount - 1; i >= 0; i--) 
+        for (int i = selectedSummonsCount - 1; i >= 0; i--)
         {
             UIManager.Instance.ClearSelectedSummon(summonsToKill[i]);
 
             currentSummons.Remove(summonsToKill[i]);
 
-            summonsToKill[i].KillSummon();            
+            summonsToKill[i].KillSummon();
         }
         //summonsToKill.Clear();
     }
@@ -462,7 +472,7 @@ public class Character : MonoBehaviour, IDamagable
         {
             UIManager.Instance.ClearSelectedSummon(summonRef);
         }
-        
+
     }
 
     void TakeDamage(float damage)
