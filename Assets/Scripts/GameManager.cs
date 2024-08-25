@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
 
     private float timeBetweenWaves = 3;
 
-    float timeToReturnMenu = 2f;
-
     [SerializeField] private GameObject waveScreen;
 
     [SerializeField] GameObject choosePerkScreen;
