@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject waveScreen;
 
     [SerializeField] GameObject choosePerkScreen;
+
+    [SerializeField] private GameObject gameOverScreen;
 
     IEnumerator enumerator = null;
 
@@ -79,7 +82,8 @@ public class GameManager : MonoBehaviour
 
     public void Lose()
     {
-
+        gameOverScreen.SetActive(true);
+        spawner.gameObject.SetActive(false);
     }
 
     public IEnumerator StartNewWave()
@@ -115,6 +119,15 @@ public class GameManager : MonoBehaviour
         spawner.gameObject.SetActive(true);
     }
 
+    public void Retry()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ReturnToMainManu()
+    {
+        SceneManager.LoadScene(0);
+    }
 
     public void Pause()
     {

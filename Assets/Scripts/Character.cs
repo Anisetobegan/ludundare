@@ -110,6 +110,11 @@ public class Character : MonoBehaviour, IDamagable
             KillSummon(selectedSummons);
         }
 
+        if (health <= 0)
+        {
+            state = State.Dead;
+        }
+
         switch (state)
         {
             case State.Idle:
@@ -154,6 +159,8 @@ public class Character : MonoBehaviour, IDamagable
             case State.Dead:
 
                 //Game over
+                RemoveSummons();
+                GameManager.Instance.Lose();
 
                 break;
         }
@@ -251,10 +258,7 @@ public class Character : MonoBehaviour, IDamagable
 
     private void Die()
     {
-        if (health <= 0)
-        {
-            gameObject.SetActive(false);
-        }
+        
     }
 
     void CalculateExp(Enemies enemyRef)
@@ -379,9 +383,13 @@ public class Character : MonoBehaviour, IDamagable
         }
     }
 
-    private void RemoveSummon(Summon deadSummon)
+    private void RemoveSummons()
     {
-
+        int selectedSummonsCount = currentSummons.Count;
+        for (int i = selectedSummonsCount - 1; i >= 0; i--)
+        {
+            currentSummons[i].KillSummon();
+        }
     }
 
     private void KillSummon(List<Summon> summonsToKill)
@@ -395,7 +403,6 @@ public class Character : MonoBehaviour, IDamagable
 
             summonsToKill[i].KillSummon();
         }
-        //summonsToKill.Clear();
     }
 
     private void DrawVisual() //draws the canvasÅLs selection box while dragging
