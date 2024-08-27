@@ -21,7 +21,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject gameOverScreen;
 
+    [SerializeField] private GameObject pauseScreen;
+
     IEnumerator enumerator = null;
+
+    public static bool isPaused = false;
 
     public Character PlayerGet { get { return player; } }
 
@@ -131,12 +135,16 @@ public class GameManager : MonoBehaviour
 
     public void Pause()
     {
-
+        pauseScreen.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
     }
 
     public void Resume()
     {
-
+        pauseScreen.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
     }
 
     public void GenerateRandomPerks()
