@@ -20,6 +20,8 @@ public class Summon : MonoBehaviour, IDamagable
 
     [SerializeField] protected HealthBars healthBar;
 
+    [SerializeField] protected Animator animator;
+
     public float SummonHealth { get { return health; } set { health = value; } }
     public float SummonMaxHealth { get {return maxHealth; } set { maxHealth = value; } }
 
@@ -53,7 +55,7 @@ public class Summon : MonoBehaviour, IDamagable
     {
         isDead = true;
         Actions.OnSummonKilled?.Invoke(this);
-        GameObject.Destroy(gameObject);        
+        GameObject.Destroy(gameObject, 1f);        
     }
 
     virtual public string GetSummonName()

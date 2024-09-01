@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 2741980199210194521}
   - component: {fileID: 1500834502708182844}
   - component: {fileID: 6249011729564051498}
+  - component: {fileID: 6638477539340387258}
   m_Layer: 3
   m_Name: Skeleton
   m_TagString: Untagged
@@ -130,6 +131,7 @@ MonoBehaviour:
   isDead: 0
   agent: {fileID: 994197822126361533}
   healthBar: {fileID: 7066798583712836086}
+  animator: {fileID: 6638477539340387258}
   enemiesInRange: []
 --- !u!195 &994197822126361533
 NavMeshAgent:
@@ -224,6 +226,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &6638477539340387258
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766957736099343079}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 9b80cef7452e39b4fbc2b81ed4847cfe, type: 3}
+  m_Controller: {fileID: 9100000, guid: 182393401eda4e94399397d26810f9ee, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5044470606750339325
 GameObject:
   m_ObjectHideFlags: 0
