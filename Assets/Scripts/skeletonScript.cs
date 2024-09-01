@@ -15,7 +15,7 @@ public class skeletonScript : Summon
         Grabbing,
         Dead
     }
-    State state;
+    [SerializeField] State state;
 
     [SerializeField] private List<GameObject> enemiesInRange;
     private GameObject closestEnemy;
@@ -49,76 +49,67 @@ public class skeletonScript : Summon
 
             case State.Idle:
 
-                if (enumerator == null)
+                if (target != Vector3.zero)
                 {
-                    if (target != Vector3.zero)
-                    {
-                        state = State.Moving;
-                    }
-
-                    if (enemiesInRange.Count > 0)
-                    {
-                        targetEnemy = DetectClosestEnemy();
-                        state = State.Chasing;
-                    }                    
+                    state = State.Moving;
+                    animator.SetBool("isWalking", true);
                 }
+
+                if (enemiesInRange.Count > 0)
+                {
+                    targetEnemy = DetectClosestEnemy();
+                    state = State.Chasing;
+                    animator.SetBool("isWalking", true);
+                }        
 
                 break;
 
             case State.Moving:
-
-                if (enumerator == null)
+                
+                
+                if (agent.remainingDistance <= 0)
                 {
-                    Move();
-
-                    if (agent.remainingDistance <= 0)
-                    {
-                        target = Vector3.zero;
-                        state = State.Idle;
-                    }
-
-                    if (targetEnemy != null)
-                    {
-                        state = State.Chasing;
-                    }
+                    target = Vector3.zero;
+                    state = State.Idle;
+                    animator.SetBool("isWalking", false);
                 }
+                
+                if (targetEnemy != null)
+                {
+                    state = State.Chasing;
+                    animator.SetBool("isWalking", true);
+                }        
 
                 break;
 
             case State.Chasing:
-
-                if (enumerator == null)
+                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        target = targetEnemy.transform.position;
-                    }
-                    
-                    Move();
-
-                    float distance = Vector3.Distance(agent.transform.position, target);
-
-                    if (distance < minAttackDistance)
-                    {
-                        state = State.Grabbing;
-                    }
+                    target = targetEnemy.transform.position;
+                }
+                
+                Move();
+                
+                float distance = Vector3.Distance(agent.transform.position, target);
+                
+                if (distance < minAttackDistance)
+                {
+                    state = State.Grabbing;
                 }
 
                 break;
 
             case State.Grabbing:
-
-                if (enumerator == null)
+                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        StartGrabbing();
-                    }
-                    else
-                    {
-                        state = State.Idle;
-                    }
+                    StartGrabbing();
                 }
+                else
+                {
+                    state = State.Idle;
+                }        
 
                 break;
 
@@ -154,6 +145,19 @@ public class skeletonScript : Summon
         return targetPos.GetComponent<Enemies>();
     }
 
+    void StartGrabbing()
+    {
+        if (enumerator == null)
+        {
+            isGrabbing = true;
+            animator.SetBool("isGrabbing", true);
+            animator.SetBool("isWalking", false);
+            targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+
+            Attack();
+        }
+    }
+
     protected override void Attack()
     {
         targetEnemy.TakeDamage(damage);
@@ -169,19 +173,10 @@ public class skeletonScript : Summon
         enumerator = null;
     }
 
-    void StartGrabbing()
-    {
-        isGrabbing = true;
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
-
-        Attack();
-    }
-
-
     public override void DesignateTarget(Vector3 target)
     {
         base.DesignateTarget(target);
-        state = State.Moving;
+        Move();
     }
 
     public override string GetSummonName()
@@ -211,11 +206,14 @@ public class skeletonScript : Summon
         enemiesInRange.Remove(enemyRef.gameObject);
         target = Vector3.zero;
         targetEnemy = null;
+        animator.SetBool("isGrabbing", false);
     }
 
     protected override void Die()
     {
         isGrabbing = false;
+
+        animator.SetTrigger("isDead");
 
         if (targetEnemy != null)
         {

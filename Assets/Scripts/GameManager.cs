@@ -126,11 +126,13 @@ public class GameManager : MonoBehaviour
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1;
     }
 
     public void ReturnToMainManu()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 
     public void Pause()

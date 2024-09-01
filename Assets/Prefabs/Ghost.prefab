@@ -64,6 +64,7 @@ GameObject:
   - component: {fileID: 1253457788443384516}
   - component: {fileID: 5129940397725224814}
   - component: {fileID: 8519908602666423063}
+  - component: {fileID: -5278838773827531479}
   m_Layer: 3
   m_Name: Ghost
   m_TagString: Untagged
@@ -105,6 +106,7 @@ MonoBehaviour:
   isDead: 0
   agent: {fileID: 1253457788443384516}
   healthBar: {fileID: 1149187930114832603}
+  animator: {fileID: -5278838773827531479}
   state: 0
   enemiesInRange: []
   explosionPrefab: {fileID: 1437338458097751948, guid: b037e67b235f626418cf4f741193da19, type: 3}
@@ -178,6 +180,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &-5278838773827531479
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056252221531414024}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 0b0b0213545022c48954f7cfad9d2642, type: 3}
+  m_Controller: {fileID: 9100000, guid: c6e27794aa2552b48b404f1629e87302, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4040708811007419256
 GameObject:
   m_ObjectHideFlags: 0

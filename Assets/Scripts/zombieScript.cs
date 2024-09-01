@@ -15,7 +15,7 @@ public class zombieScript : Summon
         Attacking,
         Dead
     }
-    State state;
+    [SerializeField] State state;
 
     Vector3 walkPoint;
     bool walkPointSet;
@@ -52,68 +52,56 @@ public class zombieScript : Summon
         {
             
             case State.Wandering:
-
-                if (enumerator == null)
+                
+                Wander();
+                
+                if (target != Vector3.zero)
                 {
-                    Wander();
-
-                    if (target != Vector3.zero)
-                    {
-                        state = State.Moving;
-                    }
+                    state = State.Moving;
                 }
-
+                
                 break;
 
             case State.Moving:
-
-                if (enumerator == null)
+                
+                Move();
+                
+                if (agent.remainingDistance <= 0)
                 {
-                    Move();
-
-                    if (agent.remainingDistance <= 0)
-                    {
-                        target = Vector3.zero;
-                        state = State.Wandering;
-                    }
-
-                    if (targetEnemy != null)
-                    {
-                        state = State.Chasing;
-                    }
+                    target = Vector3.zero;
+                    state = State.Wandering;
+                }
+                
+                if (targetEnemy != null)
+                {
+                    state = State.Chasing;
                 }
 
                 break;
 
             case State.Chasing:
-
-                if (enumerator == null)
+                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        target = targetEnemy.transform.position;
-                    }
-
-                    Move();
-
-                    float distance = Vector3.Distance(agent.transform.position, target);
-
-                    if (distance < minAttackDistance)
-                    {
-                        state = State.Attacking;
-                    }
+                    target = targetEnemy.transform.position;
+                }
+                
+                Move();
+                
+                float distance = Vector3.Distance(agent.transform.position, target);
+                
+                if (distance < minAttackDistance)
+                {
+                    state = State.Attacking;
                 }
 
                 break;
 
             case State.Attacking:
-
-                if (enumerator == null)
+                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        Attack();
-                    }
+                    Attack();
                 }
 
                 break;            
@@ -134,12 +122,26 @@ public class zombieScript : Summon
 
     protected override void Attack()
     {
-        agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
-        
-        targetEnemy.TakeDamage(damage);
+        if (enumerator == null)
+        {
+            agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-        enumerator = ResetAttack();
-        StartCoroutine(enumerator);
+            int randomNumber = Random.Range(0, 2);
+
+            if (randomNumber == 0)
+            {
+                animator.SetTrigger("isAttackingLeft");
+            }
+            else
+            {
+                animator.SetTrigger("isAttackingRight");
+            }
+
+            targetEnemy.TakeDamage(damage);
+
+            enumerator = ResetAttack();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator ResetAttack()
@@ -151,6 +153,8 @@ public class zombieScript : Summon
         state = State.Wandering;
 
         enumerator = null;
+
+        animator.SetTrigger("stoppedAttacking");
     }
 
     protected void Wander() 
@@ -208,6 +212,7 @@ public class zombieScript : Summon
     protected override void Die()
     {
         agent = null;
+        animator.SetTrigger("isDead");
         base.Die();
     }
 }

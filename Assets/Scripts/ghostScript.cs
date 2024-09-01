@@ -47,74 +47,66 @@ public class ghostScript : Summon
         {
 
             case State.Idle:
-
-                if (enumerator == null)
+                
+                if (target != Vector3.zero)
                 {
-                    if (target != Vector3.zero)
-                    {
-                        state = State.Moving;
-                    }
-
-                    if (enemiesInRange.Count > 0)
-                    {
-                        targetEnemy = DetectClosestEnemy();
-                        state = State.Chasing;
-                    }
+                    state = State.Moving;
+                    animator.SetBool("isWalking", true);
+                }
+                
+                if (enemiesInRange.Count > 0)
+                {
+                    targetEnemy = DetectClosestEnemy();
+                    state = State.Chasing;
+                    animator.SetBool("isWalking", true);
                 }
 
                 break;
 
             case State.Moving:
-
-                if (enumerator == null)
+                
+                Move();
+                
+                if (agent.remainingDistance <= 0)
                 {
-                    Move();
-
-                    if (agent.remainingDistance <= 0)
-                    {
-                        target = Vector3.zero;
-                        state = State.Idle;
-                    }
-
-                    if (targetEnemy != null)
-                    {
-                        state = State.Chasing;
-                    }
+                    target = Vector3.zero;
+                    state = State.Idle;
+                    animator.SetBool("isWalking", false);
+                }
+                
+                if (targetEnemy != null)
+                {
+                    state = State.Chasing;
+                    animator.SetBool("isWalking", true);
                 }
 
                 break;
 
             case State.Chasing:
-
-                if (enumerator == null)
+                                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        target = targetEnemy.transform.position;
-                    }
-
-                    Move();
-
-                    float distance = Vector3.Distance(agent.transform.position, target);
-
-                    if (distance < minAttackDistance)
-                    {
-                        state = State.Exploding;
-                    }
+                    target = targetEnemy.transform.position;
+                }
+                
+                Move();
+                
+                float distance = Vector3.Distance(agent.transform.position, target);
+                                
+                if (distance < minAttackDistance)
+                {
+                    state = State.Exploding;
                 }
 
                 break;
 
             case State.Exploding:
-
-                if (enumerator == null)
+                
+                if (targetEnemy != null)
                 {
-                    if (targetEnemy != null)
-                    {
-                        InitiateExplosion();
-                    }
+                    InitiateExplosion();
                 }
-
+                
                 break;
 
             case State.Dead:
@@ -123,21 +115,21 @@ public class ghostScript : Summon
 
                 break;
         }
-    }
-
-    protected override void Attack()
-    {
-
-    }
+    }    
 
     void InitiateExplosion()
     {
-        enumerator = Exploding();
-        StartCoroutine(enumerator);
+        if (enumerator == null)
+        {
+            enumerator = Exploding();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator Exploding()
     {
+        animator.SetTrigger("isExploding");
+
         yield return new WaitForSeconds(timeToExplode);
 
         //instantiate explotion GameObject
@@ -206,5 +198,12 @@ public class ghostScript : Summon
         target = Vector3.zero;
         targetEnemy = null;
         state = State.Idle;
+    }
+
+    protected override void Die()
+    {
+        isDead = true;
+        Actions.OnSummonKilled?.Invoke(this);
+        GameObject.Destroy(gameObject);
     }
 }

@@ -255,4 +255,10 @@ public class GunSlingerScript : Enemies
         target = Vector3.zero;
         state = State.Chasing;
     }
+
+    protected override void Die()
+    {
+        agent = null;
+        base.Die();
+    }
 }
