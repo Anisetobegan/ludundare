@@ -60,61 +60,63 @@ public class skeletonScript : Summon
                     targetEnemy = DetectClosestEnemy();
                     state = State.Chasing;
                     animator.SetBool("isWalking", true);
-                }        
+                }
 
                 break;
 
             case State.Moving:
-                
-                
+
+
                 if (agent.remainingDistance <= 0)
                 {
                     target = Vector3.zero;
                     state = State.Idle;
                     animator.SetBool("isWalking", false);
                 }
-                
+
                 if (targetEnemy != null)
                 {
                     state = State.Chasing;
                     animator.SetBool("isWalking", true);
-                }        
+                }
 
                 break;
 
             case State.Chasing:
-                
+
                 if (targetEnemy != null)
                 {
                     target = targetEnemy.transform.position;
                 }
-                
+
                 Move();
-                
+
                 float distance = Vector3.Distance(agent.transform.position, target);
-                
+
                 if (distance < minAttackDistance)
                 {
                     state = State.Grabbing;
+                    StartGrabbing();
                 }
 
                 break;
 
             case State.Grabbing:
-                
+
                 if (targetEnemy != null)
                 {
-                    StartGrabbing();
+                    //StartGrabbing();
+                    Attack();
                 }
                 else
                 {
                     state = State.Idle;
-                }        
+                }
 
                 break;
 
             case State.Dead:
-                
+
                 //Die();
 
                 break;
@@ -147,23 +149,23 @@ public class skeletonScript : Summon
 
     void StartGrabbing()
     {
-        if (enumerator == null)
-        {
-            isGrabbing = true;
-            animator.SetBool("isGrabbing", true);
-            animator.SetBool("isWalking", false);
-            targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+        isGrabbing = true;
+        animator.SetBool("isGrabbing", true);
+        animator.SetBool("isWalking", false);
+        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
 
-            Attack();
-        }
+        
     }
 
     protected override void Attack()
     {
-        targetEnemy.TakeDamage(damage);
+        if (enumerator == null)
+        {
+            targetEnemy.TakeDamage(damage);
 
-        enumerator = ResetAttack();
-        StartCoroutine(enumerator);
+            enumerator = ResetAttack();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator ResetAttack()

@@ -126,16 +126,7 @@ public class zombieScript : Summon
         {
             agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-            int randomNumber = Random.Range(0, 2);
-
-            if (randomNumber == 0)
-            {
-                animator.SetTrigger("isAttackingLeft");
-            }
-            else
-            {
-                animator.SetTrigger("isAttackingRight");
-            }
+            animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");            
 
             targetEnemy.TakeDamage(damage);
 
