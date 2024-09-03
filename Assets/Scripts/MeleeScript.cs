@@ -91,7 +91,8 @@ public class MeleeScript : Enemies
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-        animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");
+        animator.SetTrigger(Random.Range(0, 2) == 0 ? (Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight") : 
+            (Random.Range(0, 2) == 0 ? "isKickingLeft" : "isKickingRight"));
 
         damagable.Damage(damage);
 
