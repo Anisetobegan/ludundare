@@ -28,51 +28,57 @@ public class MeleeScript : Enemies
     {
         Actions.OnSummonKilled -= SummonDestroyed;
     }
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         state = State.Chasing;
         target = GameManager.Instance.PlayerTransform.position;
+
+        colliderTrigger.GetList(alliesInRange);
     }
 
     protected override void Update()
     {
-        base.Update();
-
-        switch (state)
+        if (isDead == false)
         {
-            case State.Chasing:
+            base.Update();
 
-                if (enumerator == null)
-                {
-                    target = DetectClosestAlly();
-                    Move();
+            switch (state)
+            {
+                case State.Chasing:
 
-                    float distance = Vector3.Distance(agent.transform.position, target);
-
-                    if (distance < minAttackDistance)
+                    if (enumerator == null)
                     {
-                        state = State.Attacking;
-                    }                    
-                }
+                        target = DetectClosestAlly();
+                        Move();
 
-                break;
+                        float distance = Vector3.Distance(agent.transform.position, target);
 
-            case State.Attacking:
+                        if (distance < minAttackDistance)
+                        {
+                            state = State.Attacking;
+                        }
+                    }
 
-                if (enumerator == null)
-                {
-                    Attack();
-                }
+                    break;
 
-                break;
+                case State.Attacking:
 
-            case State.Die:
+                    if (enumerator == null)
+                    {
+                        Attack();
+                    }
 
-                //Die();
+                    break;
 
-                break;
+                case State.Die:
+
+                    //Die();
+
+                    break;
+            }
         }
-        
     }
 
     protected override void Move()
@@ -84,6 +90,8 @@ public class MeleeScript : Enemies
     protected override void Attack()
     {
         agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+
+        animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");
 
         damagable.Damage(damage);
 
@@ -100,27 +108,19 @@ public class MeleeScript : Enemies
         state = State.Chasing;
 
         enumerator = null;
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (alliesInRange.Contains(other.gameObject) == false)
-        {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
-            {
-                alliesInRange.Add(other.gameObject);
-            }
-        }
+        animator.SetTrigger("stoppedAttacking");
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        alliesInRange.Remove(other.gameObject);
-    }    
 
     void SummonDestroyed(Summon summonRef)
     {
         alliesInRange.Remove(summonRef.gameObject);
         target = Vector3.zero;
+    }
+    protected override void Die()
+    {
+        animator.SetTrigger("isDead");
+        this.enabled = false;
+        base.Die();
     }
 }

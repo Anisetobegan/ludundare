@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 3630433901888098704}
   - component: {fileID: 2686185098120923466}
   - component: {fileID: 7137523947986638358}
-  m_Layer: 3
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,6 +309,8 @@ MonoBehaviour:
   agent: {fileID: 2256879320064761871}
   healthBar: {fileID: 4424064061787589792}
   animator: {fileID: 5690289264852749864}
+  colliderTrigger: {fileID: 0}
+  state: 0
   ground:
     serializedVersion: 2
     m_Bits: 64

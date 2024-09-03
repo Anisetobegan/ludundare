@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class GranadeerScript : Enemies
 {
-    bool isOnRange = false;
-    float timeToThrowGranade = 2f;
+    float timeToThrowGranade = 1f;
+    float minAttackDistance = 7.5f;
+
     [SerializeField] private GameObject grenade;
 
     enum State
@@ -17,72 +18,75 @@ public class GranadeerScript : Enemies
         Die
     }
 
-    State state;
+    [SerializeField] State state;
 
     private GrenadeScript newGrenade = null; 
 
-    private void Awake()
+    private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         state = State.Chasing;
         target = GameManager.Instance.PlayerTransform.position;
+
+        colliderTrigger.GetList(alliesInRange);
     }
 
     protected override void Update()
     {
-        base.Update();
-
-        switch (state)
+        if (isDead == false)
         {
-            case State.Chasing:
+            base.Update();
 
-                if (enumerator == null)
-                {
+            switch (state)
+            {
+                case State.Chasing:
 
                     target = DetectClosestAlly();
                     Move();
 
-                    if (isOnRange)
+                    float distance = Vector3.Distance(agent.transform.position, target);
+
+                    if (distance < minAttackDistance)
                     {
                         state = State.Attacking;
                     }
-                }
-                break;
 
-            case State.Attacking:
+                    break;
 
-                if (enumerator == null)
-                {
+                case State.Attacking:
+
                     Attack();
-                }
 
-                break;
+                    break;
 
-            case State.Waiting:
-                if (enumerator == null)
-                {
-                    if(newGrenade == null)
+                case State.Waiting:
+
+                    if (newGrenade == null)
                     {
                         agent.isStopped = false;
                         state = State.Chasing;
+
+                        animator.SetTrigger("stoppedAttacking");
                     }
-                }
-                break;
 
-            case State.Die:
+                    break;
 
-                //Die();
+                case State.Die:
 
-                break;
+                    //Die();
+
+                    break;
+            }
         }
     }
 
@@ -90,48 +94,32 @@ public class GranadeerScript : Enemies
     {
         Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
         agent.SetDestination(offset);
-    }    
+    }
 
     protected override void Attack()
     {
-        agent.isStopped = true;
+        if (enumerator == null)
+        {
+            agent.isStopped = true;
 
-        newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+            animator.SetTrigger("isAttacking");
 
-        newGrenade.InitializeGranadeTarget(target, damage);
-        
-        enumerator = ThrowingGranade();
-        StartCoroutine(enumerator);
-        
-        state = State.Waiting;
+            enumerator = ThrowingGranade();
+            StartCoroutine(enumerator);            
+        }
     }
 
     IEnumerator ThrowingGranade()
     {
         yield return new WaitForSeconds(timeToThrowGranade);
+
+        newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+
+        newGrenade.InitializeGranadeTarget(target, damage);
+
         enumerator = null;
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (alliesInRange.Contains(other.gameObject) == false)
-        {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Clickable"))
-            {
-                alliesInRange.Add(other.gameObject);
-            }
-        }
-        isOnRange = true;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        alliesInRange.Remove(other.gameObject);
-
-        if (alliesInRange.Count == 0)
-        {
-            isOnRange = false;
-        }
+        state = State.Waiting;        
     }
 
     void SummonDestroyed(Summon summonRef)
@@ -139,5 +127,12 @@ public class GranadeerScript : Enemies
         alliesInRange.Remove(summonRef.gameObject);
         target = Vector3.zero;
         state = State.Chasing;
+    }
+
+    protected override void Die()
+    {
+        animator.SetTrigger("isDead");
+        this.enabled = false;
+        base.Die();
     }
 }

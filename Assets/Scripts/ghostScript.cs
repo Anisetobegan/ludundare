@@ -27,6 +27,8 @@ public class ghostScript : Summon
     private void Awake()
     {
         damage = 100f;
+
+        colliderTrigger.GetList(enemiesInRange);
     }
 
     private void OnEnable()
@@ -41,79 +43,82 @@ public class ghostScript : Summon
 
     protected override void Update()
     {
-        base.Update();
-
-        switch (state)
+        if (isDead == false)
         {
+            base.Update();
 
-            case State.Idle:
-                
-                if (target != Vector3.zero)
-                {
-                    state = State.Moving;
-                    animator.SetBool("isWalking", true);
-                }
-                
-                if (enemiesInRange.Count > 0)
-                {
-                    targetEnemy = DetectClosestEnemy();
-                    state = State.Chasing;
-                    animator.SetBool("isWalking", true);
-                }
+            switch (state)
+            {
 
-                break;
+                case State.Idle:
 
-            case State.Moving:
-                
-                Move();
-                
-                if (agent.remainingDistance <= 0)
-                {
-                    target = Vector3.zero;
-                    state = State.Idle;
-                    animator.SetBool("isWalking", false);
-                }
-                
-                if (targetEnemy != null)
-                {
-                    state = State.Chasing;
-                    animator.SetBool("isWalking", true);
-                }
+                    if (target != Vector3.zero)
+                    {
+                        state = State.Moving;
+                        animator.SetBool("isWalking", true);
+                    }
 
-                break;
+                    if (enemiesInRange.Count > 0)
+                    {
+                        targetEnemy = DetectClosestEnemy();
+                        state = State.Chasing;
+                        animator.SetBool("isWalking", true);
+                    }
 
-            case State.Chasing:
-                                
-                if (targetEnemy != null)
-                {
-                    target = targetEnemy.transform.position;
-                }
-                
-                Move();
-                
-                float distance = Vector3.Distance(agent.transform.position, target);
-                                
-                if (distance < minAttackDistance)
-                {
-                    state = State.Exploding;
-                }
+                    break;
 
-                break;
+                case State.Moving:
 
-            case State.Exploding:
-                
-                if (targetEnemy != null)
-                {
-                    InitiateExplosion();
-                }
-                
-                break;
+                    Move();
 
-            case State.Dead:
+                    if (agent.remainingDistance <= 0)
+                    {
+                        target = Vector3.zero;
+                        state = State.Idle;
+                        animator.SetBool("isWalking", false);
+                    }
 
-                //Die();
+                    if (targetEnemy != null)
+                    {
+                        state = State.Chasing;
+                        animator.SetBool("isWalking", true);
+                    }
 
-                break;
+                    break;
+
+                case State.Chasing:
+
+                    if (targetEnemy != null)
+                    {
+                        target = targetEnemy.transform.position;
+                    }
+
+                    Move();
+
+                    float distance = Vector3.Distance(agent.transform.position, target);
+
+                    if (distance < minAttackDistance)
+                    {
+                        state = State.Exploding;
+                    }
+
+                    break;
+
+                case State.Exploding:
+
+                    if (targetEnemy != null)
+                    {
+                        InitiateExplosion();
+                    }
+
+                    break;
+
+                case State.Dead:
+
+                    //Die();
+
+                    break;
+            }
         }
     }    
 
@@ -202,8 +207,7 @@ public class ghostScript : Summon
 
     protected override void Die()
     {
-        isDead = true;
-        Actions.OnSummonKilled?.Invoke(this);
-        GameObject.Destroy(gameObject);
+        this.enabled = false;
+        base.Die();
     }
 }
