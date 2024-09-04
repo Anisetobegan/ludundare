@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class zombieScript : Summon
 {
@@ -23,7 +24,11 @@ public class zombieScript : Summon
 
     [SerializeField] LayerMask ground;
 
-    IEnumerator enumerator = null;
+    protected override void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        UpdateHealthBar();
+    }
 
     private void Awake()
     {
@@ -32,6 +37,7 @@ public class zombieScript : Summon
 
         damage = 25f;
 
+        enemiesInRange = null;
         colliderTrigger = null;
     }
 

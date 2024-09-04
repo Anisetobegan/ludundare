@@ -17,9 +17,6 @@ public class ghostScript : Summon
     }
     [SerializeField] State state;
 
-    IEnumerator enumerator = null;
-
-    [SerializeField] private List<GameObject> enemiesInRange;
     private GameObject closestEnemy;
 
     [SerializeField] ExplotionScript explosionPrefab;
@@ -27,8 +24,6 @@ public class ghostScript : Summon
     private void Awake()
     {
         damage = 100f;
-
-        colliderTrigger.GetList(enemiesInRange);
     }
 
     private void OnEnable()
@@ -208,6 +203,9 @@ public class ghostScript : Summon
     protected override void Die()
     {
         this.enabled = false;
-        base.Die();
+        healthBar.gameObject.SetActive(false);
+        isDead = true;
+        Actions.OnSummonKilled?.Invoke(this);
+        Destroy(gameObject);
     }
 }

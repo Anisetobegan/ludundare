@@ -25,7 +25,7 @@ public class ColliderTrigger : MonoBehaviour
         objectsCollided.Remove(other.gameObject);
     }
 
-    public void GetList(List<GameObject> listToGet)
+    public void SetList(List<GameObject> listToGet)
     {
         objectsCollided = listToGet;
     }

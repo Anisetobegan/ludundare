@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 7174401735749020822}
   - component: {fileID: 9163739176410252152}
   - component: {fileID: 7753488242313588219}
+  - component: {fileID: -1160522282721784236}
   m_Layer: 7
   m_Name: GunSlinger
   m_TagString: Untagged
@@ -236,7 +237,7 @@ MonoBehaviour:
   alliesInRange: []
   healthBar: {fileID: 2780002328919879675}
   colliderTrigger: {fileID: 6884420153347662499}
-  animator: {fileID: 0}
+  animator: {fileID: -1160522282721784236}
   bullet: {fileID: 7563733609764549209, guid: 8ab0bf4074142994cb6632e0935e03a7, type: 3}
   state: 0
 --- !u!195 &9163739176410252152
@@ -284,6 +285,27 @@ CapsuleCollider:
   m_Height: 2.0030708
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!95 &-1160522282721784236
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3787706476907361795}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: ea72a85b46d4e954487c31842c06987f, type: 3}
+  m_Controller: {fileID: 9100000, guid: 0bcf0a13736129e4c9fbc378e8509aad, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7230263934945493462
 GameObject:
   m_ObjectHideFlags: 0

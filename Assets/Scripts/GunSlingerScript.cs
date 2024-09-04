@@ -43,8 +43,6 @@ public class GunSlingerScript : Enemies
 
         state = State.Chasing;
         target = GameManager.Instance.PlayerTransform.position;
-
-        colliderTrigger.GetList(alliesInRange);
     }
 
     protected override void Update()
@@ -56,21 +54,17 @@ public class GunSlingerScript : Enemies
             switch (state)
             {
                 case State.Chasing:
-
-                    if (enumerator == null)
+                    
+                    target = DetectClosestAlly();
+                    Move();
+                    
+                    float distance = Vector3.Distance(agent.transform.position, target);
+                    
+                    if (distance < minAttackDistance)
                     {
-
-                        target = DetectClosestAlly();
-                        Move();
-
-                        float distance = Vector3.Distance(agent.transform.position, target);
-
-                        if (distance < minAttackDistance)
-                        {
-                            state = State.Aiming;
-
-                            animator.SetTrigger("isAiming");
-                        }
+                        state = State.Aiming;
+                        
+                        animator.SetTrigger("isAiming");
                     }
 
                     break;
@@ -83,53 +77,41 @@ public class GunSlingerScript : Enemies
 
                     transform.rotation = Quaternion.RotateTowards(transform.rotation,
                         Quaternion.LookRotation((target + Vector3.up * transform.position.y - transform.position).normalized), 360f);
-
-                    if (enumerator == null) // Checks if thereLs no running coroutines
-                    {
-                        WaitForFinishAim(); //Calls the Aiming coroutine
-                    }
+                    
+                    WaitForFinishAim(); //Calls the Aiming coroutine
 
                     break;
 
                 case State.Attacking:
-
-                    if (enumerator == null)
-                    {
-                        Attack();
-                    }
+                    
+                    Attack();
 
                     break;
 
                 case State.Waiting:
-
-                    if (enumerator == null)
+                    
+                    if (bullets > 0)
                     {
-                        if (bullets > 0)
-                        {
-                            state = State.Chasing;
-
-                            animator.SetTrigger("stoppedShooting");
-                        }
-                        if (bullets <= 0)
-                        {
-                            state = State.Reloading;
-                        }
+                        state = State.Chasing;
+                        
+                        animator.SetTrigger("stoppedShooting");
+                    }
+                    else
+                    {
+                        state = State.Reloading;
                     }
 
                     break;
 
                 case State.Reloading:
-
-                    if (enumerator == null)
+                    
+                    if (tookCover == false)
                     {
-                        if (tookCover == false)
-                        {
-                            TakingCoverDestination();
-                        }
-                        else
-                        {
-                            Reloading();
-                        }
+                        TakingCoverDestination();
+                    }
+                    else
+                    {
+                        Reloading();
                     }
 
                     break;                
@@ -144,9 +126,12 @@ public class GunSlingerScript : Enemies
     }
 
     protected void WaitForFinishAim()
-    {        
-        enumerator = Aiming();
-        StartCoroutine(enumerator);        
+    {
+        if (enumerator == null) // Checks if thereLs no running coroutines
+        {
+            enumerator = Aiming();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator Aiming() //Aims for 1 second before attacking
@@ -166,21 +151,23 @@ public class GunSlingerScript : Enemies
 
     protected override void Attack()
     {
-        if (bullets > 0)
+        if (enumerator == null)
         {
-            GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
-            newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
-        
-            bullets--;        
-        
-            enumerator = ResetAttack();
-            StartCoroutine(enumerator);                        
+            if (bullets > 0)
+            {
+                GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+                newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
+
+                bullets--;
+
+                enumerator = ResetAttack();
+                StartCoroutine(enumerator);
+            }
+            else
+            {
+                state = State.Reloading;
+            }
         }
-        else
-        {
-            state = State.Reloading;
-        }
-                
         
     }
 
@@ -197,9 +184,12 @@ public class GunSlingerScript : Enemies
 
     protected void Reloading()
     {
-        agent.isStopped = true;
-        enumerator = Reload();
-        StartCoroutine (enumerator);
+        if (enumerator == null)
+        {
+            agent.isStopped = true;
+            enumerator = Reload();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator Reload()
@@ -221,17 +211,20 @@ public class GunSlingerScript : Enemies
 
     private void TakingCoverDestination()
     {
-        if (isBeingGrabbed == false)
+        if (enumerator == null)
         {
-            agent.isStopped = false;
-            target = DetectClosestAlly();
-            Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
-            agent.SetDestination(oppositeDirection);
+            if (isBeingGrabbed == false)
+            {
+                agent.isStopped = false;
+                target = DetectClosestAlly();
+                Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
+                agent.SetDestination(oppositeDirection);
 
-            animator.SetTrigger("stoppedShooting");
+                animator.SetTrigger("stoppedShooting");
 
-            enumerator = TakingCover();
-            StartCoroutine(enumerator);
+                enumerator = TakingCover();
+                StartCoroutine(enumerator);
+            }
         }
     }
 

@@ -37,8 +37,6 @@ public class GranadeerScript : Enemies
         base.Start();
         state = State.Chasing;
         target = GameManager.Instance.PlayerTransform.position;
-
-        colliderTrigger.GetList(alliesInRange);
     }
 
     protected override void Update()
@@ -64,6 +62,9 @@ public class GranadeerScript : Enemies
                     break;
 
                 case State.Attacking:
+
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                        Quaternion.LookRotation((target + Vector3.up * transform.position.y - transform.position).normalized), 360f);
 
                     Attack();
 

@@ -47,6 +47,8 @@ public class Enemies : MonoBehaviour
     virtual protected void Start()
     {
         UpdateHealthBar();
+
+        colliderTrigger.SetList(alliesInRange);
     }
 
     virtual protected void Update()

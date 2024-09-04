@@ -16,11 +16,8 @@ public class skeletonScript : Summon
         Dead
     }
     [SerializeField] State state;
-
-    [SerializeField] private List<GameObject> enemiesInRange;
+    
     private GameObject closestEnemy;
-
-    IEnumerator enumerator = null;
 
     bool isGrabbing = false;
 
@@ -28,8 +25,6 @@ public class skeletonScript : Summon
     {
         state = State.Idle;
         damage = 10f;
-
-        colliderTrigger.GetList(enemiesInRange);
     }
 
     private void OnEnable()

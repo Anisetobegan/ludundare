@@ -34,8 +34,6 @@ public class MeleeScript : Enemies
 
         state = State.Chasing;
         target = GameManager.Instance.PlayerTransform.position;
-
-        colliderTrigger.GetList(alliesInRange);
     }
 
     protected override void Update()
@@ -48,28 +46,25 @@ public class MeleeScript : Enemies
             {
                 case State.Chasing:
 
-                    if (enumerator == null)
+                    target = DetectClosestAlly();
+                    Move();
+
+                    float distance = Vector3.Distance(agent.transform.position, target);
+
+                    if (distance < minAttackDistance)
                     {
-                        target = DetectClosestAlly();
-                        Move();
-
-                        float distance = Vector3.Distance(agent.transform.position, target);
-
-                        if (distance < minAttackDistance)
-                        {
-                            state = State.Attacking;
-                        }
+                        state = State.Attacking;
                     }
-
+                    
                     break;
 
                 case State.Attacking:
 
-                    if (enumerator == null)
-                    {
-                        Attack();
-                    }
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                        Quaternion.LookRotation((target + Vector3.up * transform.position.y - transform.position).normalized), 360f);
 
+                    Attack();
+                    
                     break;
 
                 case State.Die:
@@ -89,15 +84,18 @@ public class MeleeScript : Enemies
 
     protected override void Attack()
     {
-        agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+        if (enumerator == null)
+        {
+            agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-        animator.SetTrigger(Random.Range(0, 2) == 0 ? (Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight") : 
-            (Random.Range(0, 2) == 0 ? "isKickingLeft" : "isKickingRight"));
+            animator.SetTrigger(Random.Range(0, 2) == 0 ? (Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight") :
+                (Random.Range(0, 2) == 0 ? "isKickingLeft" : "isKickingRight"));
 
-        damagable.Damage(damage);
+            damagable.Damage(damage);
 
-        enumerator = ResetAttack();
-        StartCoroutine(enumerator);
+            enumerator = ResetAttack();
+            StartCoroutine(enumerator);
+        }
     }
 
     IEnumerator ResetAttack()
