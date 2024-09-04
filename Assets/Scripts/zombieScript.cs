@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class zombieScript : Summon
 {
-    float minAttackDistance = 1.3f;
+    float minAttackDistance = 1.6f;
     float timeBetweenAttacks = 3f;
 
     enum State
@@ -23,7 +24,11 @@ public class zombieScript : Summon
 
     [SerializeField] LayerMask ground;
 
-    IEnumerator enumerator = null;
+    protected override void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        UpdateHealthBar();
+    }
 
     private void Awake()
     {
@@ -31,6 +36,9 @@ public class zombieScript : Summon
         state = State.Wandering;
 
         damage = 25f;
+
+        enemiesInRange = null;
+        colliderTrigger = null;
     }
 
     private void OnEnable()
@@ -46,71 +54,74 @@ public class zombieScript : Summon
 
     protected override void Update()
     {
-        base.Update();
-
-        switch (state)
+        if (isDead == false)
         {
-            
-            case State.Wandering:
-                
-                Wander();
-                
-                if (target != Vector3.zero)
-                {
-                    state = State.Moving;
-                }
-                
-                break;
+            base.Update();
 
-            case State.Moving:
-                
-                Move();
-                
-                if (agent.remainingDistance <= 0)
-                {
-                    target = Vector3.zero;
-                    state = State.Wandering;
-                }
-                
-                if (targetEnemy != null)
-                {
-                    state = State.Chasing;
-                }
+            switch (state)
+            {
 
-                break;
+                case State.Wandering:
 
-            case State.Chasing:
-                
-                if (targetEnemy != null)
-                {
-                    target = targetEnemy.transform.position;
-                }
-                
-                Move();
-                
-                float distance = Vector3.Distance(agent.transform.position, target);
-                
-                if (distance < minAttackDistance)
-                {
-                    state = State.Attacking;
-                }
+                    Wander();
 
-                break;
+                    if (target != Vector3.zero)
+                    {
+                        state = State.Moving;
+                    }
 
-            case State.Attacking:
-                
-                if (targetEnemy != null)
-                {
-                    Attack();
-                }
+                    break;
 
-                break;            
+                case State.Moving:
 
-            case State.Dead:
+                    Move();
 
-                //Die();
+                    if (agent.remainingDistance <= 0)
+                    {
+                        target = Vector3.zero;
+                        state = State.Wandering;
+                    }
 
-                break;
+                    if (targetEnemy != null)
+                    {
+                        state = State.Chasing;
+                    }
+
+                    break;
+
+                case State.Chasing:
+
+                    if (targetEnemy != null)
+                    {
+                        target = targetEnemy.transform.position;
+                    }
+
+                    Move();
+
+                    float distance = Vector3.Distance(agent.transform.position, target);
+
+                    if (distance < minAttackDistance)
+                    {
+                        state = State.Attacking;
+                    }
+
+                    break;
+
+                case State.Attacking:
+
+                    if (targetEnemy != null)
+                    {
+                        Attack();
+                    }
+
+                    break;
+
+                case State.Dead:
+
+                    //Die();
+
+                    break;
+            }
         }
     }
 
@@ -126,8 +137,7 @@ public class zombieScript : Summon
         {
             agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
 
-            animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");            
-
+            animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");
             targetEnemy.TakeDamage(damage);
 
             enumerator = ResetAttack();
@@ -202,8 +212,8 @@ public class zombieScript : Summon
 
     protected override void Die()
     {
-        agent = null;
         animator.SetTrigger("isDead");
+        this.enabled = false;
         base.Die();
     }
 }

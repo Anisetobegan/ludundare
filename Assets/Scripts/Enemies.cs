@@ -34,18 +34,26 @@ public class Enemies : MonoBehaviour
 
     protected bool isBeingGrabbed = false;
 
+    protected bool isDead = false;
+
     [SerializeField] HealthBars healthBar;
+
+    [SerializeField] protected ColliderTrigger colliderTrigger;
+
+    [SerializeField] protected Animator animator;
 
     public float EnemyHealth { get { return health; } set { health = value; } }
 
-    protected void Start()
+    virtual protected void Start()
     {
         UpdateHealthBar();
+
+        colliderTrigger.SetList(alliesInRange);
     }
 
     virtual protected void Update()
     {
-        if (health <= 0)
+        if (health <= 0 && isDead == false)
         {
             Die();
         }
@@ -71,7 +79,11 @@ public class Enemies : MonoBehaviour
     {
         Actions.OnEnemyKilled?.Invoke(this);
 
-        Destroy(gameObject);
+        isDead = true;
+
+        healthBar.gameObject.SetActive(false);
+
+        Destroy(gameObject, 1f);
     }
 
     virtual public void IsBeingGrabbed(bool isStopped)

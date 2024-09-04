@@ -22,6 +22,12 @@ public class Summon : MonoBehaviour, IDamagable
 
     [SerializeField] protected Animator animator;
 
+    [SerializeField] protected ColliderTrigger colliderTrigger;
+
+    [SerializeField] protected List<GameObject> enemiesInRange;
+
+    protected IEnumerator enumerator = null;
+
     public float SummonHealth { get { return health; } set { health = value; } }
     public float SummonMaxHealth { get {return maxHealth; } set { maxHealth = value; } }
 
@@ -31,12 +37,14 @@ public class Summon : MonoBehaviour, IDamagable
     {
         agent = GetComponent<NavMeshAgent>();
         UpdateHealthBar();
+
+        colliderTrigger.SetList(enemiesInRange);
     }
 
     // Update is called once per frame
     virtual protected void Update()
     {
-        if (health <= 0)
+        if (health <= 0 && isDead == false)
         {
             Die();
         }
@@ -53,9 +61,10 @@ public class Summon : MonoBehaviour, IDamagable
     }
     virtual protected void Die()
     {
+        healthBar.gameObject.SetActive(false);
         isDead = true;
         Actions.OnSummonKilled?.Invoke(this);
-        GameObject.Destroy(gameObject, 1f);        
+        Destroy(gameObject, 1f);
     }
 
     virtual public string GetSummonName()
