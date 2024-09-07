@@ -58,6 +58,8 @@ public class Character : MonoBehaviour, IDamagable
 
     List<int> levelToUnlockSummon = new List<int> { 0, 3, 5 }; //Stores the level requirements to unlock summons in their respective index
 
+    [SerializeField] ParticleSystem summonCircle;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -234,6 +236,8 @@ public class Character : MonoBehaviour, IDamagable
 
     IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
     {
+        summonCircle.gameObject.SetActive(true);
+
         yield return new WaitForSeconds(castingTime);
 
         Summon newSummon = Instantiate(summon);
@@ -247,6 +251,8 @@ public class Character : MonoBehaviour, IDamagable
         enumerator = null;
 
         StartCoroutine(CastingCoolDownCoroutine());
+
+        summonCircle.gameObject.SetActive(false);
     }
 
     IEnumerator CastingCoolDownCoroutine()
