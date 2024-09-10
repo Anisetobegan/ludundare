@@ -11,6 +11,8 @@ public class ExplotionScript : MonoBehaviour
 
     [SerializeField] SphereCollider sphereCollider;
 
+    [SerializeField] ParticleSystem explosionVFX;
+
     public enum ExplosionType
     {
         Ghost,
@@ -69,5 +71,6 @@ public class ExplotionScript : MonoBehaviour
         this.damage = damage;
         sphereCollider.radius = explosionRadius;
         this.explosionType = explosionType;
+        explosionVFX.transform.localScale *= explosionRadius;
     }
 }

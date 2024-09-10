@@ -25,12 +25,9 @@ public class GrenadeScript : MonoBehaviour
 
     private void Update()
     {
-        if (enumerator == null)
-        {
-            enumerator = Move();
-            StartCoroutine(enumerator);
-        }
+        transform.Rotate((360 * 5) *Time.deltaTime, 0, 0);
     }
+
     IEnumerator Move()
     {
         Vector3 directionVector = target - transform.position;
@@ -73,5 +70,7 @@ public class GrenadeScript : MonoBehaviour
     {
         this.target = target;
         this.damage = grenadierDamage;
+
+        StartCoroutine(Move());
     }
 }
