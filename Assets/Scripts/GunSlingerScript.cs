@@ -14,6 +14,8 @@ public class GunSlingerScript : Enemies
     int bullets = 5;
 
     [SerializeField] private GameObject bullet;
+    [SerializeField] Transform bulletStartPos;
+    [SerializeField] GameObject muzzleFlashVFX;
 
     enum State
     {
@@ -155,7 +157,9 @@ public class GunSlingerScript : Enemies
         {
             if (bullets > 0)
             {
-                GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+                muzzleFlashVFX.SetActive(true);
+
+                GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
                 newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
 
                 bullets--;
@@ -174,6 +178,8 @@ public class GunSlingerScript : Enemies
     IEnumerator ResetAttack()
     {
         yield return new WaitForSeconds(timeBetweenAttacks);
+
+        muzzleFlashVFX.SetActive(false);
 
         agent.isStopped = false;
 

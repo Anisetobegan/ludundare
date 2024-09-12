@@ -240,7 +240,7 @@ public class Character : MonoBehaviour, IDamagable
 
         yield return new WaitForSeconds(castingTime);
 
-        Summon newSummon = Instantiate(summon);
+        Summon newSummon = Instantiate(summon, summonCircle.transform.position, transform.rotation);
         currentSummons.Add(newSummon);
 
         newSummon.SummonHealth += summonHealthToAdd;

@@ -4971,7 +4971,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   boxVisual: {fileID: 0}
-  playerCollider: {fileID: 0}
+  playerCollider: {fileID: 4476036062778615434}
   healthBar: {fileID: 0}
   summonCircle: {fileID: 7130645022297846156}
 --- !u!136 &4476036062778615434

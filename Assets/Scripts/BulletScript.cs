@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class BulletScript : MonoBehaviour
 {
-    float moveSpeed = 4;
+    float moveSpeed = 8;
 
     float damage;
 
