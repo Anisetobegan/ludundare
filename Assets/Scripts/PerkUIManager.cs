@@ -8,6 +8,10 @@ public class PerkUIManager : MonoBehaviour
 
     int perksToChoose = 3;
 
+    [SerializeField] Queue<PerkData> perkQueue = new Queue<PerkData>();
+
+    int randomIndex;
+
     public static PerkUIManager Instance
     {
         get;
@@ -45,10 +49,16 @@ public class PerkUIManager : MonoBehaviour
 
         for (int i = 0; i < perksToChoose; i++)
         {
-            GameObject newPerkPrefab = null;
-            int randomIndex = Random.Range(0, newDataList.Count); //Generates random number between 0 and the count of total perks available
+            //GameObject newPerkPrefab = null;
+            randomIndex = Random.Range(0, newDataList.Count); //Generates random number between 0 and the count of total perks available
 
-            newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
+            perkQueue.Enqueue(newDataList[randomIndex]);
+
+            newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks
+
+            
+
+            /*newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
             newPerkPrefab.transform.SetParent(this.transform);
 
             Perks newPerk = CreatePerkType(newDataList[randomIndex].type); //Generates a new Perk
@@ -57,9 +67,41 @@ public class PerkUIManager : MonoBehaviour
             
             
             newPerkPrefab.GetComponent<PerkUI>().FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
-            newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks
-            
+            newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks*/
+
         }
+        InstantiatePerkPrefab();
+    }
+
+    void InstantiatePerkPrefab()
+    {
+        if (this.transform.childCount < perksToChoose)
+        {
+            for (int i = 0; i < perksToChoose; i++)
+            {
+                GameObject newPerkPrefab = null;
+
+                newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
+                newPerkPrefab.transform.SetParent(this.transform);
+
+                PerkData dequeuedPerkData = perkQueue.Dequeue();
+
+                Perks newPerk = CreatePerkType(dequeuedPerkData.type); //Generates a new Perk
+                newPerk.Data = dequeuedPerkData; //Recieves the data of the perk randomized
+
+                newPerkPrefab.GetComponent<PerkUI>().FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
+            }
+        }
+    }
+
+    public bool CheckEmptyQueue()
+    {
+        if(perkQueue.Count > 0)
+        {
+            InstantiatePerkPrefab();
+            return false;
+        }
+        return true;
     }
 
     Perks CreatePerkType(PerkData.Type type)
@@ -101,9 +143,9 @@ public class PerkUIManager : MonoBehaviour
 
     public void DestroyPerkPrefabs()
     {
-        for (int i = 0; i < this.transform.childCount; i++)
+        for (int i = perksToChoose - 1; i >= 0; i--)
         {
-            Destroy(this.transform.GetChild(i).gameObject);
+            DestroyImmediate(this.transform.GetChild(i).gameObject);
         }
     }
 }

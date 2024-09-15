@@ -109,16 +109,14 @@ public class GameManager : MonoBehaviour
 
     public void OpenPerkSelectionScreen()
     {
-        choosePerkScreen.SetActive(true);
-
         spawner.gameObject.SetActive(false);
+
+        Time.timeScale = 0;
     }
 
     public void ClosePerkSelectionScreen() 
     {
-        choosePerkScreen.SetActive(false);
-
-        choosePerkScreen.GetComponent<PerkUIManager>().DestroyPerkPrefabs();
+        Time.timeScale = 1;
 
         spawner.gameObject.SetActive(true);
     }
