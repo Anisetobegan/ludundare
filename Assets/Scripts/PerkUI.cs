@@ -45,8 +45,14 @@ public class PerkUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     IEnumerator PerkIsSelected()
     {
-        yield return new WaitForSeconds(1f);
-        GameManager.Instance.ClosePerkSelectionScreen();
+        PerkUIManager.Instance.DestroyPerkPrefabs();
+
+        if (PerkUIManager.Instance.CheckEmptyQueue() == true)
+        {
+            GameManager.Instance.ClosePerkSelectionScreen();
+        }
+
+        yield return null;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
