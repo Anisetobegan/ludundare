@@ -11,7 +11,7 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
     int lvl = 1;
-    float exp = 99;
+    float exp;
     float levelUpExp = 100;
     List<Perks> perksObtained = new List<Perks>();
     float summonCooldown;
