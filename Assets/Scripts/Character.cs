@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Character : MonoBehaviour, IDamagable
@@ -19,6 +17,8 @@ public class Character : MonoBehaviour, IDamagable
     float summonHealthToAdd = 0;
     float castingTime = 2f;
     float castingCoolDown = 3f;
+    float rotationSpeed = 720f;
+    bool isDead = false;
 
     [SerializeField] bool readyToCast = true;
 
@@ -59,6 +59,8 @@ public class Character : MonoBehaviour, IDamagable
     List<int> levelToUnlockSummon = new List<int> { 0, 3, 5 }; //Stores the level requirements to unlock summons in their respective index
 
     [SerializeField] ParticleSystem summonCircle;
+
+    [SerializeField] Animator animator;
 
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
@@ -119,9 +121,12 @@ public class Character : MonoBehaviour, IDamagable
 
         switch (state)
         {
-            case State.Idle:
+            case State.Idle:                
 
                 Move();
+
+                animator.SetBool("isWalking", IsMoving());
+
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
@@ -130,6 +135,7 @@ public class Character : MonoBehaviour, IDamagable
                 if (IsMoving())
                 {
                     state = State.Moving;
+                    
                 }
 
                 break;
@@ -137,6 +143,9 @@ public class Character : MonoBehaviour, IDamagable
             case State.Moving:
 
                 Move();
+
+                animator.SetBool("isWalking", IsMoving());
+
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
@@ -160,9 +169,14 @@ public class Character : MonoBehaviour, IDamagable
 
             case State.Dead:
 
-                //Game over
-                RemoveSummons();
-                GameManager.Instance.Lose();
+                if (isDead == false)
+                {
+                    isDead = true;
+                    animator.SetTrigger("isDead");
+                    //Game over
+                    RemoveSummons();
+                    GameManager.Instance.Lose();
+                }
 
                 break;
         }
@@ -174,8 +188,15 @@ public class Character : MonoBehaviour, IDamagable
         float zDirection = Input.GetAxis("Vertical");
 
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
+        moveDirection.Normalize();
 
         transform.position += (moveDirection * moveSpeed) * Time.deltaTime;
+
+        if (moveDirection != Vector3.zero)
+        {
+            Quaternion towardsRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, towardsRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 
     private bool IsMoving() //checks if the player is moving
@@ -236,6 +257,8 @@ public class Character : MonoBehaviour, IDamagable
 
     IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
     {
+        animator.SetBool("isCasting", true);
+
         summonCircle.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(castingTime);
@@ -251,6 +274,8 @@ public class Character : MonoBehaviour, IDamagable
         enumerator = null;
 
         StartCoroutine(CastingCoolDownCoroutine());
+
+        animator.SetBool("isCasting", false);
 
         summonCircle.gameObject.SetActive(false);
     }
