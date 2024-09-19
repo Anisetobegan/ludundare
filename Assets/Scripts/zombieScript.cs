@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class zombieScript : Summon
 {
     float minAttackDistance = 1.6f;
-    float timeBetweenAttacks = 3f;
+    float timeBetweenAttacks = 2f;
 
     enum State
     {

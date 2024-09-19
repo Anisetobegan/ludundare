@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Character : MonoBehaviour, IDamagable
@@ -123,9 +121,12 @@ public class Character : MonoBehaviour, IDamagable
 
         switch (state)
         {
-            case State.Idle:
+            case State.Idle:                
 
                 Move();
+
+                animator.SetBool("isWalking", IsMoving());
+
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
@@ -134,7 +135,7 @@ public class Character : MonoBehaviour, IDamagable
                 if (IsMoving())
                 {
                     state = State.Moving;
-                    animator.SetBool("isWalking", true);
+                    
                 }
 
                 break;
@@ -142,6 +143,9 @@ public class Character : MonoBehaviour, IDamagable
             case State.Moving:
 
                 Move();
+
+                animator.SetBool("isWalking", IsMoving());
+
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
@@ -150,7 +154,6 @@ public class Character : MonoBehaviour, IDamagable
                 if (!IsMoving())
                 {
                     state = State.Idle;
-                    animator.SetBool("isWalking", false);
                 }
 
                 break;
