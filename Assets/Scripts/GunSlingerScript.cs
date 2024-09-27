@@ -159,7 +159,9 @@ public class GunSlingerScript : Enemies
             {
                 muzzleFlashVFX.SetActive(true);
 
-                GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
+                //GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
+                GameObject newBullet = ObjectPool.Instance.SpawnFromPool("Bullet", bulletStartPos.position, transform.rotation);
+
                 newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
 
                 bullets--;

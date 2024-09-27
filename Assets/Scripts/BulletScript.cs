@@ -13,9 +13,10 @@ public class BulletScript : MonoBehaviour
 
     IDamagable damagable;
 
-    private void Awake()
+    private void OnEnable()
     {
-        Destroy(gameObject, timeToDestroyBullet);
+        //Destroy(gameObject, timeToDestroyBullet);
+        StartCoroutine(SetBulletInactive());
     }
 
     private void Update()
@@ -38,13 +39,19 @@ public class BulletScript : MonoBehaviour
         {
             damagable = other.GetComponent<Character>();
             damagable.Damage(damage);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else
         {
             damagable = other.GetComponent<Summon>();
             damagable.Damage(damage);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
+    }
+
+    IEnumerator SetBulletInactive()
+    {
+        yield return new WaitForSeconds(timeToDestroyBullet);
+        gameObject.SetActive(false);
     }
 }

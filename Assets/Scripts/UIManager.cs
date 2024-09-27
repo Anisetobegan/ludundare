@@ -21,6 +21,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI playerLevelTextMeshPro;
     [SerializeField] TextMeshProUGUI playerExpTextMeshPro;
 
+    [SerializeField] Button resumeButton;
+    [SerializeField] Button retryButton;
+    [SerializeField] Button returnButton;
+
     public static UIManager Instance
     {
         get;
@@ -37,6 +41,10 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        resumeButton.onClick.AddListener(GameManager.Instance.Resume);
+        retryButton.onClick.AddListener(GameManager.Instance.Retry);
+        returnButton.onClick.AddListener(GameManager.Instance.ReturnToMainManu);
     }
 
     private void Start()

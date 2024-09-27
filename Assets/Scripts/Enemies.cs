@@ -83,7 +83,8 @@ public class Enemies : MonoBehaviour
 
         healthBar.gameObject.SetActive(false);
 
-        Destroy(gameObject, 1f);
+        //Destroy(gameObject, 1f);
+        gameObject.SetActive(false);
     }
 
     virtual public void IsBeingGrabbed(bool isStopped)

@@ -133,8 +133,9 @@ public class ghostScript : Summon
         yield return new WaitForSeconds(timeToExplode);
 
         //instantiate explotion GameObject
-        ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        newExplosion.InitializeExplosion(damage, explotionRadius, ExplotionScript.ExplosionType.Ghost);
+        //ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        GameObject newExplosion = ObjectPool.Instance.SpawnFromPool("GhostExplosion", transform.position, transform.rotation);
+        newExplosion.GetComponent<ExplotionScript>().InitializeExplosion(damage, explotionRadius, ExplotionScript.ExplosionType.Ghost);
 
         enumerator = null;
 

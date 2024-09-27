@@ -20,7 +20,7 @@ public class GranadeerScript : Enemies
 
     [SerializeField] State state;
 
-    private GrenadeScript newGrenade = null; 
+    private GameObject newGrenade = null; 
 
     private void OnEnable()
     {
@@ -114,9 +114,10 @@ public class GranadeerScript : Enemies
     {
         yield return new WaitForSeconds(timeToThrowGranade);
 
-        newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+        //newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+        newGrenade = ObjectPool.Instance.SpawnFromPool("Grenade", transform.position, transform.rotation);
 
-        newGrenade.InitializeGranadeTarget(target, damage);
+        newGrenade.GetComponent<GrenadeScript>().InitializeGranadeTarget(target, damage);
 
         enumerator = null;
 

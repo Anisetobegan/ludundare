@@ -62,7 +62,10 @@ public class EnemySpawner : MonoBehaviour
     {
         int i = UnityEngine.Random.Range(0, enemiesToSpawn.Count);
 
-        Enemies newEnemy = Instantiate(enemiesToSpawn[i], new Vector3(UnityEngine.Random.Range(minOffset, maxOffset),
+        // Enemies newEnemy = Instantiate(enemiesToSpawn[i], new Vector3(UnityEngine.Random.Range(minOffset, maxOffset),
+        // transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset)), transform.rotation);
+
+        ObjectPool.Instance.SpawnFromPool(enemiesToSpawn[i].gameObject.name, new Vector3(UnityEngine.Random.Range(minOffset, maxOffset),
             transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset)), transform.rotation);
 
         enemiesSpawned++;
