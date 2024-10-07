@@ -8,7 +8,7 @@ public class Character : MonoBehaviour, IDamagable
     float moveSpeed = 4f; //2.25f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
-    int lvl = 1;
+    int lvl = 5;
     float exp;
     float levelUpExp = 100;
     List<Perks> perksObtained = new List<Perks>();
@@ -266,7 +266,10 @@ public class Character : MonoBehaviour, IDamagable
         yield return new WaitForSeconds(castingTime);
 
         //Summon newSummon = Instantiate(summon, summonCircle.transform.position, transform.rotation);
-        Summon newSummon = ObjectPool.Instance.SpawnFromPool(summonTag, summonCircle.transform.position, transform.rotation).GetComponent<Summon>();
+        //Summon newSummon = ObjectPool.Instance.SpawnFromPool(summonTag, summonCircle.transform.position, transform.rotation).GetComponent<Summon>();
+        Summon newSummon = ObjectPoolManager.Instance.GetFromPool(summon);
+        newSummon.transform.position = summonCircle.transform.position;
+        newSummon.transform.rotation = transform.rotation;
 
         currentSummons.Add(newSummon);
 

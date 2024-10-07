@@ -36,7 +36,7 @@ public class Enemies : MonoBehaviour
 
     protected bool isDead = false;
 
-    [SerializeField] HealthBars healthBar;
+    [SerializeField] protected HealthBars healthBar;
 
     [SerializeField] protected ColliderTrigger colliderTrigger;
 
@@ -83,8 +83,7 @@ public class Enemies : MonoBehaviour
 
         healthBar.gameObject.SetActive(false);
 
-        //Destroy(gameObject, 1f);
-        gameObject.SetActive(false);
+        //Destroy(gameObject, 1f);        
     }
 
     virtual public void IsBeingGrabbed(bool isStopped)

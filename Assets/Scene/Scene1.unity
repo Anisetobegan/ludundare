@@ -25998,85 +25998,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4370333fe7b5c504ab3ee3ffacf20b17, type: 3}
---- !u!1 &919413076
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 919413078}
-  - component: {fileID: 919413077}
-  m_Layer: 0
-  m_Name: ObjectPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &919413077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919413076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e69e894a7809e5a48aa978ec1193dafc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pools:
-  - tag: Bullet
-    prefabs:
-    - {fileID: 7563733609764549209, guid: 8ab0bf4074142994cb6632e0935e03a7, type: 3}
-    size: 25
-  - tag: Enemies
-    prefabs:
-    - {fileID: 7521420076613471474, guid: 943ccd4c42d38e74ea6dbfa9e8020c45, type: 3}
-    - {fileID: 3787706476907361795, guid: cc85221e9c75e7841a6c8700b2407e7b, type: 3}
-    - {fileID: 1482602563851719434, guid: 5122a514e41fb2147a61439a18935621, type: 3}
-    size: 25
-  - tag: Grenade
-    prefabs:
-    - {fileID: 6963534018475108480, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
-    size: 25
-  - tag: GhostExplosion
-    prefabs:
-    - {fileID: 3933506245355426822, guid: 024cd13dca885c14a8a49fa6ca729de0, type: 3}
-    size: 25
-  - tag: GrenadeExplosion
-    prefabs:
-    - {fileID: 3933506245355426822, guid: b037e67b235f626418cf4f741193da19, type: 3}
-    size: 25
-  - tag: Zombie
-    prefabs:
-    - {fileID: 4315239896747456804, guid: dd4b54675d8c85245bdf771131c93454, type: 3}
-    size: 25
-  - tag: Skeleton
-    prefabs:
-    - {fileID: 3766957736099343079, guid: 72852ca173759b241b00331f18952586, type: 3}
-    size: 25
-  - tag: Ghost
-    prefabs:
-    - {fileID: 1056252221531414024, guid: 31fc9ccaf25ac674ebe21935c585547f, type: 3}
-    size: 25
---- !u!4 &919413078
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919413076}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &923970991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44114,6 +44035,52 @@ CapsuleCollider:
   m_Height: 2.2898483
   m_Direction: 1
   m_Center: {x: 0, y: 1.1449242, z: 0}
+--- !u!1 &1620949250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1620949252}
+  - component: {fileID: 1620949251}
+  m_Layer: 0
+  m_Name: ObjectPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1620949251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620949250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebd0a98fc90bfa94ba976ffb123d14cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeBullets: []
+  inactiveBullets: []
+--- !u!4 &1620949252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620949250}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1621031863
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61258,7 +61225,7 @@ SceneRoots:
   - {fileID: 1054406951}
   - {fileID: 1180503501}
   - {fileID: 794409469}
-  - {fileID: 919413078}
+  - {fileID: 1620949252}
   - {fileID: 426541170}
   - {fileID: 2088162054}
   - {fileID: 1016023957}

@@ -39,19 +39,19 @@ public class BulletScript : MonoBehaviour
         {
             damagable = other.GetComponent<Character>();
             damagable.Damage(damage);
-            gameObject.SetActive(false);
+            ObjectPoolManager.Instance.AddToPool(this);
         }
         else
         {
             damagable = other.GetComponent<Summon>();
             damagable.Damage(damage);
-            gameObject.SetActive(false);
+            ObjectPoolManager.Instance.AddToPool(this);
         }
     }
 
     IEnumerator SetBulletInactive()
     {
         yield return new WaitForSeconds(timeToDestroyBullet);
-        gameObject.SetActive(false);
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

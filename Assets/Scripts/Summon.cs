@@ -61,11 +61,12 @@ public class Summon : MonoBehaviour, IDamagable
     }
     virtual protected void Die()
     {
+        target = Vector3.zero;
+        targetEnemy = null;
         healthBar.gameObject.SetActive(false);
         isDead = true;
         Actions.OnSummonKilled?.Invoke(this);
         //Destroy(gameObject, 1f);
-        gameObject.SetActive(false);
     }
 
     virtual public string GetSummonName()
