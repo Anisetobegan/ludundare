@@ -183,7 +183,7 @@ MonoBehaviour:
   healthBar: {fileID: 3465480854864095699}
   colliderTrigger: {fileID: 6747773760830081533}
   animator: {fileID: 852560352041677527}
-  grenade: {fileID: 6963534018475108480, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
+  grenade: {fileID: 368107035774250357, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
   state: 0
 --- !u!195 &-2606264758318999713
 NavMeshAgent:

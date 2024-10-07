@@ -8,7 +8,7 @@ public class GranadeerScript : Enemies
     float timeToThrowGranade = 1f;
     float minAttackDistance = 7.5f;
 
-    [SerializeField] private GameObject grenade;
+    [SerializeField] private GrenadeScript grenade;
 
     enum State
     {
@@ -20,23 +20,24 @@ public class GranadeerScript : Enemies
 
     [SerializeField] State state;
 
-    private GrenadeScript newGrenade = null; 
+    GrenadeScript newGrenade = null;
 
     private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        state = State.Chasing;
+        target = GameManager.Instance.PlayerTransform.position;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
     }
 
     private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        state = State.Chasing;
-        target = GameManager.Instance.PlayerTransform.position;
     }
 
     protected override void Update()
@@ -72,7 +73,7 @@ public class GranadeerScript : Enemies
 
                 case State.Waiting:
 
-                    if (newGrenade == null)
+                    if (newGrenade == null || !newGrenade.gameObject.activeSelf)
                     {
                         agent.isStopped = false;
                         state = State.Chasing;
@@ -114,7 +115,11 @@ public class GranadeerScript : Enemies
     {
         yield return new WaitForSeconds(timeToThrowGranade);
 
-        newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+        //newGrenade = Instantiate(grenade, transform.position, transform.rotation).GetComponent<GrenadeScript>();
+        //newGrenade = ObjectPool.Instance.SpawnFromPool("Grenade", transform.position, transform.rotation);
+        newGrenade = ObjectPoolManager.Instance.GetFromPool(grenade);
+        newGrenade.transform.position = transform.position;
+        newGrenade.transform.rotation = transform.rotation;
 
         newGrenade.InitializeGranadeTarget(target, damage);
 
@@ -133,7 +138,7 @@ public class GranadeerScript : Enemies
     protected override void Die()
     {
         animator.SetTrigger("isDead");
-        this.enabled = false;
         base.Die();
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

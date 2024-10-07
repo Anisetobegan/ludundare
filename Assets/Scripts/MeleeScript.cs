@@ -22,18 +22,19 @@ public class MeleeScript : Enemies
     private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        state = State.Chasing;
+        target = GameManager.Instance.PlayerTransform.position;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
     }
 
     private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
-    }
-    protected override void Start()
-    {
-        base.Start();
-
-        state = State.Chasing;
-        target = GameManager.Instance.PlayerTransform.position;
     }
 
     protected override void Update()
@@ -119,7 +120,7 @@ public class MeleeScript : Enemies
     protected override void Die()
     {
         animator.SetTrigger("isDead");
-        this.enabled = false;
         base.Die();
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

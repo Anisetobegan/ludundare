@@ -257,13 +257,20 @@ public class Character : MonoBehaviour, IDamagable
 
     IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
     {
+        string summonTag = summon.GetSummonName();
+
         animator.SetBool("isCasting", true);
 
         summonCircle.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(castingTime);
 
-        Summon newSummon = Instantiate(summon, summonCircle.transform.position, transform.rotation);
+        //Summon newSummon = Instantiate(summon, summonCircle.transform.position, transform.rotation);
+        //Summon newSummon = ObjectPool.Instance.SpawnFromPool(summonTag, summonCircle.transform.position, transform.rotation).GetComponent<Summon>();
+        Summon newSummon = ObjectPoolManager.Instance.GetFromPool(summon);
+        newSummon.transform.position = summonCircle.transform.position;
+        newSummon.transform.rotation = transform.rotation;
+
         currentSummons.Add(newSummon);
 
         newSummon.SummonHealth += summonHealthToAdd;

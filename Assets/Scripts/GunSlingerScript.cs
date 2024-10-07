@@ -9,11 +9,11 @@ public class GunSlingerScript : Enemies
     float reloadTime = 4f;
     float timeBetweenAttacks = 1f;
     bool tookCover = false;
-    float minAttackDistance = 5f;
+    float minAttackDistance = 7f;
 
-    int bullets = 5;
+    int bullets;
 
-    [SerializeField] private GameObject bullet;
+    [SerializeField] BulletScript bullet;
     [SerializeField] Transform bulletStartPos;
     [SerializeField] GameObject muzzleFlashVFX;
 
@@ -32,19 +32,20 @@ public class GunSlingerScript : Enemies
     private void OnEnable()
     {
         Actions.OnSummonKilled += SummonDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        state = State.Chasing;
+        target = GameManager.Instance.PlayerTransform.position;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
+        bullets = 5;
     }
 
     private void OnDisable()
     {
         Actions.OnSummonKilled -= SummonDestroyed;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        state = State.Chasing;
-        target = GameManager.Instance.PlayerTransform.position;
     }
 
     protected override void Update()
@@ -159,8 +160,13 @@ public class GunSlingerScript : Enemies
             {
                 muzzleFlashVFX.SetActive(true);
 
-                GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
-                newBullet.GetComponent<BulletScript>().InitializeBullet(damage);
+                //GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
+                // BulletScript newBullet = ObjectPool.Instance.SpawnFromPool("Bullet", bulletStartPos.position, transform.rotation);
+                BulletScript newBullet = ObjectPoolManager.Instance.GetFromPool(bullet);
+                newBullet.transform.position = bulletStartPos.position;
+                newBullet.transform.rotation = transform.rotation;
+
+                newBullet.InitializeBullet(damage);
 
                 bullets--;
 
@@ -254,7 +260,7 @@ public class GunSlingerScript : Enemies
     protected override void Die()
     {
         animator.SetTrigger("isDead");
-        this.enabled = false;
         base.Die();
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

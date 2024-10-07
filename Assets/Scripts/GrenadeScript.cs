@@ -59,10 +59,16 @@ public class GrenadeScript : MonoBehaviour
 
     private void Explode()
     {
-        ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //GameObject newExplosion = ObjectPool.Instance.SpawnFromPool("GrenadeExplosion" , transform.position, transform.rotation);
+
+        ExplotionScript newExplosion = ObjectPoolManager.Instance.GetFromPool(explosionPrefab);
+        newExplosion.transform.position = transform.position;
+        newExplosion.transform.rotation = transform.rotation;
+
         newExplosion.InitializeExplosion(damage, explosionRadius, ExplotionScript.ExplosionType.Grenade);
 
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 
 

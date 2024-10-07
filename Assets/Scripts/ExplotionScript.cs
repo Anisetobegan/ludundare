@@ -23,7 +23,7 @@ public class ExplotionScript : MonoBehaviour
 
     IDamagable damagable;
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(DisipateExplosion());
     }
@@ -32,8 +32,9 @@ public class ExplotionScript : MonoBehaviour
     IEnumerator DisipateExplosion()
     {
         yield return new WaitForSeconds(explotionDuration);
+        
 
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -68,6 +69,7 @@ public class ExplotionScript : MonoBehaviour
 
     public void InitializeExplosion(float damage, float explosionRadius, ExplosionType explosionType)
     {
+        explosionVFX.transform.localScale = Vector3.one;
         this.damage = damage;
         sphereCollider.radius = explosionRadius;
         this.explosionType = explosionType;

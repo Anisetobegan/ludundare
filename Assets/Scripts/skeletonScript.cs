@@ -21,15 +21,18 @@ public class skeletonScript : Summon
 
     bool isGrabbing = false;
 
-    private void Awake()
-    {
-        state = State.Idle;
-        damage = 10f;
-    }
 
     private void OnEnable()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        state = State.Idle;
+        damage = 10f;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
     }
 
     private void OnDisable()
@@ -205,8 +208,8 @@ public class skeletonScript : Summon
             targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
         }
 
-        this.enabled = false;
+        base.Die();
 
-        base.Die();        
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

@@ -30,20 +30,20 @@ public class zombieScript : Summon
         UpdateHealthBar();
     }
 
-    private void Awake()
-    {
-        walkPointSet = false;
-        state = State.Wandering;
-
-        damage = 25f;
-
-        enemiesInRange = null;
-        colliderTrigger = null;
-    }
-
     private void OnEnable()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        walkPointSet = false;
+        state = State.Wandering;
+        damage = 25f;
+        enemiesInRange = null;
+        colliderTrigger = null;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
     }
 
     private void OnDisable()
@@ -213,7 +213,7 @@ public class zombieScript : Summon
     protected override void Die()
     {
         animator.SetTrigger("isDead");
-        this.enabled = false;
         base.Die();
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }

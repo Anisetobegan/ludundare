@@ -21,14 +21,18 @@ public class ghostScript : Summon
 
     [SerializeField] ExplotionScript explosionPrefab;
 
-    private void Awake()
-    {
-        damage = 100f;
-    }
 
     private void OnEnable()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
+
+        health = maxHealth;
+        isDead = false;
+        damage = 100f;
+        state = State.Idle;
+        healthBar.gameObject.SetActive(true);
+        UpdateHealthBar();
+        enumerator = null;
     }
 
     private void OnDisable()
@@ -133,7 +137,12 @@ public class ghostScript : Summon
         yield return new WaitForSeconds(timeToExplode);
 
         //instantiate explotion GameObject
-        ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //GameObject newExplosion = ObjectPool.Instance.SpawnFromPool("GhostExplosion", transform.position, transform.rotation);
+        ExplotionScript newExplosion = ObjectPoolManager.Instance.GetFromPool(explosionPrefab);
+        newExplosion.transform.position = transform.position;
+        newExplosion.transform.rotation = transform.rotation;
+
         newExplosion.InitializeExplosion(damage, explotionRadius, ExplotionScript.ExplosionType.Ghost);
 
         enumerator = null;
@@ -189,7 +198,7 @@ public class ghostScript : Summon
     public override void DesignateTarget(Vector3 target)
     {
         base.DesignateTarget(target);
-        state = State.Moving;
+        Move();
     }
 
     void EnemyDestroyed(Enemies enemyRef)
@@ -202,10 +211,7 @@ public class ghostScript : Summon
 
     protected override void Die()
     {
-        this.enabled = false;
-        healthBar.gameObject.SetActive(false);
-        isDead = true;
-        Actions.OnSummonKilled?.Invoke(this);
-        Destroy(gameObject);
+        base.Die();
+        ObjectPoolManager.Instance.AddToPool(this);
     }
 }
