@@ -6,9 +6,6 @@ public class ObjectPoolManager : MonoBehaviour
 {
     Dictionary<string, PooledObject<MonoBehaviour>> pools = new Dictionary<string, PooledObject<MonoBehaviour>>();
 
-    [SerializeField] List<MonoBehaviour> activeBullets;
-    [SerializeField] List<MonoBehaviour> inactiveBullets;
-
     public static ObjectPoolManager Instance
     {
         get;
@@ -37,27 +34,16 @@ public class ObjectPoolManager : MonoBehaviour
         objToPool.activeInstances = new List<MonoBehaviour>();
         objToPool.instancesInPool = new List<MonoBehaviour>();
 
-        activeBullets = objToPool.activeInstances;
-        inactiveBullets = objToPool.instancesInPool;
-
         pools.Add(prefab.GetType().ToString(), objToPool);
     }
 
     public T GetFromPool<T>(T prefab) where T : MonoBehaviour
     {
         string typeOf = prefab.GetType().ToString();
-        
-        if (!pools.ContainsKey(prefab.GetType().ToString()))
-        {
-            CreatePool<T>(prefab);
-            PooledObject<MonoBehaviour> objToPool = pools[typeOf];
-            return (T)pools[typeOf].GetOrCreate(); 
-        }
-        else
-        {
-            PooledObject<MonoBehaviour> objToPool = pools[typeOf];
-            return (T)pools[typeOf].GetOrCreate();
-        }
+
+        CreatePool<T>(prefab);
+        PooledObject<MonoBehaviour> objToPool = pools[typeOf];
+        return (T)pools[typeOf].GetOrCreate();
     }
 
     public void AddToPool<T>(T toAdd) where T : MonoBehaviour
