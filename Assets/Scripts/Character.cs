@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,9 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] private List<Summon> currentSummons;
     [SerializeField] private List<Summon> selectedSummons;
     [SerializeField] private List<Summon> summons;
+
+    [SerializeField] Transform playerModel;
+    Vector3 playerModelScale;
 
     List<Perks> currentPerks = new List<Perks>();
     enum State
@@ -97,6 +101,7 @@ public class Character : MonoBehaviour, IDamagable
         DrawVisual();
         UIManager.Instance.UpdatePlayerLevel(lvl);
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
+        playerModelScale = playerModel.localScale;
 
         UpdateHealthBar();
     }
@@ -525,6 +530,10 @@ public class Character : MonoBehaviour, IDamagable
         health -= damage;
 
         UpdateHealthBar();
+
+        playerModel.localScale = playerModelScale;
+
+        playerModel.DOShakeScale(0.1f, 2f, 15);
     }
 
     public void UpdateHealthBar()

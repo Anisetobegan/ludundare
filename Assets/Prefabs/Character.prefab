@@ -4964,6 +4964,7 @@ MonoBehaviour:
   - {fileID: 3434436531844742556, guid: dd4b54675d8c85245bdf771131c93454, type: 3}
   - {fileID: 2133690372044652048, guid: 72852ca173759b241b00331f18952586, type: 3}
   - {fileID: 636098350367905688, guid: 31fc9ccaf25ac674ebe21935c585547f, type: 3}
+  playerModel: {fileID: 3513207178389738300}
   state: 0
   clickable:
     serializedVersion: 2

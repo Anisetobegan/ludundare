@@ -302,6 +302,7 @@ MonoBehaviour:
   healthBar: {fileID: 2780002328919879675}
   colliderTrigger: {fileID: 6884420153347662499}
   animator: {fileID: -1160522282721784236}
+  enemyModel: {fileID: 5827165573603971715}
   bullet: {fileID: 1672830091416039260, guid: 8ab0bf4074142994cb6632e0935e03a7, type: 3}
   bulletStartPos: {fileID: 1229320469896559402}
   muzzleFlashVFX: {fileID: 2477105266647114197}

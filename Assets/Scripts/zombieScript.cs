@@ -28,6 +28,8 @@ public class zombieScript : Summon
     {
         agent = GetComponent<NavMeshAgent>();
         UpdateHealthBar();
+
+        summonModelScale = summonModel.localScale;
     }
 
     private void OnEnable()

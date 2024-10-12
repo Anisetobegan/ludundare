@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -26,6 +27,10 @@ public class Summon : MonoBehaviour, IDamagable
 
     [SerializeField] protected List<GameObject> enemiesInRange;
 
+    [SerializeField] protected Transform summonModel;
+
+    protected Vector3 summonModelScale;
+
     protected IEnumerator enumerator = null;
 
     public float SummonHealth { get { return health; } set { health = value; } }
@@ -39,6 +44,8 @@ public class Summon : MonoBehaviour, IDamagable
         UpdateHealthBar();
 
         colliderTrigger.SetList(enemiesInRange);
+
+        summonModelScale = summonModel.localScale;
     }
 
     // Update is called once per frame
@@ -91,6 +98,10 @@ public class Summon : MonoBehaviour, IDamagable
         health -= damage;
 
         UpdateHealthBar();
+
+        summonModel.localScale = summonModelScale;
+
+        summonModel.DOShakeScale(0.1f, 2f, 15);
     }
 
     public void Damage(float damage)

@@ -135,6 +135,7 @@ MonoBehaviour:
   animator: {fileID: 6638477539340387258}
   colliderTrigger: {fileID: 1772462134765301252}
   enemiesInRange: []
+  summonModel: {fileID: 4752021949225870798}
   state: 0
 --- !u!195 &994197822126361533
 NavMeshAgent:

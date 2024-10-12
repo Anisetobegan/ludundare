@@ -388,6 +388,7 @@ MonoBehaviour:
   healthBar: {fileID: 7720667170272439915}
   colliderTrigger: {fileID: 2576140110688204181}
   animator: {fileID: 5888878693656811829}
+  enemyModel: {fileID: 3809515968010957591}
 --- !u!195 &-4960739914802525594
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -533,15 +534,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.74
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.74
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.74
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -582,6 +583,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3dbffb73a18d8eb4f97a36f6ba1acfd8, type: 3}
       propertyPath: m_Name

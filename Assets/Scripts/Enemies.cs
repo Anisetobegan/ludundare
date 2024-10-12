@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,10 @@ public class Enemies : MonoBehaviour
 
     [SerializeField] protected Animator animator;
 
+    [SerializeField] protected Transform enemyModel;
+
+    protected Vector3 enemyModelScale;
+
     public float EnemyHealth { get { return health; } set { health = value; } }
 
     virtual protected void Start()
@@ -49,6 +54,8 @@ public class Enemies : MonoBehaviour
         UpdateHealthBar();
 
         colliderTrigger.SetList(alliesInRange);
+
+        enemyModelScale = enemyModel.localScale;
     }
 
     virtual protected void Update()
@@ -97,6 +104,10 @@ public class Enemies : MonoBehaviour
         health -= damageTaken;
 
         UpdateHealthBar();
+
+        enemyModel.localScale = enemyModelScale;
+
+        enemyModel.DOShakeScale(0.1f, 2f, 15);
     }
 
     virtual protected Vector3 DetectClosestAlly()

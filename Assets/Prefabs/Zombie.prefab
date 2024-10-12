@@ -312,6 +312,7 @@ MonoBehaviour:
   animator: {fileID: 5690289264852749864}
   colliderTrigger: {fileID: 0}
   enemiesInRange: []
+  summonModel: {fileID: 3225546275107230279}
   state: 0
   ground:
     serializedVersion: 2

@@ -183,6 +183,7 @@ MonoBehaviour:
   healthBar: {fileID: 3465480854864095699}
   colliderTrigger: {fileID: 6747773760830081533}
   animator: {fileID: 852560352041677527}
+  enemyModel: {fileID: 2547085527238316688}
   grenade: {fileID: 368107035774250357, guid: 51d7af62c91c1e047b6215a68fc8ff6d, type: 3}
   state: 0
 --- !u!195 &-2606264758318999713
@@ -584,6 +585,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5f0a3a3481803f346a5ee1444539831c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5f0a3a3481803f346a5ee1444539831c, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5f0a3a3481803f346a5ee1444539831c, type: 3}
       propertyPath: m_Name
