@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PerkUIManager : MonoBehaviour
 {
-    [SerializeField] GameObject perkPrefab;
+    [SerializeField] PerkUI perkPrefab;
 
     int perksToChoose = 3;
 
     [SerializeField] Queue<PerkData> perkQueue = new Queue<PerkData>();
 
     int randomIndex;
+
+    List<PerkUI> perkUIlist = new List<PerkUI>();
 
     public static PerkUIManager Instance
     {
@@ -55,20 +58,6 @@ public class PerkUIManager : MonoBehaviour
             perkQueue.Enqueue(newDataList[randomIndex]);
 
             newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks
-
-            
-
-            /*newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
-            newPerkPrefab.transform.SetParent(this.transform);
-
-            Perks newPerk = CreatePerkType(newDataList[randomIndex].type); //Generates a new Perk
-            newPerk.Data = newDataList[randomIndex]; //Recieves the data of the perk randomized
-
-            
-            
-            newPerkPrefab.GetComponent<PerkUI>().FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
-            newDataList.RemoveAt(randomIndex); //Removes the data from the DataList to avoid repeated perks*/
-
         }
         InstantiatePerkPrefab();
     }
@@ -79,18 +68,24 @@ public class PerkUIManager : MonoBehaviour
         {
             for (int i = 0; i < perksToChoose; i++)
             {
-                GameObject newPerkPrefab = null;
+                PerkUI newPerkPrefab = null;
 
-                newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
+                //newPerkPrefab = Instantiate(perkPrefab, transform.position, transform.rotation); //Instantiates the perk UI GameObject
+
+                newPerkPrefab = ObjectPoolManager.Instance.GetFromPool(perkPrefab); //Gets or Creates a new Perk UI GameObject from Object Pool
                 newPerkPrefab.transform.SetParent(this.transform);
 
-                PerkData dequeuedPerkData = perkQueue.Dequeue();
+                PerkData dequeuedPerkData = perkQueue.Dequeue(); //Stores the Perk Data from the Queue and Removes it from Queue
 
                 Perks newPerk = CreatePerkType(dequeuedPerkData.type); //Generates a new Perk
+
                 newPerk.Data = dequeuedPerkData; //Recieves the data of the perk randomized
 
-                newPerkPrefab.GetComponent<PerkUI>().FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
+                newPerkPrefab.FeedDataToUI(newPerk); //Sends the generated Perk to the UIManager to fill data
+
+                perkUIlist.Add(newPerkPrefab);
             }
+            PlayPerkInAnimation();
         }
     }
 
@@ -145,7 +140,49 @@ public class PerkUIManager : MonoBehaviour
     {
         for (int i = perksToChoose - 1; i >= 0; i--)
         {
-            DestroyImmediate(this.transform.GetChild(i).gameObject);
+            //DestroyImmediate(this.transform.GetChild(i).gameObject);
+            PerkUI perkToDestroy = this.transform.GetChild(i).GetComponent<PerkUI>();
+            ObjectPoolManager.Instance.AddToPool(perkToDestroy);
+            perkToDestroy.transform.SetParent(null, false);
+        }
+        perkUIlist.Clear();
+    }
+
+    public void PlayPerkInAnimation()
+    {
+        foreach (var perk in perkUIlist)
+        {
+            perk.transform.localScale = Vector3.zero;
+        }
+        for (int i= 0; i < perkUIlist.Count; i++)
+        {
+            perkUIlist[i].transform.DOScale(1f, 1f).SetEase(Ease.OutBounce).SetUpdate(true).SetDelay(0.1f * i);
+        }
+    }
+
+    public void PlayPerkOutAnimation()
+    {
+        for (int i = 0; i < perkUIlist.Count; i++)
+        {
+            if (i == 2)
+            {
+                perkUIlist[i].transform.DOScale(0f, 0.5f).OnComplete(() => PerkIsSelected()).SetUpdate(true);
+            }
+            else
+            {
+                perkUIlist[i].transform.DOScale(0f, 0.5f).SetUpdate(true);
+            }
+        }
+        
+    }
+
+    public void PerkIsSelected()
+    {
+        DestroyPerkPrefabs();
+
+        if (CheckEmptyQueue() == true)
+        {
+            GameManager.Instance.ClosePerkSelectionScreen();
         }
     }
 }
