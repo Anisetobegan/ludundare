@@ -34,17 +34,7 @@ public class LeaderBoard : MonoBehaviour
 
     private void Start()
     {
-        LoadHighScore();
-
-        /*while (highScoreList.Count > maxHighScoreCount)
-        {
-            highScoreList.RemoveAt(maxHighScoreCount);
-        }
-
-        for (int i = 0; i < highScoreList.Count; i++)
-        {
-            InstantiateScoreRow(highScoreList[i]);
-        } */       
+        LoadHighScore();     
     }
 
     public void InstantiateScoreRow()

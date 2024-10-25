@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
         }
     }
     List<HighScore> highScoreList = new List<HighScore>();
-    int maxHighScoreCount = 10;
 
     [SerializeField] Button saveHighScoreButton;
     [SerializeField] TMP_InputField nameInputField;
@@ -191,48 +190,4 @@ public class GameManager : MonoBehaviour
             Debug.Log("Insert a Name");
         }
     }
-
-    /*public void AddHighScore(HighScore newHighScore)
-    {
-        for (int i = 0; i < maxHighScoreCount; i++)
-        {
-            if (highScoreList.Count == 0 || newHighScore.score > highScoreList[i].score)
-            {
-                highScoreList.Insert(i, newHighScore);
-            }
-
-            while (highScoreList.Count > maxHighScoreCount)
-            {
-                highScoreList.RemoveAt(maxHighScoreCount);
-            }
-
-            SaveHighScore();
-
-            break;
-        }
-    }
-
-    public class HighScoreList
-    {
-        public List<HighScore> highScoreList;
-    }
-
-    public void SaveHighScore()
-    {
-        HighScoreList highScore = new HighScoreList() { highScoreList = this.highScoreList };
-        string json = JsonUtility.ToJson(highScore);
-        PlayerPrefs.SetString("LeaderBoard", json);
-        PlayerPrefs.Save();
-    }
-
-    public void LoadHighScore()
-    {
-        string jsonString = PlayerPrefs.GetString("LeaderBoard");
-        HighScoreList highScore = JsonUtility.FromJson<HighScoreList>(jsonString);
-        highScoreList = highScore.highScoreList;
-        if (highScoreList ==  null)
-        {
-            highScoreList = new List<HighScore>();
-        }
-    }*/
 }
