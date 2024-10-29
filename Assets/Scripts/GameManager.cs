@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,9 +26,27 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject pauseScreen;
 
+    [SerializeField] private GameObject saveHighScoreScreen;
+
     IEnumerator enumerator = null;
 
     public static bool isPaused = false;
+
+    [Serializable] public class HighScore
+    {
+        public string name;
+        public int score;
+
+        public HighScore (string name, int score)
+        {
+            this.name = name;
+            this.score = score;
+        }
+    }
+    List<HighScore> highScoreList = new List<HighScore>();
+
+    [SerializeField] Button saveHighScoreButton;
+    [SerializeField] TMP_InputField nameInputField;
 
     public Character PlayerGet { get { return player; } }
 
@@ -56,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        saveHighScoreButton.onClick.AddListener(OnSaveButtonClick);
         wave = 1;
     }
 
@@ -147,9 +169,25 @@ public class GameManager : MonoBehaviour
         isPaused = false;
     }
 
-    public void GenerateRandomPerks()
+    public void OpenSaveScoreScreen()
     {
-
+        saveHighScoreScreen.SetActive(true);
+        gameOverScreen.SetActive(false);
     }
 
+    public void OnSaveButtonClick()
+    {
+        if (nameInputField.text != "")
+        {
+            HighScore newHighScore = new HighScore(nameInputField.text, wave);
+            LeaderBoard.Instance.AddHighScore(newHighScore);
+
+            saveHighScoreScreen.SetActive(false);
+            gameOverScreen.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Insert a Name");
+        }
+    }
 }

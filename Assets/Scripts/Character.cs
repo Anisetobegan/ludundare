@@ -9,8 +9,8 @@ public class Character : MonoBehaviour, IDamagable
     float moveSpeed = 4f; //2.25f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
-    int lvl = 5;
-    float exp = 99;
+    int lvl = 1;
+    float exp = 0;
     float levelUpExp = 100;
     List<Perks> perksObtained = new List<Perks>();
     float summonCooldown;
