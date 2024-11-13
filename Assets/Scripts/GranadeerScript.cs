@@ -52,6 +52,7 @@ public class GranadeerScript : Enemies
 
                     target = DetectClosestAlly();
                     Move();
+                    enemyAudioSource.enabled = true;
 
                     float distance = Vector3.Distance(agent.transform.position, target);
 
@@ -103,6 +104,7 @@ public class GranadeerScript : Enemies
         if (enumerator == null)
         {
             agent.isStopped = true;
+            enemyAudioSource.enabled = false;
 
             animator.SetTrigger("isAttacking");
 

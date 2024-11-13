@@ -9,7 +9,7 @@ public class Character : MonoBehaviour, IDamagable
     float moveSpeed = 4f; //2.25f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
-    int lvl = 1;
+    int lvl = 5;
     float exp = 0;
     float levelUpExp = 100;
     List<Perks> perksObtained = new List<Perks>();
@@ -65,6 +65,11 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] ParticleSystem summonCircle;
 
     [SerializeField] Animator animator;
+
+    [SerializeField] AudioSource playerAudioSource;
+    [SerializeField] AudioClip lvlUpClip;
+    [SerializeField] AudioClip summonClip;
+    [SerializeField] AudioClip damageClip;
 
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
@@ -140,7 +145,6 @@ public class Character : MonoBehaviour, IDamagable
                 if (IsMoving())
                 {
                     state = State.Moving;
-                    
                 }
 
                 break;
@@ -150,6 +154,7 @@ public class Character : MonoBehaviour, IDamagable
                 Move();
 
                 animator.SetBool("isWalking", IsMoving());
+                playerAudioSource.enabled = IsMoving();
 
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
@@ -158,7 +163,7 @@ public class Character : MonoBehaviour, IDamagable
 
                 if (!IsMoving())
                 {
-                    state = State.Idle;
+                    state = State.Idle;                    
                 }
 
                 break;
@@ -178,6 +183,7 @@ public class Character : MonoBehaviour, IDamagable
                 {
                     isDead = true;
                     animator.SetTrigger("isDead");
+                    playerAudioSource.enabled = false;
                     //Game over
                     RemoveSummons();
                     GameManager.Instance.Lose();
@@ -185,6 +191,7 @@ public class Character : MonoBehaviour, IDamagable
 
                 break;
         }
+        lastPos = transform.position;
     }
 
     private void Move() //moves the player
@@ -206,16 +213,7 @@ public class Character : MonoBehaviour, IDamagable
 
     private bool IsMoving() //checks if the player is moving
     {
-        if (transform.position != lastPos)
-        {
-            lastPos = transform.position;
-            return true;
-        }
-        else
-        {
-            lastPos = transform.position;
-            return false;
-        }
+        return transform.position != lastPos;        
     }
 
     private int Summon() //checks whether the keys 1, 2 or 3 are pressed and returns the corresponding key - 1
@@ -268,10 +266,14 @@ public class Character : MonoBehaviour, IDamagable
 
         summonCircle.gameObject.SetActive(true);
 
+        playerAudioSource.enabled = false;
+
         yield return new WaitForSeconds(castingTime);
 
         //Summon newSummon = Instantiate(summon, summonCircle.transform.position, transform.rotation);
         //Summon newSummon = ObjectPool.Instance.SpawnFromPool(summonTag, summonCircle.transform.position, transform.rotation).GetComponent<Summon>();
+        AudioManager.Instance.PlaySFX(summonClip);
+
         Summon newSummon = ObjectPoolManager.Instance.GetFromPool(summon);
         newSummon.transform.position = summonCircle.transform.position;
         newSummon.transform.rotation = transform.rotation;
@@ -321,6 +323,8 @@ public class Character : MonoBehaviour, IDamagable
         lvl++;
         exp -= levelUpExp;
         levelUpExp += 20f;
+
+        AudioManager.Instance.PlaySFX(lvlUpClip);
 
         UIManager.Instance.UpdatePlayerLevel(lvl);
         UIManager.Instance.UpdatePlayerExp(exp, levelUpExp);
@@ -527,6 +531,8 @@ public class Character : MonoBehaviour, IDamagable
 
     void TakeDamage(float damage)
     {
+        AudioManager.Instance.PlaySFX(damageClip);
+
         health -= damage;
 
         UpdateHealthBar();

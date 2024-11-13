@@ -20,6 +20,7 @@ public class ghostScript : Summon
     private GameObject closestEnemy;
 
     [SerializeField] ExplotionScript explosionPrefab;
+    [SerializeField] AudioClip explosionClip;
 
 
     private void OnEnable()
@@ -139,6 +140,8 @@ public class ghostScript : Summon
         //instantiate explotion GameObject
         //ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
         //GameObject newExplosion = ObjectPool.Instance.SpawnFromPool("GhostExplosion", transform.position, transform.rotation);
+        AudioManager.Instance.PlaySFX(explosionClip);
+
         ExplotionScript newExplosion = ObjectPoolManager.Instance.GetFromPool(explosionPrefab);
         newExplosion.transform.position = transform.position;
         newExplosion.transform.rotation = transform.rotation;

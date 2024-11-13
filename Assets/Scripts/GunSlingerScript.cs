@@ -16,6 +16,7 @@ public class GunSlingerScript : Enemies
     [SerializeField] BulletScript bullet;
     [SerializeField] Transform bulletStartPos;
     [SerializeField] GameObject muzzleFlashVFX;
+    [SerializeField] AudioClip gunShotSFX;
 
     enum State
     {
@@ -60,6 +61,7 @@ public class GunSlingerScript : Enemies
                     
                     target = DetectClosestAlly();
                     Move();
+                    enemyAudioSource.enabled = true;
                     
                     float distance = Vector3.Distance(agent.transform.position, target);
                     
@@ -73,6 +75,8 @@ public class GunSlingerScript : Enemies
                     break;
 
                 case State.Aiming:
+
+                    enemyAudioSource.enabled = false;
 
                     target = DetectClosestAlly();
 
@@ -159,6 +163,7 @@ public class GunSlingerScript : Enemies
             if (bullets > 0)
             {
                 muzzleFlashVFX.SetActive(true);
+                AudioManager.Instance.PlaySFX(gunShotSFX);
 
                 //GameObject newBullet = Instantiate(bullet, bulletStartPos.position, transform.rotation);
                 // BulletScript newBullet = ObjectPool.Instance.SpawnFromPool("Bullet", bulletStartPos.position, transform.rotation);
@@ -227,6 +232,7 @@ public class GunSlingerScript : Enemies
         {
             if (isBeingGrabbed == false)
             {
+                enemyAudioSource.enabled = true;
                 agent.isStopped = false;
                 target = DetectClosestAlly();
                 Vector3 oppositeDirection = transform.position + ((transform.position - target).normalized * 5f);
@@ -248,6 +254,7 @@ public class GunSlingerScript : Enemies
         }
         enumerator = null;
         tookCover = true;
+        enemyAudioSource.enabled = false;
     }
 
     void SummonDestroyed(Summon summonRef)
@@ -260,6 +267,7 @@ public class GunSlingerScript : Enemies
     protected override void Die()
     {
         animator.SetTrigger("isDead");
+        enemyAudioSource.enabled = false;
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }

@@ -66,6 +66,7 @@ public class zombieScript : Summon
                 case State.Wandering:
 
                     Wander();
+                    summonAudioSource.enabled = true;
 
                     if (target != Vector3.zero)
                     {
@@ -77,6 +78,7 @@ public class zombieScript : Summon
                 case State.Moving:
 
                     Move();
+                    summonAudioSource.enabled = true;
 
                     if (agent.remainingDistance <= 0)
                     {
@@ -99,6 +101,7 @@ public class zombieScript : Summon
                     }
 
                     Move();
+                    summonAudioSource.enabled = true;
 
                     float distance = Vector3.Distance(agent.transform.position, target);
 
@@ -138,6 +141,7 @@ public class zombieScript : Summon
         if (enumerator == null)
         {
             agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+            summonAudioSource.enabled = false;
 
             animator.SetTrigger(Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight");
             targetEnemy.TakeDamage(damage);
@@ -215,6 +219,7 @@ public class zombieScript : Summon
     protected override void Die()
     {
         animator.SetTrigger("isDead");
+        summonAudioSource.enabled = false;
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }

@@ -22,6 +22,8 @@ public class GrenadeScript : MonoBehaviour
 
     [SerializeField] ExplotionScript explosionPrefab;
 
+    [SerializeField] AudioClip explosionClip;
+
 
     private void Update()
     {
@@ -61,6 +63,7 @@ public class GrenadeScript : MonoBehaviour
     {
         //ExplotionScript newExplosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
         //GameObject newExplosion = ObjectPool.Instance.SpawnFromPool("GrenadeExplosion" , transform.position, transform.rotation);
+        AudioManager.Instance.PlaySFX(explosionClip);
 
         ExplotionScript newExplosion = ObjectPoolManager.Instance.GetFromPool(explosionPrefab);
         newExplosion.transform.position = transform.position;

@@ -45,6 +45,10 @@ public class Enemies : MonoBehaviour
 
     [SerializeField] protected Transform enemyModel;
 
+    [SerializeField] protected AudioSource enemyAudioSource;
+
+    [SerializeField] protected AudioClip damageClip;
+
     protected Vector3 enemyModelScale;
 
     public float EnemyHealth { get { return health; } set { health = value; } }
@@ -101,6 +105,8 @@ public class Enemies : MonoBehaviour
 
     virtual public void TakeDamage (float damageTaken)
     {
+        AudioManager.Instance.PlaySFX(damageClip);
+
         health -= damageTaken;
 
         UpdateHealthBar();
