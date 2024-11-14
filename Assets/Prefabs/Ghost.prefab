@@ -114,6 +114,7 @@ MonoBehaviour:
   summonModel: {fileID: 674051236998512928}
   state: 0
   explosionPrefab: {fileID: 1437338458097751948, guid: 024cd13dca885c14a8a49fa6ca729de0, type: 3}
+  explosionClip: {fileID: 8300000, guid: d125febe90ecabf47804c0a6c27cf56c, type: 3}
 --- !u!195 &1253457788443384516
 NavMeshAgent:
   m_ObjectHideFlags: 0

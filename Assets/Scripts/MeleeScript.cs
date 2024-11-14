@@ -49,6 +49,7 @@ public class MeleeScript : Enemies
 
                     target = DetectClosestAlly();
                     Move();
+                    enemyAudioSource.enabled = true;
 
                     float distance = Vector3.Distance(agent.transform.position, target);
 
@@ -88,6 +89,7 @@ public class MeleeScript : Enemies
         if (enumerator == null)
         {
             agent.isStopped = true; // NavMeshAgent.Stop is obsolete. Set NavMeshAgent.isStopped to true.
+            enemyAudioSource.enabled = false;
 
             animator.SetTrigger(Random.Range(0, 2) == 0 ? (Random.Range(0, 2) == 0 ? "isAttackingLeft" : "isAttackingRight") :
                 (Random.Range(0, 2) == 0 ? "isKickingLeft" : "isKickingRight"));
@@ -120,6 +122,7 @@ public class MeleeScript : Enemies
     protected override void Die()
     {
         animator.SetTrigger("isDead");
+        enemyAudioSource.enabled = false;
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }

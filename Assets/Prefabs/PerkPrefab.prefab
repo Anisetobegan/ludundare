@@ -305,6 +305,8 @@ MonoBehaviour:
   descriptionTextMeshPro: {fileID: 7923369353413888629}
   highlightBorder: {fileID: 4421954445463887352}
   button: {fileID: 5731987627410182094}
+  selectClip: {fileID: 8300000, guid: 8d775a6d475d53149bcbfb996f9d633e, type: 3}
+  pointerEnterClip: {fileID: 8300000, guid: 019353b941411c846b4acbc4613c76e2, type: 3}
 --- !u!1 &6533680800638870164
 GameObject:
   m_ObjectHideFlags: 0

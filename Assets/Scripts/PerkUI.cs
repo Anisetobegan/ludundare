@@ -15,6 +15,9 @@ public class PerkUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField] Button button;
 
+    [SerializeField] AudioClip selectClip;
+    [SerializeField] AudioClip pointerEnterClip;
+
     IEnumerator enumerator = null;
 
     PerkData.Type type;
@@ -40,12 +43,15 @@ public class PerkUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         selectedPerk.Apply();
 
+        AudioManager.Instance.PlaySFX(selectClip);
+
         PerkUIManager.Instance.PlayPerkOutAnimation();
     }    
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         highlightBorder.SetActive(true);
+        AudioManager.Instance.PlaySFX(pointerEnterClip);
     }
 
     public void OnPointerExit(PointerEventData eventData)

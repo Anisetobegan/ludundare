@@ -51,6 +51,8 @@ public class skeletonScript : Summon
 
                 case State.Idle:
 
+                    summonAudioSource.enabled = false;
+
                     if (target != Vector3.zero)
                     {
                         state = State.Moving;
@@ -68,6 +70,7 @@ public class skeletonScript : Summon
 
                 case State.Moving:
 
+                    summonAudioSource.enabled = true;
 
                     if (agent.remainingDistance <= 0)
                     {
@@ -85,6 +88,8 @@ public class skeletonScript : Summon
                     break;
 
                 case State.Chasing:
+
+                    summonAudioSource.enabled = true;
 
                     if (targetEnemy != null)
                     {
@@ -154,6 +159,7 @@ public class skeletonScript : Summon
         isGrabbing = true;
         animator.SetBool("isGrabbing", true);
         animator.SetBool("isWalking", false);
+        summonAudioSource.enabled = false;
         targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
 
         

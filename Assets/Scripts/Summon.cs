@@ -29,6 +29,8 @@ public class Summon : MonoBehaviour, IDamagable
 
     [SerializeField] protected Transform summonModel;
 
+    [SerializeField] protected AudioSource summonAudioSource;
+
     protected Vector3 summonModelScale;
 
     protected IEnumerator enumerator = null;

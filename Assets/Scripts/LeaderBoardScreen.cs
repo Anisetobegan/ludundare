@@ -6,9 +6,12 @@ public class LeaderBoardScreen : MonoBehaviour
 {
     [SerializeField] GameObject MainMenu;
     [SerializeField] Transform ScoreContainer;
+    [SerializeField] AudioClip selectClip;
 
     public void ReturnToMainMenu()
     {
+        AudioManager.Instance.PlaySFX(selectClip);
+
         this.gameObject.SetActive(false);
         MainMenu.SetActive(true);
     }

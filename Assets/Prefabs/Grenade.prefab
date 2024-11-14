@@ -79,6 +79,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   explosionPrefab: {fileID: 1437338458097751948, guid: b037e67b235f626418cf4f741193da19, type: 3}
+  explosionClip: {fileID: 8300000, guid: d125febe90ecabf47804c0a6c27cf56c, type: 3}
 --- !u!1001 &6228311211575669120
 PrefabInstance:
   m_ObjectHideFlags: 0
