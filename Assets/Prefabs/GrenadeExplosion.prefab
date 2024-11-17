@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4972155793425963879}
   - component: {fileID: 4170981139270876897}
   - component: {fileID: 1437338458097751948}
-  m_Layer: 10
+  m_Layer: 2
   m_Name: GrenadeExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 5983078229785077346}
   - component: {fileID: 1056711705064615413}
   - component: {fileID: 6956467115632737017}
-  m_Layer: 10
+  m_Layer: 2
   m_Name: GrenadeVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
