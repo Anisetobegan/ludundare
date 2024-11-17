@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class MeleeScript : Enemies
 {
 
-    float minAttackDistance = 1.3f;
+    float minAttackDistance = 1.4f;
     float timeBetweenAttacks = 3f;
 
     enum State
@@ -56,6 +56,7 @@ public class MeleeScript : Enemies
                     if (distance < minAttackDistance)
                     {
                         state = State.Attacking;
+                        agent.isStopped = true;
                     }
                     
                     break;
@@ -80,7 +81,7 @@ public class MeleeScript : Enemies
 
     protected override void Move()
     {
-        Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
+        Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 0.7f);
         agent.SetDestination(offset);
     }
 
