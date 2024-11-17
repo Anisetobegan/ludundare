@@ -83,6 +83,15 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Escape) && isPaused) 
+        {
+            Resume();
+        }
+        else if (Input.GetKeyUp(KeyCode.Escape) && !isPaused)
+        {
+            Pause();
+        }
+
         if (spawner.EnemiesKilled == spawner.MaxEnemies) //checks if player killed the amount of max enemies per wave
         {
             spawner.EnemiesKilled = 0;
