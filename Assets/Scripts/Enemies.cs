@@ -125,7 +125,7 @@ public class Enemies : MonoBehaviour
 
             for (int i = 0; i < alliesInRange.Count; i++)
             {
-                float currentDistance = Vector3.Distance(agent.transform.position, alliesInRange[i].transform.position);
+                float currentDistance = Vector3.Distance(transform.position, alliesInRange[i].transform.position);
 
                 if (currentDistance < leastDistance)
                 {

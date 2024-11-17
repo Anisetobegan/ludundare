@@ -6,10 +6,10 @@ using UnityEngine;
 public class Character : MonoBehaviour, IDamagable
 {
 
-    float moveSpeed = 4f; //2.25f initial speed
+    float moveSpeed = 3f; //2.25f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
-    int lvl = 5;
+    int lvl = 1;
     float exp = 0;
     float levelUpExp = 100;
     List<Perks> perksObtained = new List<Perks>();
