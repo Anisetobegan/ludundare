@@ -59,6 +59,7 @@ public class UIManager : MonoBehaviour
 
         GameObject newSummonIndicator = Instantiate(summonIndicator, transform.position, transform.rotation);
         newSummonIndicator.transform.SetParent(SummonPanelUI.transform);
+        newSummonIndicator.transform.localScale = Vector3.one;
 
         summonIndicatorList.Add(newSummonIndicator);
 
