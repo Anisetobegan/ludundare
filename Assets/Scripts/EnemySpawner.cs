@@ -18,12 +18,28 @@ public class EnemySpawner : MonoBehaviour
     int enemiesKilled = 0;
     int enemiesSpawned = 0;
 
+    bool spawnPointSet = false;
+
+    Camera cam;
+    [SerializeField] LayerMask ground;
+
     [SerializeField] private List<Enemies> enemiesAlive;
+
+    enum Direction
+    {
+        Top,
+        Bottom, 
+        Left, 
+        Right
+    }
+    Direction direction;
 
 
     private void Start()
     {
         Actions.OnEnemyKilled += CalculateMaxEnemies;
+
+        cam = Camera.main;
     }
 
     private void OnDestroy()
@@ -45,9 +61,16 @@ public class EnemySpawner : MonoBehaviour
         {
             if (enemiesSpawned < maxEnemies)
             {
-                SpawnEnemy();                
-            }
-            timer = 0;
+                if (!spawnPointSet)
+                {
+                    SpawnEnemy();
+                }
+                else
+                {
+                    timer = 0;
+                    spawnPointSet = false;
+                }
+            }            
         }
     }
 
@@ -67,11 +90,89 @@ public class EnemySpawner : MonoBehaviour
 
         //ObjectPool.Instance.SpawnFromPool(enemiesToSpawn[i].gameObject.name, new Vector3(UnityEngine.Random.Range(minOffset, maxOffset),
         //    transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset)), transform.rotation);
-        Enemies newEnemy = ObjectPoolManager.Instance.GetFromPool(enemiesToSpawn[i]);
-        newEnemy.transform.position = new Vector3(UnityEngine.Random.Range(minOffset, maxOffset), transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset));
-        newEnemy.transform.rotation = transform.rotation;
+        //newEnemy.transform.position = new Vector3(UnityEngine.Random.Range(minOffset, maxOffset), transform.position.y, UnityEngine.Random.Range(minOffset, maxOffset));
 
-        enemiesSpawned++;
+        Vector3 spawnPoint = SearchSpawnPoint();
+        if (spawnPointSet)
+        {
+            Enemies newEnemy = ObjectPoolManager.Instance.GetFromPool(enemiesToSpawn[i]);
+
+            newEnemy.transform.position = spawnPoint;
+            newEnemy.transform.rotation = transform.rotation;
+
+            enemiesSpawned++;
+        }
+    }
+
+    Vector3 SearchSpawnPoint()
+    {
+        Vector3 spawnPoint = Vector3.zero;
+        RaycastHit hit;
+        Ray ray;
+
+        direction = (Direction)UnityEngine.Random.Range(0, 4);
+
+        switch (direction)
+        {
+            case Direction.Left:
+
+                ray = cam.ScreenPointToRay(new Vector2(0, UnityEngine.Random.Range(0, Screen.height)));
+
+                if (Physics.Raycast(ray, out hit, 1000, ground))
+                {
+                    spawnPointSet = true;
+                    spawnPoint = hit.point;
+                    Vector3 offset = spawnPoint + (spawnPoint - GameManager.Instance.PlayerTransform.position).normalized * 10f;
+                    return offset;
+                }
+                spawnPointSet = false;
+                return spawnPoint;
+
+            case Direction.Right:
+
+                ray = cam.ScreenPointToRay(new Vector2(Screen.width, UnityEngine.Random.Range(0, Screen.height)));
+
+                if (Physics.Raycast(ray, out hit, 1000, ground))
+                {
+                    spawnPointSet = true;
+                    spawnPoint = hit.point;
+                    Vector3 offset = spawnPoint + (spawnPoint - GameManager.Instance.PlayerTransform.position).normalized * 5f;
+                    return offset;
+                }
+                spawnPointSet = false;
+                return spawnPoint;                
+
+            case Direction.Bottom:
+
+                ray = cam.ScreenPointToRay(new Vector2(UnityEngine.Random.Range(0, Screen.width), 0));
+
+                if (Physics.Raycast(ray, out hit, 1000, ground))
+                {
+                    spawnPointSet = true;
+                    spawnPoint = hit.point;
+                    Vector3 offset = spawnPoint + (spawnPoint - GameManager.Instance.PlayerTransform.position).normalized * 10f;
+                    return offset;
+                }
+                spawnPointSet = false;
+                return spawnPoint;
+
+            case Direction.Top:
+
+                ray = cam.ScreenPointToRay(new Vector2(UnityEngine.Random.Range(0, Screen.width), Screen.height));
+
+                if (Physics.Raycast(ray, out hit, 1000, ground))
+                {
+                    spawnPointSet = true;
+                    spawnPoint = hit.point;
+                    Vector3 offset = spawnPoint + (spawnPoint - GameManager.Instance.PlayerTransform.position).normalized * 10f;
+                    return offset;
+                }
+                spawnPointSet = false;
+                return spawnPoint;
+        }
+
+        spawnPointSet = false;
+        return spawnPoint;
     }
 
     public int EnemiesKilled
