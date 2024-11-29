@@ -117,13 +117,17 @@ public class MeleeScript : Enemies
 
     void SummonDestroyed(Summon summonRef)
     {
-        alliesInRange.Remove(summonRef.gameObject);
-        target = Vector3.zero;
+        if (alliesInRange.Contains(summonRef.gameObject) && summonRef.isDead)
+        {
+            alliesInRange.Remove(summonRef.gameObject);
+            target = Vector3.zero;
+        }
     }
     protected override void Die()
     {
         animator.SetTrigger("isDead");
         enemyAudioSource.enabled = false;
+        alliesInRange.Clear();
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }

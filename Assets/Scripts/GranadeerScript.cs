@@ -132,14 +132,18 @@ public class GranadeerScript : Enemies
 
     void SummonDestroyed(Summon summonRef)
     {
-        alliesInRange.Remove(summonRef.gameObject);
-        target = Vector3.zero;
-        state = State.Waiting;        
+        if (alliesInRange.Contains(summonRef.gameObject) && summonRef.isDead)
+        {
+            alliesInRange.Remove(summonRef.gameObject);
+            target = Vector3.zero;
+            state = State.Waiting;
+        }
     }
 
     protected override void Die()
     {
         animator.SetTrigger("isDead");
+        alliesInRange.Clear();
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }
