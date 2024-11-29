@@ -24,14 +24,6 @@ public class zombieScript : Summon
 
     [SerializeField] LayerMask ground;
 
-    protected override void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        UpdateHealthBar();
-
-        summonModelScale = summonModel.localScale;
-    }
-
     private void OnEnable()
     {
         Actions.OnEnemyKilled += EnemyDestroyed;
@@ -41,8 +33,6 @@ public class zombieScript : Summon
         walkPointSet = false;
         state = State.Wandering;
         damage = 25f;
-        enemiesInRange = null;
-        colliderTrigger = null;
         healthBar.gameObject.SetActive(true);
         UpdateHealthBar();
         enumerator = null;
@@ -53,9 +43,16 @@ public class zombieScript : Summon
         Actions.OnEnemyKilled -= EnemyDestroyed;
     }
 
-
     protected override void Update()
     {
+        for (int i = enemiesInRange.Count - 1; i >= 0; i--)
+        {
+            if (!enemiesInRange[i].activeInHierarchy)
+            {
+                enemiesInRange.RemoveAt(i);
+            }
+        }
+
         if (isDead == false)
         {
             base.Update();
@@ -71,6 +68,12 @@ public class zombieScript : Summon
                     if (target != Vector3.zero)
                     {
                         state = State.Moving;
+                    }
+
+                    if (enemiesInRange.Count > 0)
+                    {
+                        targetEnemy = DetectClosestEnemy();
+                        state = State.Chasing;
                     }
 
                     break;
@@ -211,15 +214,20 @@ public class zombieScript : Summon
 
     void EnemyDestroyed(Enemies enemyRef)
     {
-        target = Vector3.zero;
-        targetEnemy = null;
-        state = State.Wandering;
+        if (enemyRef.IsEnemyDead && targetEnemy == enemyRef)
+        {
+            enemiesInRange.Remove(enemyRef.gameObject);
+            target = transform.position;
+            targetEnemy = null;
+            state = State.Wandering;
+        }
     }
 
     protected override void Die()
     {
         animator.SetTrigger("isDead");
         summonAudioSource.enabled = false;
+        enemiesInRange.Clear();
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }
