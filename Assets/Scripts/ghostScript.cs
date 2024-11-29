@@ -5,7 +5,7 @@ using UnityEngine;
 public class ghostScript : Summon
 {
     float explotionRadius = 5f;
-    float minAttackDistance = 1.5f;
+    float minAttackDistance = 1.6f;
     float timeToExplode = 2f;
     enum State
     {
@@ -43,6 +43,14 @@ public class ghostScript : Summon
 
     protected override void Update()
     {
+        for (int i = enemiesInRange.Count - 1; i >= 0; i--)
+        {
+            if (!enemiesInRange[i].activeInHierarchy)
+            {
+                enemiesInRange.RemoveAt(i);
+            }
+        }
+
         if (isDead == false)
         {
             base.Update();
@@ -164,7 +172,7 @@ public class ghostScript : Summon
         return "Ghost";
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (enemiesInRange.Contains(other.gameObject) == false)
         {
@@ -178,7 +186,7 @@ public class ghostScript : Summon
     private void OnTriggerExit(Collider other)
     {
         enemiesInRange.Remove(other.gameObject);
-    }
+    }*/
 
     public override void DesignateTarget(Vector3 target)
     {
@@ -188,14 +196,18 @@ public class ghostScript : Summon
 
     void EnemyDestroyed(Enemies enemyRef)
     {
-        enemiesInRange.Remove(enemyRef.gameObject);
-        target = Vector3.zero;
-        targetEnemy = null;
-        state = State.Idle;
+        if (enemyRef.IsEnemyDead && targetEnemy == enemyRef)
+        {
+            enemiesInRange.Remove(enemyRef.gameObject);
+            target = transform.position;
+            targetEnemy = null;
+            state = State.Idle;
+        }
     }
 
     protected override void Die()
     {
+        enemiesInRange.Clear();
         base.Die();
         ObjectPoolManager.Instance.AddToPool(this);
     }
