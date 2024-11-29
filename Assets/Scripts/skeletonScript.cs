@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class skeletonScript : Summon
 {
-    float minAttackDistance = 1.5f;
+    float minAttackDistance = 1.6f;
     float timeBetweenAttacks = 1f;
 
     enum State
@@ -33,6 +33,7 @@ public class skeletonScript : Summon
         healthBar.gameObject.SetActive(true);
         UpdateHealthBar();
         enumerator = null;
+        isGrabbing = false;
     }
 
     private void OnDisable()
@@ -42,6 +43,14 @@ public class skeletonScript : Summon
 
     protected override void Update()
     {
+        for (int i = enemiesInRange.Count - 1; i >= 0; i--)
+        {
+            if (!enemiesInRange[i].activeInHierarchy)
+            {
+                enemiesInRange.RemoveAt(i);
+            }
+        }
+
         if (isDead == false)
         {
             base.Update();
@@ -134,35 +143,18 @@ public class skeletonScript : Summon
     {
         Vector3 offset = target + (transform.position - target).normalized * (GameManager.Instance.playerColliderRadius + 1f);
         agent.SetDestination(offset);
-    }
-
-    private Enemies DetectClosestEnemy()
-    {
-        float leastDistance = Mathf.Infinity;
-        GameObject targetPos = null;
-
-        for (int i = 0; i < enemiesInRange.Count; i++)
-        {
-            float currentDistance = Vector3.Distance(agent.transform.position, enemiesInRange[i].transform.position);
-
-            if (currentDistance < leastDistance)
-            {
-                leastDistance = currentDistance;
-                targetPos = enemiesInRange[i].gameObject;
-            }
-        }
-        return targetPos.GetComponent<Enemies>();
-    }
+    }    
 
     void StartGrabbing()
     {
-        isGrabbing = true;
-        animator.SetBool("isGrabbing", true);
-        animator.SetBool("isWalking", false);
-        summonAudioSource.enabled = false;
-        targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
-
-        
+        if (targetEnemy != null)
+        {
+            isGrabbing = true;
+            animator.SetBool("isGrabbing", true);
+            animator.SetBool("isWalking", false);
+            summonAudioSource.enabled = false;
+            targetEnemy.IsBeingGrabbed(isGrabbing);
+        }
     }
 
     protected override void Attack()
@@ -196,23 +188,29 @@ public class skeletonScript : Summon
 
     void EnemyDestroyed(Enemies enemyRef)
     {
-        isGrabbing = false;
-        enemiesInRange.Remove(enemyRef.gameObject);
-        target = Vector3.zero;
-        targetEnemy = null;
-        animator.SetBool("isGrabbing", false);
+        if (enemyRef.IsEnemyDead && targetEnemy == enemyRef)
+        {
+            isGrabbing = false;
+            enemiesInRange.Remove(enemyRef.gameObject);
+            target = transform.position;
+            targetEnemy = null;
+            animator.SetBool("isGrabbing", false);
+        }
     }
 
     protected override void Die()
     {
         isGrabbing = false;
 
+        animator.SetBool("isGrabbing", false);
         animator.SetTrigger("isDead");
 
         if (targetEnemy != null)
         {
-            targetEnemy.GetComponent<Enemies>().IsBeingGrabbed(isGrabbing);
+            targetEnemy.IsBeingGrabbed(isGrabbing);
         }
+
+        enemiesInRange.Clear();
 
         base.Die();
 

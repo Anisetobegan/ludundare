@@ -106,6 +106,24 @@ public class Summon : MonoBehaviour, IDamagable
         summonModel.DOShakeScale(0.1f, 2f, 15);
     }
 
+    protected Enemies DetectClosestEnemy()
+    {
+        float leastDistance = Mathf.Infinity;
+        GameObject targetPos = null;
+
+        for (int i = 0; i < enemiesInRange.Count; i++)
+        {
+            float currentDistance = Vector3.Distance(transform.position, enemiesInRange[i].transform.position);
+
+            if (currentDistance < leastDistance)
+            {
+                leastDistance = currentDistance;
+                targetPos = enemiesInRange[i].gameObject;
+            }
+        }
+        return targetPos.GetComponent<Enemies>();
+    }
+
     public void Damage(float damage)
     {
         TakeDamage(damage);

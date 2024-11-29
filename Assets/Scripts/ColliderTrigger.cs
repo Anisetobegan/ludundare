@@ -13,8 +13,8 @@ public class ColliderTrigger : MonoBehaviour
     {
         if (objectsCollided.Contains(other.gameObject) == false)
         {
-            if (layer == (layer | (1 << other.gameObject.layer)))
-                {
+            if (layer == (layer | (1 << other.gameObject.layer)) && other.gameObject.activeInHierarchy)
+            {                
                 objectsCollided.Add(other.gameObject);
             }
         }

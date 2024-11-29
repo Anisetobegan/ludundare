@@ -52,6 +52,7 @@ public class Enemies : MonoBehaviour
     protected Vector3 enemyModelScale;
 
     public float EnemyHealth { get { return health; } set { health = value; } }
+    public bool IsEnemyDead { get { return isDead; } }
 
     virtual protected void Start()
     {
@@ -88,9 +89,9 @@ public class Enemies : MonoBehaviour
 
     virtual protected void Die()
     {
-        Actions.OnEnemyKilled?.Invoke(this);
-
         isDead = true;
+
+        Actions.OnEnemyKilled?.Invoke(this);        
 
         healthBar.gameObject.SetActive(false);
 

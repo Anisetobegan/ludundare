@@ -159,24 +159,6 @@ public class ghostScript : Summon
         agent.SetDestination(offset);
     }
 
-    private Enemies DetectClosestEnemy()
-    {
-        float leastDistance = Mathf.Infinity;
-        GameObject targetPos = null;
-
-        for (int i = 0; i < enemiesInRange.Count; i++)
-        {
-            float currentDistance = Vector3.Distance(agent.transform.position, enemiesInRange[i].transform.position);
-
-            if (currentDistance < leastDistance)
-            {
-                leastDistance = currentDistance;
-                targetPos = enemiesInRange[i].gameObject;
-            }
-        }
-        return targetPos.GetComponent<Enemies>();
-    }
-
     public override string GetSummonName()
     {
         return "Ghost";
