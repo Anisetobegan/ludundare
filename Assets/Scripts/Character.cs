@@ -71,6 +71,11 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] AudioClip summonClip;
     [SerializeField] AudioClip damageClip;
 
+    float firstClickTime;
+    float timeBetweenClicks = 0.5f;
+    bool isTimeCheckAllowed = true;
+    int clickCount = 0;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -381,17 +386,24 @@ public class Character : MonoBehaviour, IDamagable
     {
         if (Input.GetMouseButtonDown(0))
         {
-
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickable))
             {
+                clickCount++;
+
                 if (!selectedSummons.Contains(hit.collider.gameObject.GetComponentInParent<Summon>()))
                 {
                     selectedSummons.Add(hit.collider.gameObject.GetComponentInParent<Summon>());
                     string summonName = hit.collider.gameObject.name;
                     UIManager.Instance.UpdateSummon(hit.collider.gameObject.GetComponentInParent<Summon>());
+
+                    if (clickCount == 1 && isTimeCheckAllowed)
+                    {
+                        firstClickTime = Time.time;
+                        StartCoroutine(DetectDoubleClick(hit.collider.gameObject.GetComponentInParent<Summon>()));
+                    }
                 }
 
             }
@@ -399,11 +411,33 @@ public class Character : MonoBehaviour, IDamagable
             {
                 DeselectAll();
             }
-
         }
 
     } //selects a single summon with the mouse left click
 
+    IEnumerator DetectDoubleClick(Summon selectedSummon)
+    {
+        isTimeCheckAllowed = false;
+        while (Time.time < (firstClickTime + timeBetweenClicks))
+        {
+            if (clickCount == 2)
+            {
+                for (int i = 0; i < currentSummons.Count; i++)
+                {
+                    if (currentSummons[i].GetType() == selectedSummon.GetType() && !selectedSummons.Contains(currentSummons[i]))
+                    {
+                        selectedSummons.Add(currentSummons[i]);
+                        string summonName = currentSummons[i].GetSummonName();
+                        UIManager.Instance.UpdateSummon(currentSummons[i]);
+                    }
+                }
+                break;
+            }
+            yield return null;
+        }
+        clickCount = 0;
+        isTimeCheckAllowed = true;
+    }
 
     private void DragSelect() //selects multiple summons while dragging the mouse left click
     {
