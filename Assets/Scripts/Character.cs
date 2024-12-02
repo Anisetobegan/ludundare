@@ -76,6 +76,9 @@ public class Character : MonoBehaviour, IDamagable
     bool isTimeCheckAllowed = true;
     int clickCount = 0;
 
+    [SerializeField] ParticleSystem moveCursor;
+    [SerializeField] ParticleSystem attackCursor;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -371,15 +374,26 @@ public class Character : MonoBehaviour, IDamagable
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground")) //checks if the RayCast hits the ground
                     {
                         summon.DesignateTarget(hit.point); //Sends the Vector3 of the RayCast hit point
+                        moveCursor.gameObject.SetActive(true);
+                        moveCursor.transform.position = new Vector3(hit.point.x, 0.02f, hit.point.z);
+                        StartCoroutine(SetCursorInactive(moveCursor));
                     }
                     else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy")) //Checks if the RayCast hits an enemy
                     {
                         summon.DesignateTarget(hit.collider.gameObject.GetComponent<Enemies>()); //Sends the gameObject of the enemy hit
+                        attackCursor.gameObject.SetActive(true);
+                        attackCursor.transform.position = hit.collider.transform.position;
+                        StartCoroutine (SetCursorInactive(attackCursor));
                     }
                 }
-
             }
         }
+    }
+
+    IEnumerator SetCursorInactive(ParticleSystem cursor)
+    {
+        yield return new WaitForSeconds(1.5f);
+        cursor.gameObject.SetActive(false);
     }
 
     private void SelectSummon()
