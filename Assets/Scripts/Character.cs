@@ -6,7 +6,7 @@ using UnityEngine;
 public class Character : MonoBehaviour, IDamagable
 {
 
-    float moveSpeed = 3f; //2.25f initial speed
+    float moveSpeed = 3f; //3f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
     int lvl = 1;
