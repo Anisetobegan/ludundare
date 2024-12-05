@@ -4981,6 +4981,10 @@ MonoBehaviour:
   playerAudioSource: {fileID: 2481698527075522989}
   lvlUpClip: {fileID: 8300000, guid: 8fa670ea94241df4c9ea290d02b2f1a8, type: 3}
   summonClip: {fileID: 8300000, guid: 76e2c91daf11ea343b6c59c9e3cd30a4, type: 3}
+  damageClip: {fileID: 8300000, guid: 6e598f8125ae5ec4dab985e08796e345, type: 3}
+  moveCursor: {fileID: 0}
+  attackCursor: {fileID: 0}
+  rb: {fileID: 8954596036177446238}
 --- !u!136 &4476036062778615434
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5030,7 +5034,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!95 &2112761224360531032
 Animator:
   serializedVersion: 5
@@ -5065,7 +5069,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: fed2b679e6357b840861f4fc15031a36, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.412
-  m_Pitch: 1
+  m_Pitch: 1.6
   Loop: 1
   Mute: 0
   Spatialize: 0

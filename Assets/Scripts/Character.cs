@@ -6,7 +6,7 @@ using UnityEngine;
 public class Character : MonoBehaviour, IDamagable
 {
 
-    float moveSpeed = 3f; //3f initial speed
+    float moveSpeed = 4f; //3f initial speed
     [SerializeField] float health = 100;
     [SerializeField] float maxHealth = 100;
     int lvl = 1;
@@ -79,6 +79,9 @@ public class Character : MonoBehaviour, IDamagable
     [SerializeField] ParticleSystem moveCursor;
     [SerializeField] ParticleSystem attackCursor;
 
+    [SerializeField] Rigidbody rb;
+    Vector3 movePosition = Vector3.zero;
+
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
 
@@ -108,7 +111,7 @@ public class Character : MonoBehaviour, IDamagable
     private void Start()
     {
         cam = Camera.main;
-        lastPos = transform.position;
+        lastPos = rb.position;
         startPos = Vector2.zero;
         endPos = Vector2.zero;
         DrawVisual();
@@ -121,7 +124,7 @@ public class Character : MonoBehaviour, IDamagable
 
     // Update is called once per frame
     void Update()
-    {
+    {        
         SelectSummon();
         DragSelect();
 
@@ -141,16 +144,17 @@ public class Character : MonoBehaviour, IDamagable
         {
             case State.Idle:                
 
-                Move();
+                //Move();
 
-                animator.SetBool("isWalking", IsMoving());
+                animator.SetBool("isWalking", false);
+                playerAudioSource.enabled = false;
 
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
                 }
 
-                if (IsMoving())
+                if (new Vector2 (Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).magnitude != 0)
                 {
                     state = State.Moving;
                 }
@@ -161,15 +165,15 @@ public class Character : MonoBehaviour, IDamagable
 
                 Move();
 
-                animator.SetBool("isWalking", IsMoving());
-                playerAudioSource.enabled = IsMoving();
+                animator.SetBool("isWalking", true);
+                playerAudioSource.enabled = true;
 
                 if (currentSummons.Count < maxSummons && readyToCast == true)
                 {
                     keyPressed = Summon();
                 }
 
-                if (!IsMoving())
+                if (new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).magnitude == 0)
                 {
                     state = State.Idle;                    
                 }
@@ -199,7 +203,13 @@ public class Character : MonoBehaviour, IDamagable
 
                 break;
         }
-        lastPos = transform.position;
+        
+    }
+
+    private void FixedUpdate()
+    {
+        rb.MovePosition(movePosition);
+        lastPos = rb.position;
     }
 
     private void Move() //moves the player
@@ -210,18 +220,13 @@ public class Character : MonoBehaviour, IDamagable
         Vector3 moveDirection = new Vector3(xDirection, 0.0f, zDirection);
         moveDirection.Normalize();
 
-        transform.position += (moveDirection * moveSpeed) * Time.deltaTime;
+        movePosition = ((moveDirection * moveSpeed) * Time.fixedDeltaTime) + rb.position;
 
         if (moveDirection != Vector3.zero)
         {
             Quaternion towardsRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, towardsRotation, rotationSpeed * Time.deltaTime);
+            rb.rotation = Quaternion.RotateTowards(transform.rotation, towardsRotation, rotationSpeed * Time.fixedDeltaTime);
         }
-    }
-
-    private bool IsMoving() //checks if the player is moving
-    {
-        return transform.position != lastPos;        
     }
 
     private int Summon() //checks whether the keys 1, 2 or 3 are pressed and returns the corresponding key - 1
@@ -413,7 +418,7 @@ public class Character : MonoBehaviour, IDamagable
                     string summonName = hit.collider.gameObject.name;
                     UIManager.Instance.UpdateSummon(hit.collider.gameObject.GetComponentInParent<Summon>());
 
-                    if (clickCount == 1 && isTimeCheckAllowed)
+                    if (clickCount >= 1 && isTimeCheckAllowed)
                     {
                         firstClickTime = Time.time;
                         StartCoroutine(DetectDoubleClick(hit.collider.gameObject.GetComponentInParent<Summon>()));
@@ -424,6 +429,7 @@ public class Character : MonoBehaviour, IDamagable
             else
             {
                 DeselectAll();
+                clickCount = 0;
             }
         }
 
@@ -434,7 +440,7 @@ public class Character : MonoBehaviour, IDamagable
         isTimeCheckAllowed = false;
         while (Time.time < (firstClickTime + timeBetweenClicks))
         {
-            if (clickCount == 2)
+            if (clickCount >= 2)
             {
                 for (int i = 0; i < currentSummons.Count; i++)
                 {
