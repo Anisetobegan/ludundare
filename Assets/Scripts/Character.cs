@@ -1,7 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Character : MonoBehaviour, IDamagable
 {
@@ -81,6 +83,8 @@ public class Character : MonoBehaviour, IDamagable
 
     [SerializeField] Rigidbody rb;
     Vector3 movePosition = Vector3.zero;
+
+    [SerializeField] LayerMask defaultLayer;
 
     public float ColliderRadius { get { return playerCollider.radius; } }
     public float PlayerHealth { get { return health; } set { health = value; } }
@@ -260,8 +264,28 @@ public class Character : MonoBehaviour, IDamagable
         {
             if (lvl >= levelToUnlockSummon[keyPressed]) //checks if the level is equal to or greater than the level requirement to summon
             {
-                enumerator = BeginCasting(summon);
-                StartCoroutine(enumerator);
+                Vector3 castPosition = new Vector3(summonCircle.transform.position.x, 20, summonCircle.transform.position.z);
+                RaycastHit hit;
+                Ray ray = new Ray(castPosition, Vector3.down);
+
+                if (Physics.Raycast(ray, out hit, 1000, defaultLayer))
+                {
+                    NavMeshHit navMeshHit;
+                    if (NavMesh.SamplePosition(hit.point, out navMeshHit, 10, NavMesh.AllAreas))
+                    {
+                        enumerator = BeginCasting(summon, navMeshHit.position);
+                        StartCoroutine(enumerator);
+                    }                    
+                }
+                else 
+                {
+                    NavMeshHit navMeshHit;
+                    if (NavMesh.SamplePosition(summonCircle.transform.position, out navMeshHit, 10, NavMesh.AllAreas))
+                    {
+                        enumerator = BeginCasting(summon, navMeshHit.position);
+                        StartCoroutine(enumerator);
+                    }
+                }
             }
             else
             {
@@ -271,7 +295,7 @@ public class Character : MonoBehaviour, IDamagable
         }
     }
 
-    IEnumerator BeginCasting(Summon summon) //waits for x seconds and instantiates a summon
+    IEnumerator BeginCasting(Summon summon, Vector3 summonPos) //waits for x seconds and instantiates a summon
     {
         string summonTag = summon.GetSummonName();
 
@@ -288,7 +312,9 @@ public class Character : MonoBehaviour, IDamagable
         AudioManager.Instance.PlaySFX(summonClip);
 
         Summon newSummon = ObjectPoolManager.Instance.GetFromPool(summon);
-        newSummon.transform.position = summonCircle.transform.position;
+        newSummon.agent.enabled = false;      
+        newSummon.transform.position = summonPos;
+
         newSummon.transform.rotation = transform.rotation;
 
         currentSummons.Add(newSummon);
@@ -305,6 +331,7 @@ public class Character : MonoBehaviour, IDamagable
         animator.SetBool("isCasting", false);
 
         summonCircle.gameObject.SetActive(false);
+        newSummon.agent.enabled = true;
     }
 
     IEnumerator CastingCoolDownCoroutine()

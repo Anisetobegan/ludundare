@@ -4985,6 +4985,9 @@ MonoBehaviour:
   moveCursor: {fileID: 0}
   attackCursor: {fileID: 0}
   rb: {fileID: 8954596036177446238}
+  defaultLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!136 &4476036062778615434
 CapsuleCollider:
   m_ObjectHideFlags: 0
