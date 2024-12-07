@@ -71,11 +71,12 @@ public class Enemies : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     virtual protected void OnMouseDown()
     {
         Die();
     }
-
+#endif
 
     virtual protected void Move()
     {
